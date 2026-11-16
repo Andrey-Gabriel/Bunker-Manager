@@ -136,6 +136,7 @@
   .slot:focus-visible { outline: 2px solid var(--green); }
   .caption { font-size: 11px; color: var(--muted); }
   .scroll-hint { display: none; }
+  .phone-only { display: none; }
   .room-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; padding: 0 12px 12px; }
   .categories { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 9px; }
   .categories [aria-pressed="true"], .map-tile[aria-pressed="true"] { border-color: var(--green); color: var(--green); }
@@ -484,6 +485,71 @@
     .masthead .clock { justify-self: end; }
     .playback { grid-column: 1 / -1; justify-self: end; flex-wrap: wrap; justify-content: end; }
   }
+  @media (max-width: 675px) {
+    .app { padding: 8px max(8px, env(safe-area-inset-right)) 20px max(8px, env(safe-area-inset-left)); }
+    .masthead { margin-bottom: 8px; padding: 8px; }
+    .masthead .playback .control, .scene .control, dialog .control, .scenario-list button { min-height: 44px; }
+    .command-column .build-controls { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); overflow: visible; }
+    .command-column .command { grid-column: span 3; min-width: 0; width: 100%; min-height: 48px; justify-content: center;
+      border-right: 1px solid #c8bb9a; padding: 5px 2px; gap: 3px; font-size: 12px; white-space: normal; }
+    .command-column .command:nth-child(n+5) { grid-column: span 4; }
+    .command-column .command b { overflow-wrap: anywhere; text-overflow: unset; }
+    .command-column .command span { flex: 0 0 auto; width: auto; }
+    .scene { min-width: 0; }
+    #stats .stat { padding: 8px 4px; }
+    #stats .stat strong { font-size: 15px; }
+    #stats .stat-label { font-size: 10px; }
+    .view-header { align-items: center; }
+    .view-header h2 { font-size: 16px; }
+    #build-status, #lift-status { flex-basis: 100%; order: 1; text-align: left; }
+    #cutaway-view { --min-scene-width: 0px; overscroll-behavior-x: contain;
+      max-height: max(calc(var(--scene-bottom, 451) * var(--min-scene-width) / 960), calc(var(--scene-bottom, 451) * 100cqw / 960)); }
+    #cutaway-view[data-zoom="detail"] { --min-scene-width: 720px; }
+    #cutaway-view .cutaway { min-width: var(--min-scene-width); }
+    .bunker-touch { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px;
+      padding: 6px 10px 9px; background: #23342b; }
+    .phone-picker { display: grid; gap: 4px; min-width: 0; color: var(--muted); font-size: 12px; }
+    .phone-picker select { width: 100%; color: var(--text); background: #1d2b24; border: 1px solid #617263; padding: 6px; }
+    .catalog-picker { padding: 8px 10px; }
+    #categories, #staff-list { display: none; }
+    .room-list { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: none; overflow: visible; padding: 0 10px 10px; }
+    .room { min-height: 82px; padding: 8px; }
+    .room b { font-size: 14px; }
+    .room small { font-size: 11px; line-height: 1.35; }
+    #event .choices, #gate .choices, #raid .choices, #field-choices { display: grid; }
+    #event .control, #gate .control, #raid .control, #field-choices .control { text-align: left; }
+    dialog:not(#main-menu) { width: calc(100% - 12px); max-width: calc(100% - 12px); max-height: calc(100% - 12px);
+      max-height: calc(100dvh - 12px); padding: 12px; overflow: auto; overscroll-behavior: contain; }
+    dialog:is(#room-dialog, #surface, #staff, #research-board, #journal, #tasks, #power-board, #resource-balance) {
+      width: calc(100% - 12px); max-width: calc(100% - 12px); padding: 12px; }
+    dialog .surface-header, .room-inspection-head, .journal-heading { position: sticky; top: -12px; z-index: 2; }
+    dialog .surface-header { margin: -12px -12px 12px; padding: 6px 12px; }
+    dialog .surface-header h2 { font-size: 19px; }
+    .room-inspection-head, .journal-heading { background: #26362e; margin: -12px -12px 0; padding: 8px 12px; }
+    .journal-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--line); }
+    #journal .journal-heading form { display: block; margin: 0; }
+    #journal > form { display: none; }
+    #main-menu { max-height: calc(100dvh - 16px); max-width: calc(100% - 16px); }
+    .menu-illustration { min-height: clamp(70px, 16dvh, 120px); }
+    .menu-panel { padding: 16px; }
+    dialog select, dialog input[type="number"], .phone-picker select { max-width: 100%; min-height: 44px; font-size: 16px; }
+    #rations { margin-left: 3px; }
+    .party-picks { max-height: none; gap: 5px; }
+    #dispatch .party-picks label, #shelter-picks label { display: flex; align-items: center; gap: 6px;
+      min-height: 40px; padding: 4px 7px; border: 1px solid var(--line); background: #304238; }
+    .research-grid { grid-template-columns: minmax(0, 1fr); }
+    .research-controls { display: grid; grid-template-columns: minmax(0, 1fr); gap: 5px; }
+    .research-controls select { width: 100%; }
+    .skill-row { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) auto; gap: 5px; }
+    .skill-row b, .staff-detail small { overflow-wrap: anywhere; }
+    .shift-control { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    #notice { width: max-content; bottom: max(8px, env(safe-area-inset-bottom)); }
+  }
+  @media (max-width: 560px) {
+    .masthead .playback { width: 100%; display: grid; grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(44px, 1fr)); }
+    .playback .control + .control { min-width: 0; }
+    .command-column .command { display: grid; justify-items: center; align-content: center; gap: 2px; }
+  }
 </style>
 </head>
 <body>
@@ -549,6 +615,10 @@
       <button type="button" class="control" id="resource-balance-button" aria-haspopup="dialog">Balanço</button>
       <span id="lift-status" hidden></span>
     </section>
+      <div class="bunker-touch phone-only">
+        <label class="phone-picker"><span id="touch-lot-label">Cômodos e obras</span><select id="touch-lot"></select></label>
+        <button type="button" class="control" id="bunker-zoom" aria-controls="cutaway-view" aria-pressed="false">Aproximar</button>
+      </div>
       <div class="viewport" id="cutaway-view">
         <div class="cutaway">
           <canvas id="bunker" width="960" height="451" role="img" aria-label="Vista lateral do bunker com moradores caminhando entre os cômodos e usando o elevador"></canvas>
@@ -559,6 +629,7 @@
     <div class="floor-key"><span id="outside-use"></span><span>N1 · exposto ao frio</span><span>N2 · seco</span><span>N3–4 · umidade crescente</span></div>
     <section id="build-catalog" aria-label="Catálogo de construções" hidden>
       <div id="categories" class="categories" aria-label="Categorias"></div>
+      <label class="phone-picker phone-only catalog-picker">Categoria<select id="touch-category"></select></label>
       <div class="room-list" id="room-list"></div>
       <button class="control" id="propose-building" hidden>Pedir proposta de obra</button>
       <section class="task-board" id="work-queue" hidden><h3>Fila de obras</h3>
@@ -707,11 +778,15 @@
   </div>
   <div class="staff-layout">
     <div id="staff-list" class="staff-list" aria-label="Lista de moradores"></div>
+    <label class="phone-picker phone-only">Morador<select id="touch-resident"></select></label>
     <section id="staff-detail" class="staff-detail" aria-label="Ficha do morador"></section>
   </div>
 </dialog>
 <dialog id="journal" aria-labelledby="journal-title">
-  <h2 id="journal-title">Diário da colônia</h2>
+  <div class="journal-heading">
+    <h2 id="journal-title">Diário da colônia</h2>
+    <form method="dialog" class="phone-only"><button class="control">Fechar</button></form>
+  </div>
   <section class="journal-section">
     <h3>Futuro da colônia</h3>
     <div id="legacy-list"></div>
@@ -3126,14 +3201,19 @@ function renderStaff() {
   byId('ration-info').textContent = rationPolicies[state.rations].note;
   const list = byId('staff-list');
   list.replaceChildren();
+  const picker = byId('touch-resident');
+  picker.replaceChildren();
   residentIds().forEach(id => {
     const [color] = residentAppearance(id);
     const status = state.sheltered[id] !== undefined ? 'No posto ' + sectorName(state.sheltered[id]) :
       !home.has(id) ? 'Em viagem' : childStage(id) ?? (state.injuries[id] ? 'Em recuperação' : apprenticeshipOf(id) ?
         'Em aprendizado' : !onShift(id) ? 'Em descanso' : state.training[id] ? 'Em treino' : duties[duty(id)][0]);
     addStaffTab(list, id, residentName(id), status, color, childStage(id) || awaitingProfession(id) ? undefined : professionFor(id));
+    picker.append(new Option(residentName(id) + ' · ' + status, String(id)));
   });
   addStaffTab(list, 'animals', 'Animais', state.animals.length + ' no abrigo', '#d3a680');
+  picker.append(new Option('Animais · ' + state.animals.length + ' no abrigo', 'animals'));
+  picker.value = String(staffSelected);
   if (staffSelected === 'animals') renderAnimalCare();
   else renderResidentFile(staffSelected, home.has(staffSelected));
 }
@@ -7054,6 +7134,7 @@ function refreshConstruction() {
     slot.button.setAttribute('aria-label', label);
     slot.button.title = label;
   });
+  renderTouchLots();
   for (const button of byId('room-list').children) {
     button.setAttribute('aria-pressed', button.dataset.room === selected);
   }
@@ -7073,6 +7154,19 @@ function refreshConstruction() {
   renderIncident();
 }
 
+function renderTouchLots() {
+  const picker = byId('touch-lot');
+  byId('touch-lot-label').textContent = selected ? 'Lote para ' + rooms[selected].name : 'Cômodos e obras';
+  const options = slots.flatMap((slot, id) => {
+    const occupied = state.rooms[id] || state.works[id];
+    if (selected ? occupied || !canPlace(selected, slot) : !occupied) return [];
+    return [new Option(slot.button.getAttribute('aria-label'), String(id))];
+  });
+  picker.replaceChildren(new Option(selected ? 'Escolha onde construir' : 'Inspecionar cômodo', ''), ...options);
+  picker.value = '';
+  picker.disabled = options.length === 0;
+}
+
 function setConstructionOpen(open) {
   byId('build-catalog').hidden = !open;
   byId('build-button').setAttribute('aria-expanded', open);
@@ -7080,6 +7174,10 @@ function setConstructionOpen(open) {
     selected = null;
     refreshConstruction();
   }
+}
+
+function isPhoneLayout() {
+  return window.matchMedia?.('(max-width: 675px)').matches ?? false;
 }
 
 function setupConstruction() {
@@ -7098,6 +7196,8 @@ function setupConstruction() {
     slot.button = button;
     byId('slots').append(button);
   });
+  const picker = byId('touch-category');
+  picker.replaceChildren(...categories.map(name => new Option(name, name)));
   for (const name of categories) {
     const button = document.createElement('button');
     button.className = 'control';
@@ -7114,6 +7214,7 @@ function setupConstruction() {
 function renderCatalog() {
   const list = byId('room-list');
   list.replaceChildren();
+  byId('touch-category').value = category;
   for (const button of byId('categories').children) {
     button.setAttribute('aria-pressed', button.dataset.category === category);
   }
@@ -7134,6 +7235,7 @@ function renderCatalog() {
       }
       selected = selected === key ? null : key;
       refreshConstruction();
+      if (selected && isPhoneLayout()) byId('touch-lot-label').scrollIntoView({ block: 'center' });
     };
     list.append(button);
   }
@@ -8566,6 +8668,26 @@ byId('build-button').onclick = () => {
   setConstructionOpen(opening);
   if (opening) byId('build-catalog').scrollIntoView({ block: 'nearest' });
 };
+byId('touch-category').onchange = event => {
+  category = event.target.value;
+  renderCatalog();
+};
+byId('touch-lot').onchange = event => {
+  const { value } = event.target;
+  if (!value) return;
+  event.target.value = '';
+  buildSlot(Number(value));
+};
+byId('bunker-zoom').onclick = () => {
+  const view = byId('cutaway-view');
+  const button = byId('bunker-zoom');
+  const detailed = view.dataset.zoom !== 'detail';
+  const center = view.scrollWidth ? (view.scrollLeft + view.clientWidth / 2) / view.scrollWidth : .5;
+  view.dataset.zoom = detailed ? 'detail' : 'overview';
+  button.setAttribute('aria-pressed', String(detailed));
+  button.textContent = detailed ? 'Visão geral' : 'Aproximar';
+  view.scrollLeft = detailed ? center * view.scrollWidth - view.clientWidth / 2 : 0;
+};
 byId('propose-building').onclick = () => requestInitiative(constructionInitiative(selected));
 byId('propose-room').onclick = () => requestInitiative(roomInitiative(inspected));
 byId('upgrade-room').onclick = () => startRoomUpgrade(inspected);
@@ -8601,6 +8723,11 @@ byId('raid-stash').onclick = () => prepareRaid('stashed');
 byId('staff-button').onclick = () => {
   renderStaff();
   byId('staff').showModal();
+};
+byId('touch-resident').onchange = event => {
+  staffSelected = event.target.value === 'animals' ? 'animals' : Number(event.target.value);
+  renderStaff();
+  byId('touch-resident').focus();
 };
 byId('research-button').onclick = () => openResearch();
 byId('research-staff').onclick = () => {

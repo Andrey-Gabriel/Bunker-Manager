@@ -121,6 +121,10 @@
   .sound-setting output { font-variant-numeric: tabular-nums; }
   .motion-setting { display: flex; align-items: center; gap: 7px; margin-top: 10px; min-height: 32px; font-size: 13px; }
   .motion-setting input { accent-color: #405746; }
+  .scenario-options { display: grid; gap: 5px; margin-top: 10px; }
+  .scenario-options :is(input,select) { min-height: 36px; padding: 5px; }
+  body[data-large-text] dialog :is(p,li,label,small,.control,select,input,summary,output) { font-size: max(1em, 15px); }
+  body[data-large-text] dialog { font-size: 16px; }
   .district { display: grid; gap: 4px; margin: 10px 0; }
   .district label { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
   .resident-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
@@ -717,6 +721,7 @@
           <button type="button" class="control" id="menu-new">Novo jogo</button>
           <button type="button" class="control" id="menu-guide">Como jogar</button>
           <button type="button" class="control" id="menu-transfer">Transferir partida</button>
+          <button type="button" class="control" id="menu-sync">Sincronização</button>
         </div>
         <section class="menu-settings" aria-labelledby="menu-settings-title">
           <h3 id="menu-settings-title">Configurações</h3>
@@ -726,11 +731,19 @@
           <div class="sound-setting"><label for="alert-volume">Alertas e efeitos</label><output for="alert-volume" id="alert-volume-value">100%</output>
             <input type="range" min="0" max="100" id="alert-volume" value="100"></div>
           <label class="motion-setting"><input type="checkbox" id="reduced-motion"> Reduzir movimento</label>
+          <label class="motion-setting"><input type="checkbox" id="large-text"> Texto maior nos painéis</label>
         </section>
       </section>
       <section id="menu-scenarios" hidden>
         <h3>Escolha um começo</h3>
         <div class="scenario-list" id="scenario-list"></div>
+        <div class="scenario-options">
+          <label for="menu-difficulty">Dificuldade</label>
+          <select id="menu-difficulty"><option value="story">Tranquila</option><option value="normal" selected>Padrão</option><option value="hard">Severa</option></select>
+          <label for="menu-map-code">Código do mapa</label><input id="menu-map-code" maxlength="24" placeholder="Aleatório">
+        </div>
+        <p>Tranquila reduz o consumo e os riscos. Severa aumenta a pressão sobre as reservas, as viagens e os incidentes.</p>
+        <label id="menu-ruins-option" hidden><input type="checkbox" id="menu-ruins"> Incluir vestígios da última colônia</label>
         <label><input type="checkbox" id="menu-guided"> Primeiro turno guiado</label>
         <div class="menu-actions">
           <button type="button" class="control primary" id="menu-scenario-start">Iniciar partida</button>
@@ -785,6 +798,25 @@
           <button type="button" class="control" data-menu-back>Voltar</button>
         </div>
       </section>
+      <section id="menu-cloud" hidden>
+        <h3>Sincronização</h3>
+        <p>Use o mesmo endereço e código de conta em cada aparelho. Guarde o código em local seguro.</p>
+        <div class="scenario-options">
+          <label for="cloud-address">Endereço do serviço</label><input id="cloud-address" type="url" placeholder="https://sync.exemplo.com">
+          <label for="cloud-token">Código privado da conta</label><input id="cloud-token" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="menu-actions">
+          <button type="button" class="control" id="cloud-create">Gerar código de conta</button>
+          <button type="button" class="control primary" id="cloud-connect">Ativar sincronização</button>
+          <button type="button" class="control" id="cloud-disconnect">Desativar neste aparelho</button>
+          <button type="button" class="control" data-menu-back>Voltar</button>
+        </div>
+        <p id="cloud-status" role="status"></p>
+        <div class="menu-actions" id="cloud-conflict" hidden>
+          <button type="button" class="control" id="cloud-use-remote">Usar a partida da nuvem</button>
+          <button type="button" class="control" id="cloud-use-local">Enviar a partida deste aparelho</button>
+        </div>
+      </section>
     </div>
     <div class="menu-illustration" aria-hidden="true">
       <canvas id="menu-art" width="960" height="245"></canvas>
@@ -836,6 +868,8 @@
         <select id="mission-focus"></select>
         <div id="route-post-wrap" hidden><label for="route-post">Primeira parada</label><select id="route-post"></select></div>
         <div id="route-post-next-wrap" hidden><label for="route-post-next">Segunda parada</label><select id="route-post-next"></select></div>
+        <div id="route-target-wrap" hidden><label for="route-target">Segundo setor de coleta</label><select id="route-target"></select></div>
+        <label id="route-drop-wrap" hidden><input id="route-drop" type="checkbox"> Deixar um terço da carga no último posto</label>
         <div class="cargo-fields" id="cargo-fields" hidden>
           <label for="cargo-food">Comida<input id="cargo-food" type="number" min="0" max="45" step="1" value="0"></label>
           <label for="cargo-water">Água<input id="cargo-water" type="number" min="0" max="45" step="1" value="0"></label>
@@ -933,6 +967,7 @@
     <form method="dialog"><button class="control">Fechar</button></form>
   </div>
   <p id="resource-balance-intro">Projeção para um dia no ritmo atual. Mudanças de turno, luz do sol, obras, expedições e incidentes alteram o estoque.</p>
+  <p class="bunker-panel" id="season-outlook"></p>
   <section id="system-diagnostics" aria-labelledby="system-diagnostics-title" hidden>
     <h3 id="system-diagnostics-title">Sistemas em atenção</h3>
     <div id="system-issues"></div>
@@ -1029,6 +1064,10 @@
     <p id="room-specialty-status"></p>
     <div id="room-specialty-options"></div>
   </section>
+  <section class="bunker-panel" id="room-backup" hidden aria-labelledby="room-backup-title">
+    <h3 id="room-backup-title">Bateria dedicada</h3><p id="room-backup-status"></p>
+    <button type="button" class="control" id="room-backup-action"></button>
+  </section>
   <section class="bunker-panel" id="room-school" hidden aria-label="Aulas da escola">
     <label for="school-course">Matéria</label>
     <select id="school-course"></select>
@@ -1091,7 +1130,6 @@ const rooms = {
   mirante: { name: 'Posto de vigia', category: 'Superfície', hours: 5, cost: 11, color: '#b0b091', detail: 'Acelera batedores e avisa sobre ameaças' },
   isolamento: { name: 'Isolamento térmico', category: 'Infraestrutura', hours: 5, cost: 12, color: '#d7ad77', detail: 'Protege este andar do frio', art: 'caldeira' },
   dreno: { name: 'Drenagem', category: 'Infraestrutura', hours: 6, cost: 14, color: '#829b9f', detail: 'Reduz a umidade das reservas neste andar', art: 'coletor' },
-  costura: { name: 'Oficina de campo', category: 'Superfície', hours: 5, cost: 12, color: '#b89765', detail: 'Reduz o custo dos kits de expedição', art: 'oficina' },
   correio: { name: 'Entreposto', category: 'Superfície', hours: 6, cost: 14, color: '#a7b29a', detail: 'Melhora as trocas com os vizinhos', art: 'deposito' },
   barreira: { name: 'Portão reforçado', category: 'Defesa', hours: 8, cost: 18, color: '#c19c7b', detail: 'Segura invasões. Mais forte no nível 1.' },
   guarda: { name: 'Posto de guarda', category: 'Defesa', hours: 5, cost: 13, color: '#a4a683', detail: 'Aumenta a prontidão dos vigias de plantão' },
@@ -1127,10 +1165,7 @@ const rooms = {
   trocador: { name: 'Recuperador de calor', category: 'Infraestrutura', hours: 7, cost: 17, color: '#c2a181', detail: 'Recupera calor das máquinas e reduz o custo do aquecimento.', art: 'caldeira' },
   baliza: { name: 'Baliza de acolhimento', category: 'Superfície', hours: 6, cost: 14, color: '#d4b387', detail: 'Atrai visitantes com mais frequência enquanto há energia.' },
   forragem: { name: 'Horta de forragem', category: 'Animais', hours: 5, cost: 12, color: '#b2ac77', detail: 'Usa um pouco de água para diminuir a comida gasta com animais.' },
-  briefing: { name: 'Sala de planejamento', category: 'Superfície', hours: 6, cost: 14, color: '#92aaa3', detail: 'Um batedor no abrigo reduz os riscos das expedições que saem.', art: 'cartografia' },
-  simulador: { name: 'Sala de simulação', category: 'Pesquisa', hours: 7, cost: 16, color: '#82b3ac', detail: 'Treinos nas salas de treinamento ficam 25% mais rápidos.', art: 'laboratorio' },
   escola: { name: 'Escola', category: 'Moradia', hours: 6, cost: 14, color: '#d4b178', detail: 'Ensina até 4 crianças por turma. As aulas acontecem das 8h às 14h com um professor e energia' },
-  salaEstudos: { name: 'Sala de estudos', category: 'Pesquisa', hours: 5, cost: 13, color: '#b8bd91', detail: 'Uma sala ligada aumenta em 25% o aprendizado nas escolas', art: 'biblioteca' },
   sementeira: { name: 'Sementeira', category: 'Produção', hours: 6, cost: 15, color: '#a8bd78', detail: 'Com um selecionador e energia, recupera parte da colheita das hortas no inverno', art: 'horta' },
   centralManutencao: { name: 'Central de manutenção', category: 'Infraestrutura', hours: 7, cost: 17, color: '#ba966c', detail: 'Um técnico no local acelera reparos do elevador sem mudar o modo da oficina', art: 'oficina' },
   estacaoTempo: { name: 'Estação meteorológica', category: 'Superfície', hours: 6, cost: 16, color: '#a1b3ca', detail: 'Um observador reduz os atrasos e riscos de viagens no inverno. Mostra a próxima mudança de estação', art: 'mirante' },
@@ -1144,6 +1179,8 @@ const rooms = {
   rampaCarga: { name: 'Rampa de carga', category: 'Superfície', hours: 6, cost: 15, color: '#a6a58d',
     detail: 'Acrescenta 4 unidades à carga das expedições na partida. O bônus vale uma vez por viagem' }
 };
+const retiredRooms = { costura: 'oficina', briefing: 'cartografia', simulador: 'academia', salaEstudos: 'biblioteca' };
+const mergedSkills = { soldagem: 'mecanica', triagem: 'cuidado', rastreio: 'busca' };
 const maxRoomLevel = 3;
 const outputUpgrade = .20;
 const generatorUpgrade = .30;
@@ -1188,6 +1225,7 @@ const specializationCost = 6;
 const pactRestThreshold = 55;
 const colonyPacts = {
   water: { title: 'Reserva de água', condition: () => state.resources.water <= 24 },
+  bed: { title: 'Cama de emergência', condition: () => freeBeds() >= 1 && freeBeds() <= 2 },
   rest: { title: 'Descanso protegido', condition: () => Object.values(state.restRequests).some(request => request.asked !== undefined) ||
     Object.values(state.overtimeWorked).some(ticks => ticks >= 18) }
 };
@@ -1203,8 +1241,15 @@ const roomSpecialties = {
       output: { normal: .85, parts: 1.4, kits: 1.4, repair: .85 } },
     service: { name: 'Manutenção de emergência', detail: '+65% em reparos · −10% em materiais e −18% nos lotes.',
       output: { normal: .9, parts: .82, kits: .82, repair: 1.65 } }
+  },
+  enfermaria: {
+    standard: { name: 'Clínica geral', detail: 'Mantém o ritmo normal de cuidados.' },
+    trauma: { name: 'Atendimento de trauma', detail: '+35% no tratamento de ferimentos · −15% na recuperação da saúde coletiva.', injury: 1.35, health: .85 },
+    community: { name: 'Saúde preventiva', detail: '+25% na saúde coletiva · −15% no tratamento de ferimentos.', injury: .85, health: 1.25 }
   }
 };
+const backupCapacity = 6;
+const backupRooms = new Set(['cisterna', 'enfermaria', 'recuperacao', 'radio']);
 // Category controls where a plan is listed. Placement describes its physical requirements.
 const exteriorRooms = new Set(['solar', 'coletor', 'mirante', 'barreira', 'defesa', 'sucata', 'correio',
   'galinheiro', 'estabulo', 'cavalaria', 'asinario', 'torreAgua', 'turbina', 'silo', 'depositoCampo', 'pomar', 'baliza', 'forragem', 'estacaoTempo',
@@ -1239,9 +1284,6 @@ const researchPlans = Object.fromEntries(Object.entries(researchTopics).flatMap(
 Object.assign(researchPlans, {
   trocador: { group: 'rede', hours: 19, cost: 10, after: 'estabilizador' },
   baliza: { group: 'protecao', hours: 16, cost: 8, after: 'alarme' },
-  briefing: { group: 'rotas', hours: 14, cost: 8, after: 'cartografia' },
-  simulador: { group: 'processos', hours: 16, cost: 9, after: 'bancada' },
-  salaEstudos: { title: 'Pedagogia', group: 'educacao', hours: 11, cost: 6 },
   lavanderia: { title: 'Higiene no abrigo', group: 'educacao', hours: 10, cost: 6 },
   sementeira: { title: 'Conservação de sementes', group: 'cultivo', hours: 14, cost: 8 },
   centralManutencao: { title: 'Inspeção de máquinas', group: 'rede', hours: 16, cost: 9, after: 'bateria' },
@@ -1253,12 +1295,10 @@ const duties = {
   obras: ['Alvenaria', 'Trabalha nas obras em andamento.'],
   carpintaria: ['Carpintaria', 'Acelera obras de madeira, como dormitórios, depósitos e cercados.'],
   cultivo: ['Cultivo', 'Cuida das hortas, estufas e bandejas de cogumelos.'],
-  mecanica: ['Mecânica', 'Produz materiais, peças e kits na oficina ou ajuda no reparo do elevador.'],
-  soldagem: ['Soldagem', 'Recupera peças no pátio de reciclagem.'],
+  mecanica: ['Mecânica', 'Trabalha na oficina, no pátio de reciclagem e em reparos.'],
   eletrica: ['Eletricidade', 'Cuida apenas da geração de energia.'],
   hidraulica: ['Hidráulica', 'Mantém cisternas e coletores rendendo mais.'],
-  cuidado: ['Medicina', 'Atende moradores na enfermaria.'],
-  triagem: ['Triagem', 'Melhora o atendimento de pessoas doentes no portão.'],
+  cuidado: ['Medicina', 'Atende feridos na enfermaria e ajuda a receber visitantes doentes.'],
   culinaria: ['Culinária', 'Reduz desperdício na cozinha e melhora as refeições.'],
   conservacao: ['Conservação', 'Diminui perdas de mantimentos por umidade.'],
   veterinaria: ['Veterinária', 'Trata animais na clínica veterinária.'],
@@ -1276,12 +1316,10 @@ const skillSpecs = {
   obras: ['Alvenaria', 'Reduz o tempo de obras de alvenaria e metal.', 'Ofícios'],
   carpintaria: ['Carpintaria', 'Reduz o tempo de obra das estruturas de madeira.', 'Ofícios'],
   cultivo: ['Cultivo', 'Aumenta a colheita de plantas e cogumelos.', 'Ofícios'],
-  mecanica: ['Mecânica', 'Produz mais materiais na oficina.', 'Ofícios'],
-  soldagem: ['Soldagem', 'Recupera mais materiais no pátio de reciclagem.', 'Ofícios'],
+  mecanica: ['Mecânica', 'Produz mais materiais na oficina e no pátio de reciclagem.', 'Ofícios'],
   eletrica: ['Eletricidade', 'Aumenta a geração elétrica instalada.', 'Ofícios'],
   hidraulica: ['Hidráulica', 'Aumenta água captada por cisternas e coletores.', 'Ofícios'],
-  cuidado: ['Medicina', 'Melhora o tratamento de pessoas na enfermaria.', 'Colônia'],
-  triagem: ['Triagem', 'Reduz custos e perdas de saúde ao receber visitantes.', 'Colônia'],
+  cuidado: ['Medicina', 'Melhora o tratamento na enfermaria e o atendimento no portão.', 'Colônia'],
   culinaria: ['Culinária', 'Gasta menos comida e melhora o ânimo nas refeições.', 'Colônia'],
   conservacao: ['Conservação', 'Protege os estoques contra a umidade.', 'Colônia'],
   veterinaria: ['Veterinária', 'Acelera a recuperação de animais.', 'Colônia'],
@@ -1289,10 +1327,9 @@ const skillSpecs = {
   pesquisa: ['Pesquisa', 'Faz o estudo ativo avançar no laboratório.', 'Colônia'],
   negociacao: ['Negociação', 'Negocia descontos nas trocas.', 'Colônia'],
   campo: ['Cartografia', 'Reduz o tempo de reconhecimento e o risco da rota.', 'Campo'],
-  busca: ['Vasculha', 'Aumenta os suprimentos recuperados em expedições.', 'Campo'],
+  busca: ['Busca e rastreio', 'Aumenta os suprimentos recuperados e acelera a localização de animais.', 'Campo'],
   manejo: ['Condução', 'Reduz o tempo de viagem com cavalos e burros.', 'Campo'],
   primeirosCampo: ['Socorro em campo', 'Reduz ferimentos sofridos fora do bunker.', 'Campo'],
-  rastreio: ['Rastreio', 'Encurta missões para localizar animais.', 'Campo'],
   ensino: ['Ensino', 'Acelera o aprendizado das crianças na escola.', 'Colônia'],
   sementes: ['Seleção de sementes', 'Reduz a perda de colheita das hortas no inverno.', 'Ofícios'],
   manutencaoPreventiva: ['Manutenção preventiva', 'Acelera o conserto do elevador na central de manutenção.', 'Ofícios'],
@@ -1301,15 +1338,15 @@ const skillSpecs = {
 };
 const practiceTools = {
   obras: 'kit de alvenaria', carpintaria: 'plaina e esquadro', cultivo: 'bandeja de germinação', mecanica: 'chaves de bancada',
-  soldagem: 'bancada de solda', eletrica: 'multímetro', hidraulica: 'bomba didática', cuidado: 'manequim de atendimento',
-  triagem: 'cartões de triagem', culinaria: 'balança de cozinha', conservacao: 'medidor de umidade',
+  eletrica: 'multímetro', hidraulica: 'bomba didática', cuidado: 'manequim de atendimento',
+  culinaria: 'balança de cozinha', conservacao: 'medidor de umidade',
   veterinaria: 'kit veterinário', vigia: 'binóculo', pesquisa: 'caderno de laboratório', negociacao: 'caderno de trocas',
   campo: 'bússola', busca: 'lanterna e bolsa de busca', manejo: 'cabresto de treino',
-  primeirosCampo: 'estojo de simulação', rastreio: 'guia de pegadas',
+  primeirosCampo: 'estojo de simulação',
   ensino: 'quadro de exercícios', sementes: 'envelopes de sementes', manutencaoPreventiva: 'relógio comparador',
   meteorologia: 'barômetro', higiene: 'termômetro de lavagem'
 };
-const woodenRooms = new Set(['quarto', 'alojamento', 'recreacao', 'deposito', 'silo', 'galinheiro', 'canil', 'estabulo', 'cavalaria', 'asinario', 'biblioteca', 'arquivo', 'escola', 'salaEstudos']);
+const woodenRooms = new Set(['quarto', 'alojamento', 'recreacao', 'deposito', 'silo', 'galinheiro', 'canil', 'estabulo', 'cavalaria', 'asinario', 'biblioteca', 'arquivo', 'escola']);
 const schoolSubjects = { pesquisa: 'Leitura e anotações', cultivo: 'Horta e ciências', carpintaria: 'Medidas e marcenaria', cuidado: 'Saúde e primeiros cuidados' };
 const schoolCapacity = 4;
 const schoolSubjectLimit = 30;
@@ -1323,11 +1360,11 @@ const professionMultiplier = 1.7;
 const professions = {
   construcao: { name: 'Construção civil', icon: '▧', skills: ['obras', 'carpintaria'] },
   horta: { name: 'Agricultura', icon: '≋', skills: ['cultivo', 'conservacao', 'sementes'] },
-  enfermagem: { name: 'Enfermagem', icon: '✚', skills: ['cuidado', 'triagem', 'primeirosCampo'] },
-  reconhecimento: { name: 'Reconhecimento', icon: '⌖', skills: ['campo', 'busca', 'rastreio', 'meteorologia'] },
-  manutencao: { name: 'Manutenção industrial', icon: '⊕', skills: ['mecanica', 'soldagem', 'eletrica', 'manutencaoPreventiva'] },
+  enfermagem: { name: 'Enfermagem', icon: '✚', skills: ['cuidado', 'primeirosCampo'] },
+  reconhecimento: { name: 'Reconhecimento', icon: '⌖', skills: ['campo', 'busca', 'meteorologia'] },
+  manutencao: { name: 'Manutenção industrial', icon: '⊕', skills: ['mecanica', 'eletrica', 'manutencaoPreventiva'] },
   saneamento: { name: 'Saneamento', icon: '◒', skills: ['hidraulica', 'conservacao', 'higiene'] },
-  veterinaria: { name: 'Veterinária', icon: '◇', skills: ['veterinaria', 'rastreio', 'manejo'] },
+  veterinaria: { name: 'Veterinária', icon: '◇', skills: ['veterinaria', 'busca', 'manejo'] },
   cozinha: { name: 'Cozinha', icon: '◫', skills: ['culinaria', 'conservacao'] },
   seguranca: { name: 'Segurança', icon: '▥', skills: ['vigia', 'primeirosCampo'] },
   laboratorio: { name: 'Laboratório', icon: '⚗', skills: ['pesquisa', 'eletrica'] },
@@ -1397,6 +1434,8 @@ const scenarios = {
   outpost: { title: 'Posto herdado', detail: 'Parte da comida, água e materiais já está num posto próximo. Organize a primeira retirada.', clock: 48,
     resources: { food: 30, water: 29, materials: 36 }, post: true, intro: 'O grupo anterior deixou uma parte das reservas num posto da região.' }
 };
+const difficulties = { story: { name: 'Tranquila', need: .9, hazard: .85 }, normal: { name: 'Padrão', need: 1, hazard: 1 },
+  hard: { name: 'Severa', need: 1.1, hazard: 1.12 } };
 const injuryTypes = [
   { label: 'Entorse', work: 70 },
   { label: 'Contusão', work: 95 },
@@ -1523,7 +1562,8 @@ const landmarks = {
   garage: { name: 'Garagem', icon: '▦', aim: 'Peças e baterias', loot: { materials: 11, power: 10 } },
   clinic: { name: 'Posto de saúde', icon: '✚', aim: 'Suprimentos médicos', loot: { health: 15, water: 6 } },
   farm: { name: 'Fazenda', icon: '≋', aim: 'Comida e água', loot: { food: 12, water: 7 } },
-  wild: { name: 'Área desconhecida', icon: '◌', aim: 'Busca por suprimentos ou pessoas', loot: { food: 5, water: 4, materials: 5 }, rescue: .12 }
+  wild: { name: 'Área desconhecida', icon: '◌', aim: 'Busca por suprimentos ou pessoas', loot: { food: 5, water: 4, materials: 5 }, rescue: .12 },
+  ruins: { name: 'Bunker anterior', icon: '⌑', aim: 'Vestígios de uma colônia anterior', loot: { food: 3, water: 4, materials: 8 } }
 };
 const siteProjects = {
   well: { name: 'Estação de água restaurada', partner: 'camp', resource: 'water', yield: 12, cost: 12 },
@@ -1531,16 +1571,23 @@ const siteProjects = {
   factory: { name: 'Oficina regional', partner: 'village', resource: 'materials', yield: 8, cost: 14 }
 };
 
-function newWorld() {
+function mapRandom(code) {
+  let seed = 2166136261;
+  for (const character of code) seed = Math.imul(seed ^ character.charCodeAt(0), 16777619);
+  return () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 4294967296);
+}
+
+function newWorld(random = Math.random) {
+  const grounds = Object.keys(groundTypes);
   const tiles = Array.from({ length: mapWidth * 5 }, () => ({
-    ground: choose(Object.keys(groundTypes)),
+    ground: grounds[Math.floor(random() * grounds.length)],
     site: 'wild',
     scouted: false,
     visited: false
   }));
   const available = tiles.map((_, id) => id).filter(id => id !== baseTile);
-  for (const key of Object.keys(landmarks).filter(key => key !== 'wild')) {
-    const [id] = available.splice(Math.floor(Math.random() * available.length), 1);
+  for (const key of Object.keys(landmarks).filter(key => !['wild', 'ruins'].includes(key))) {
+    const [id] = available.splice(Math.floor(random() * available.length), 1);
     tiles[id].site = key;
   }
   if (!available.some(id => tiles[id].ground === 'plains')) tiles[available[0]].ground = 'plains';
@@ -1855,13 +1902,15 @@ function generateFounders(size) {
   }]));
 }
 
-function fresh(scenario = 'normal') {
+function fresh(scenario = 'normal', options = {}) {
   const people = 4;
   const config = scenarios[scenario] || scenarios.normal;
   const { clock } = config;
   const startDay = Math.floor(clock / 144) + 1;
   const stamp = fmt(Math.floor(clock / 6) % 24) + ':' + fmt(clock % 6 * 10);
-  const world = newWorld();
+  const random = options.mapCode ? mapRandom(options.mapCode) : Math.random;
+  const pick = items => items[Math.floor(random() * items.length)];
+  const world = newWorld(random);
   const outposts = {};
   if (config.reveal) {
     let key = world.findIndex(tile => tile.site === config.reveal);
@@ -1869,7 +1918,7 @@ function fresh(scenario = 'normal') {
       const nearby = world.map((tile, id) => ({ tile, id })).filter(({ id }) =>
         id !== baseTile && distanceFromBase(id) <= 2);
       const accessible = nearby.filter(({ tile }) => tile.ground === 'plains' || tile.ground === 'woods');
-      const closer = choose(accessible.length ? accessible : nearby).id;
+      const closer = pick(accessible.length ? accessible : nearby).id;
       [world[key].site, world[closer].site] = [world[closer].site, world[key].site];
       key = closer;
     }
@@ -1878,13 +1927,19 @@ function fresh(scenario = 'normal') {
   if (config.post) {
     const nearby = world.map((tile, id) => ({ tile, id })).filter(({ tile, id }) =>
       id !== baseTile && tile.ground !== 'marsh' && distanceFromBase(id) <= 2);
-    const inherited = choose(nearby) || { id: baseTile - 1, tile: world[baseTile - 1] };
+    const inherited = pick(nearby) || { id: baseTile - 1, tile: world[baseTile - 1] };
     if (inherited.tile.ground === 'marsh') inherited.tile.ground = 'plains';
     inherited.tile.scouted = true;
     outposts[inherited.id] = { stock: { food: 10, water: 14, materials: 9 } };
   }
+  if (options.ruins) {
+    const site = pick(world.map((tile, id) => ({ tile, id })).filter(({ tile, id }) => tile.site === 'wild' &&
+      !outposts[id] && distanceFromBase(id) >= 1 && distanceFromBase(id) <= 3));
+    if (site) Object.assign(site.tile, { site: 'ruins', scouted: true, ruins: options.ruins });
+  }
   return {
     scenario,
+    difficulty: options.difficulty ?? 'normal', mapCode: options.mapCode ?? '',
     clock,
     resources: { food: 42, water: 46, power: 45, materials: 48, ...config.resources },
     morale: 74,
@@ -1897,6 +1952,7 @@ function fresh(scenario = 'normal') {
     schoolCourses: {},
     roomLevels: {},
     roomSpecialties: {},
+    roomBackups: {},
     oddJobs: {},
     initiatives: { offers: {}, dismissed: {} },
     liftFaultUntil: 0,
@@ -1918,6 +1974,7 @@ function fresh(scenario = 'normal') {
     orderClaims: {},
     fieldStocks: { medicine: 0, parts: 0, kits: 0 },
     agreements: {},
+    exchange: null,
     outposts,
     sheltered: {},
     injuries: {},
@@ -1975,6 +2032,7 @@ function saveColony() {
   if (!campaignStarted) return false;
   try {
     localStorage.setItem(saveKey, JSON.stringify(colonySnapshot()));
+    queueCloudSync();
     return true;
   } catch {
     return false;
@@ -1998,16 +2056,35 @@ function decodeColony(saved) {
         !Number.isFinite(saved.health) || !Number.isFinite(saved.morale) ||
         !Array.isArray(saved.log) || !saved.log.every(entry => typeof entry?.message === 'string' && typeof entry.stamp === 'string')) return null;
     saved.works ??= {};
+    const converted = new Set();
+    if (saveRecord(saved.works)) {
+      for (const [lot, type] of Object.entries(saved.rooms)) if (Object.hasOwn(retiredRooms, type)) {
+        saved.rooms[lot] = retiredRooms[type];
+        converted.add(rooms[saved.rooms[lot]].name);
+      }
+      for (const work of Object.values(saved.works)) if (work && Object.hasOwn(retiredRooms, work.type)) {
+        work.cost ??= { costura: 12, briefing: 14, simulador: 16, salaEstudos: 13 }[work.type];
+        work.type = retiredRooms[work.type];
+        converted.add(rooms[work.type].name);
+      }
+    }
     if (!saveRecord(saved.works) ||
         !Object.entries(saved.rooms).every(([lot, type]) => validSavedRoom(lot, type)) ||
         !Object.entries(saved.works).every(([lot, work]) => validSavedRoom(lot, work?.type) &&
           Number.isFinite(work.remaining) && Number.isFinite(work.total) && work.total > 0)) return null;
+    if (converted.size) {
+      const stamp = 'D' + (Math.floor(saved.clock / 144) + 1) + ' ' + fmt(Math.floor(saved.clock / 6) % 24) +
+        ':' + fmt(saved.clock % 6 * 10);
+      saved.log = [{ stamp, message: 'Plantas atualizadas neste save · ' + [...converted].join(', ') + '.' }, ...saved.log].slice(0, 8);
+    }
     saved.buildAssignments ??= {};
     saved.roomModes ??= {};
     saved.schoolCourses ??= {};
     saved.roomLevels ??= {};
     saved.roomSpecialties = Object.fromEntries(Object.entries(saved.roomSpecialties || {}).filter(([lot, key]) =>
       saved.roomLevels[lot] === maxRoomLevel && Object.hasOwn(roomSpecialties[saved.rooms[lot]] || {}, key)));
+    saved.roomBackups = Object.fromEntries(Object.entries(saved.roomBackups || {}).filter(([lot, charge]) =>
+      backupRooms.has(saved.rooms[lot]) && Number.isFinite(charge) && charge >= 0 && charge <= backupCapacity));
     saved.oddJobs ??= {};
     saved.initiatives ??= { offers: {}, dismissed: {} };
     saved.liftFaultUntil ??= 0;
@@ -2036,6 +2113,8 @@ function decodeColony(saved) {
     if (!Array.isArray(saved.world) || saved.world.length !== mapWidth * 5 || !saved.world.every(tile =>
       Object.hasOwn(groundTypes, tile?.ground) && Object.hasOwn(landmarks, tile?.site))) return null;
     if (!Object.hasOwn(scenarios, saved.scenario)) saved.scenario = 'normal';
+    if (!Object.hasOwn(difficulties, saved.difficulty)) saved.difficulty = 'normal';
+    if (typeof saved.mapCode !== 'string') saved.mapCode = '';
     saved.injuries ??= {};
     saved.routes ??= {};
     saved.routeWorks = Object.fromEntries(Object.entries(saved.routeWorks || {}).filter(([id, partner]) =>
@@ -2044,6 +2123,8 @@ function decodeColony(saved) {
     saved.legacy ??= { path: null, streak: 0, completed: [] };
     saved.legacy.endings ??= {};
     if (!Number.isFinite(saved.recovery?.started)) saved.recovery = null;
+    else saved.recovery.floors = Array.isArray(saved.recovery.floors) ?
+      saved.recovery.floors.filter(level => Number.isInteger(level) && level >= 0 && level < 4) : [];
     if (saved.tutorial) {
       if (!Array.isArray(saved.tutorial.completed)) delete saved.tutorial;
       else saved.tutorial.completed = tutorialSteps.map(([key]) => key).filter(key => saved.tutorial.completed.includes(key));
@@ -2057,6 +2138,10 @@ function decodeColony(saved) {
       Number.isFinite(mission.returns) && Array.isArray(mission.party) && mission.party.every(id =>
         Number.isInteger(id) && id >= 0 && id < saved.people) &&
       (mission.load === undefined || Number.isInteger(mission.load) && mission.load > 0) &&
+      (mission.extraTile === undefined || Number.isInteger(mission.extraTile) && mission.extraTile >= 0 &&
+        mission.extraTile < saved.world.length && mission.extraTile !== mission.tile) &&
+      (mission.dropPost === undefined || Number.isInteger(mission.dropPost) && mission.dropPost >= 0 &&
+        mission.dropPost < saved.world.length) &&
       (mission.routeStops === undefined || Array.isArray(mission.routeStops) && mission.routeStops.length <= 2 &&
         mission.routeStops.every(id => Number.isInteger(id) && id >= 0 && id < saved.world.length)))) return null;
     saved.orders ??= {};
@@ -2064,6 +2149,8 @@ function decodeColony(saved) {
     saved.fieldStocks ??= { medicine: 0, parts: 0 };
     saved.fieldStocks.kits ??= 0;
     saved.agreements ??= {};
+    if (!exchangeRoles[saved.exchange?.neighbor] || !Number.isInteger(saved.exchange.resident) ||
+        saved.exchange.resident < 0 || saved.exchange.resident >= saved.people || !Number.isFinite(saved.exchange.until)) saved.exchange = null;
     saved.outposts ??= {};
     saved.sheltered ??= {};
     saved.stories ??= {};
@@ -2105,6 +2192,7 @@ function decodeColony(saved) {
         Number.isInteger(stormLot) && slots[stormLot]?.level > 0) ? { template, deadline, postId, stormLot } : null;
     }
     relocateExterior(saved);
+    migrateMergedSkills(saved);
     return saved;
   } catch {
     return null;
@@ -2117,6 +2205,37 @@ function saveRecord(value) {
 
 function validSavedRoom(lot, type) {
   return String(Number(lot)) === lot && Number.isInteger(Number(lot)) && Boolean(slots[lot]) && Object.hasOwn(rooms, type);
+}
+
+function migrateMergedSkills(saved) {
+  const translate = skill => Object.hasOwn(mergedSkills, skill) ? mergedSkills[skill] : skill;
+  const moveKeys = (data, combine) => {
+    if (!data) return;
+    for (const [from, to] of Object.entries(mergedSkills)) if (Object.hasOwn(data, from)) {
+      data[to] = combine(data[to], data[from]);
+      delete data[from];
+    }
+  };
+  moveKeys(saved.manuals, (left, right) => (left || 0) + right);
+  for (const table of Object.values(saved.experience)) moveKeys(table, (a, b) => Math.min(skillThresholds.at(-1), (a || 0) + b));
+  for (const table of Object.values(saved.tools)) moveKeys(table, (a, b) => a || b);
+  for (const [id, skill] of Object.entries(saved.duties)) saved.duties[id] = translate(skill);
+  for (const child of Object.values(saved.children)) for (const entry of [child.apprenticeship, child.graduation]) {
+    if (entry) entry.skill = translate(entry.skill);
+  }
+  for (const bond of Object.values(saved.bonds)) if (bond.mentorship) bond.mentorship.skill = translate(bond.mentorship.skill);
+  for (const order of [...Object.values(saved.oddJobs), ...Object.values(saved.initiatives.offers || {}), ...Object.values(saved.training)]) {
+    if (order.skill) order.skill = translate(order.skill);
+    if (order.role) order.role = translate(order.role);
+    if (Object.hasOwn(retiredRooms, order.type)) order.type = retiredRooms[order.type];
+  }
+  for (const key of Object.keys(retiredRooms)) {
+    const project = saved.research.projects[key];
+    if (project) {
+      saved.resources.materials += Number.isFinite(project.invested) ? project.invested : { briefing: 8, simulador: 9, salaEstudos: 6 }[key] || 0;
+      delete saved.research.projects[key];
+    }
+  }
 }
 
 function migrateResearch(saved) {
@@ -2241,7 +2360,7 @@ function operatingOutput(type, requirePower, condition) {
 const sectorDefinitions = {
   care: ['Suporte vital', new Set(['cisterna', 'enfermaria', 'recuperacao', 'ventilacao', 'caldeira', 'reciclagem', 'casaBombas', 'camara', 'clinicaAnimal', 'lavanderia'])],
   production: ['Produção e cozinha', new Set(['horta', 'hidroponia', 'estufa', 'oficina', 'sucata', 'cozinha', 'padaria', 'trocador', 'sementeira', 'centralManutencao'])],
-  services: ['Pesquisa, conforto e comunicação', new Set(['recreacao', 'academia', 'laboratorio', 'radio', 'baliza', 'alarme', 'escola', 'salaEstudos', 'estacaoTempo'])]
+  services: ['Pesquisa, conforto e comunicação', new Set(['recreacao', 'academia', 'laboratorio', 'radio', 'baliza', 'alarme', 'escola', 'estacaoTempo'])]
 };
 
 let gridDispatch, ambientMachine;
@@ -2285,9 +2404,10 @@ function gridAllocation() {
   }
   const reserve = state.resources.power;
   const generation = baseGeneration() * (1 + Math.min(.36, workerWeight(homeWorkers(), 'eletrica') * .055));
-  const basicUse = .10 + residentsAtHome().length * .035;
+  const basicUse = .10 + (residentsAtHome().length + Number(Boolean(state.exchange))) * .035;
   let available = reserve > 5 ? Infinity : Math.max(0, generation - basicUse + reserve * .08);
   const poweredLots = new Set();
+  const backupLoads = new Map();
   const sectorLoads = Object.fromEntries(Object.keys(sectorDefinitions).map(key => [key, { total: 0, powered: 0, renovating: 0 }]));
   const order = ['cisterna', 'horta', 'hidroponia', 'estufa', 'enfermaria', 'reciclagem', 'cozinha'];
   const priority = load => {
@@ -2304,13 +2424,20 @@ function gridAllocation() {
       status.renovating++;
       continue;
     }
-    if (state.grid[load.sector] === 'off' || load.consumption > available) continue;
+    if (state.grid[load.sector] === 'off' || load.consumption > available) {
+      if ((state.roomBackups[load.lot] ?? 0) >= load.consumption) {
+        poweredLots.add(load.lot);
+        backupLoads.set(load.lot, load.consumption);
+        status.powered++;
+      }
+      continue;
+    }
     poweredLots.add(load.lot);
     status.powered++;
     consumption += load.consumption;
     available -= load.consumption;
   }
-  return { poweredLots, sectorLoads, generation, consumption };
+  return { poweredLots, backupLoads, sectorLoads, generation, consumption };
 }
 
 function powerSectorActive(sector) {
@@ -2424,7 +2551,8 @@ function loadPresentation() {
     ambient: Number.isInteger(saved?.ambient) ? clamp(saved.ambient, 0, 100) : 100,
     alerts: Number.isInteger(saved?.alerts) ? clamp(saved.alerts, 0, 100) : 100,
     reduced: typeof saved?.reduced === 'boolean' ? saved.reduced :
-      Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
+      Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches),
+    largeText: saved?.largeText === true
   };
 }
 
@@ -2453,6 +2581,15 @@ function setupPresentation() {
   motion.onchange = () => {
     presentation.reduced = motion.checked;
     if (presentation.reduced) animationTime = 0;
+    save();
+  };
+  const textSize = byId('large-text');
+  const applyTextSize = () => document.body.toggleAttribute('data-large-text', presentation.largeText);
+  textSize.checked = presentation.largeText;
+  applyTextSize();
+  textSize.onchange = () => {
+    presentation.largeText = textSize.checked;
+    applyTextSize();
     save();
   };
 }
@@ -2487,8 +2624,9 @@ async function setGameSound(enabled, manual = false) {
 }
 
 function runProduction(apply = true) {
-  const result = { kitchens: 0, prepBonus: 0, storageBonus: 0, meals: 0, preserve: 0, workshops: 0 };
+  const result = { kitchens: 0, prepBonus: 0, storageBonus: 0, meals: 0, preserve: 0, workshops: 0, workshopBonus: 0 };
   let repair = 0;
+  let guest = state.exchange?.neighbor === 'village' ? 1 : 0;
   const floorsWithStaff = liftOutOfService() ? staffedFloors() : null;
   for (const [lot, type] of Object.entries(state.rooms)) {
     if (!productionModes[type] || !isRoomPowered(lot, type)) continue;
@@ -2505,6 +2643,8 @@ function runProduction(apply = true) {
       if (mode === 'preserve') result.preserve += Math.min(1, crew.length);
     } else if (mode === 'normal') {
       result.workshops += output;
+      result.workshopBonus += output * Math.min(.065, (specialtyOutput(crew, 'mecanica') + guest) * .013);
+      guest = 0;
     } else if (mode === 'repair') {
       repair += crew.length * 2 * output;
     } else if (apply && crew.length && state.resources.materials >= 3) {
@@ -2763,7 +2903,7 @@ function advanceSchool() {
     if (!attending.length) continue;
     const topic = schoolCourse(lot);
     const rate = .30 * (1 + (skillLevel(teacher, 'ensino') - 1) * .12) *
-      (operatingCount('salaEstudos', true) ? 1.25 : 1) * alertness(teacher);
+      (operatingCount('biblioteca') ? 1.15 : 1) * alertness(teacher);
     for (const student of attending) {
       const notes = state.children[student.id].studies ??= {};
       const previous = notes[topic] ?? 0;
@@ -3007,7 +3147,7 @@ function migrateFamilyPlans() {
 function canSupportFamily(bond) {
   return canPlanPregnancy(bond) && freeBeds() > 0 && nurseryVacancies() > 0 && !populationFull() &&
     state.resources.food >= pregnancySupplies.food && state.resources.water >= pregnancySupplies.water &&
-    !pactBlocksWater(pregnancySupplies.water);
+    !pactBlocksWater(pregnancySupplies.water) && !bedPactBlocks();
 }
 
 function proposeColonyPacts() {
@@ -3016,7 +3156,7 @@ function proposeColonyPacts() {
     const current = state.colonyPacts[key];
     if (current && (current.status !== 'declined' || current.until > state.clock)) continue;
     if (!definition.condition()) continue;
-    const minimum = key === 'water' ? Math.max(10, state.people * 2) : pactRestThreshold;
+    const minimum = key === 'water' ? Math.max(10, state.people * 2) : key === 'bed' ? 1 : pactRestThreshold;
     state.colonyPacts[key] = { status: 'offered', minimum };
     storyUpdate('Os moradores propuseram um acordo de ' + definition.title.toLowerCase() + '.');
   }
@@ -3032,6 +3172,10 @@ function waterPactCrossed(amount) {
 
 function pactBlocksWater(amount) {
   return pactRuleApplies('water', waterPactCrossed(amount)) && !(state.colonyPacts.water.exception > state.clock);
+}
+
+function bedPactBlocks() {
+  return pactRuleApplies('bed', freeBeds() <= 1) && !(state.colonyPacts.bed.exception > state.clock);
 }
 
 function usePactException(key, crossing) {
@@ -3054,6 +3198,7 @@ function renderColonyPacts() {
     title.textContent = definition.title + (pact.status === 'active' ? ' · em vigor' : ' · proposta');
     const text = document.createElement('p');
     text.textContent = key === 'water' ? 'Preservar ' + pact.minimum + ' L no bunker antes de enviar expedições ou separar provisões familiares.' :
+      key === 'bed' ? 'Manter a última cama livre para quem chega doente. A regra vale na portaria e ao planejar novas gestações.' :
       'Evitar plantões extras quando o cansaço do morador já estiver em 55% ou mais.';
     const actions = document.createElement('div');
     actions.className = 'choices';
@@ -3106,10 +3251,12 @@ function supportFamily(key) {
   const plan = state.familyPlans[key];
   if (plan?.status !== 'wish' || !canSupportFamily(state.bonds[key])) return;
   const crossing = waterPactCrossed(pregnancySupplies.water);
+  const lastBed = freeBeds() <= 1;
   applyEffects({ food: -pregnancySupplies.food, water: -pregnancySupplies.water });
   plan.status = 'expecting';
   plan.due = state.clock + 3 * 144;
   usePactException('water', crossing);
+  usePactException('bed', lastBed);
   bondMoment(state.bonds[key], 'familia', 'O abrigo reservou uma cama e uma vaga no berçário para a chegada de um bebê.');
   if (byId('journal').open) renderCommunityJournal();
 }
@@ -3145,6 +3292,7 @@ function renderCommunityJournal() {
       button.textContent = 'Reservar provisões e espaço';
       button.disabled = !canSupportFamily(bond);
       if (pactBlocksWater(pregnancySupplies.water)) text.textContent += ' A reserva acordada de água impede separar as provisões agora.';
+      if (bedPactBlocks()) text.textContent += ' A última cama está reservada para uma emergência.';
       button.onclick = () => supportFamily(key);
       row.append(button);
     }
@@ -3326,14 +3474,16 @@ function recoveryPlan() {
   const lots = medicalRooms();
   const medics = homeWorkers().filter(id => duty(id) === 'cuidado' && presentForCover(id) && canReachMedicalRoom(id, lots));
   const bedsByRoom = new Map(lots.map(lot => [lot, roomPlaces(state.rooms[lot], roomLevel(lot))]));
+  const treatmentLots = new Map();
   const treated = injured.filter(id => {
     const lot = lots.find(lot => bedsByRoom.get(lot) > 0 && canReachMedicalRoom(id, [lot]));
     if (lot === undefined) return false;
     bedsByRoom.set(lot, bedsByRoom.get(lot) - 1);
+    treatmentLots.set(id, lot);
     return true;
   });
   const aid = medics.reduce((sum, id) => sum + skillLevel(id, 'cuidado') * alertness(id) * .09, 0);
-  return { injured, medics, treated, base: beds() >= home.length ? .48 : .33,
+  return { injured, medics, treated, treatmentLots, base: beds() >= home.length ? .48 : .33,
     extra: .58 + Math.min(.48, aid) };
 }
 
@@ -3341,7 +3491,9 @@ function advanceRecovery() {
   if (!Object.keys(state.injuries).length) return;
   const plan = recoveryPlan();
   for (const id of plan.injured) {
-    state.injuries[id].left -= plan.base + (plan.treated.includes(id) ? plan.extra : 0);
+    const lot = plan.treatmentLots.get(id);
+    const injuryBonus = lot !== undefined ? (roomSpecialties.enfermaria[roomSpecialty(lot)]?.injury ?? 1) : 0;
+    state.injuries[id].left -= plan.base + plan.extra * injuryBonus;
     if (state.injuries[id].left > .001) continue;
     finishRecovery(id);
   }
@@ -3450,7 +3602,7 @@ function researcherStatus(id) {
 }
 
 function unlocked(type) {
-  return !researchPlans[type] || state.research.completed.includes(type);
+  return Object.hasOwn(rooms, type) && (!researchPlans[type] || state.research.completed.includes(type));
 }
 
 function assignedStudies() {
@@ -3616,8 +3768,7 @@ function practiceSkills(workers) {
   const practice = {
     cultivo: (operatingCount('horta', true) || operatingCount('estufa', true) || exteriorCount('estufa') || operatingCount('hidroponia', true)) ||
       (count('viveiro') && state.resources.water >= 4) || (count('pomar') && weather().sun > 0 && weather().index !== 3) ? .19 : 0,
-    mecanica: operatingCount('oficina', true) ? .20 : 0,
-    soldagem: operatingCount('sucata', true) ? .22 : 0,
+    mecanica: operatingCount('oficina', true) || operatingCount('sucata', true) ? .20 : 0,
     eletrica: count('gerador') || count('solar') || count('turbina') ? .18 : 0,
     hidraulica: operatingCount('cisterna', true) || count('coletor') ? .18 : 0,
     cuidado: operatingCount('enfermaria', true) && state.health < 99.5 ? .35 : 0,
@@ -3643,7 +3794,7 @@ function practiceSkills(workers) {
 function advanceTraining(sessions) {
   let finished = false;
   for (const [id, session] of sessions) {
-    session.left -= (count('simulador') ? 1.25 : 1) * alertness(Number(id));
+    session.left -= alertness(Number(id));
     if (session.left > 0) continue;
     gainExperience(Number(id), session.skill, 28);
     delete state.training[id];
@@ -3721,6 +3872,8 @@ function renderStaff() {
   const home = new Set(residentsAtHome());
   byId('rations').value = state.rations;
   byId('ration-info').textContent = rationPolicies[state.rations].note;
+  if (state.exchange) byId('ration-info').textContent += ' Intercâmbio ativo com ' + neighbors[state.exchange.neighbor].name +
+    ' · apoio em ' + exchangeRoles[state.exchange.neighbor][0].toLowerCase() + '.';
   const list = byId('staff-list');
   list.replaceChildren();
   const picker = byId('touch-resident');
@@ -3728,7 +3881,7 @@ function renderStaff() {
   residentIds().forEach(id => {
     const [color] = residentAppearance(id);
     const status = state.sheltered[id] !== undefined ? 'No posto ' + sectorName(state.sheltered[id]) :
-      !home.has(id) ? 'Em viagem' : childStage(id) ?? (state.injuries[id] ? 'Em recuperação' : apprenticeshipOf(id) ?
+      state.exchange?.resident === id ? 'Em intercâmbio' : !home.has(id) ? 'Em viagem' : childStage(id) ?? (state.injuries[id] ? 'Em recuperação' : apprenticeshipOf(id) ?
         'Em aprendizado' : !onShift(id) ? 'Em descanso' : state.training[id] ? 'Em treino' : duties[duty(id)][0]);
     addStaffTab(list, id, residentName(id), status, color, childStage(id) || awaitingProfession(id) ? undefined : professionFor(id));
     picker.append(new Option(residentName(id) + ' · ' + status, String(id)));
@@ -3797,7 +3950,7 @@ function renderResidentFile(id, home) {
   const detail = byId('staff-detail');
   detail.replaceChildren();
   const session = state.training[id];
-  const time = session ? duration(session.left / ((count('simulador') ? 1.25 : 1) * alertness(id))) : '';
+  const time = session ? duration(session.left / alertness(id)) : '';
   const profession = professionFor(id);
   const banner = document.createElement('div');
   banner.className = 'resident-banner';
@@ -3960,7 +4113,7 @@ function renderResidentFile(id, home) {
       (activeTraining().some(([person]) => Number(person) === id) ? ' de jogo. Feche a ficha para o tempo voltar a correr.' :
         ' · aguardando turno, sala ou energia.') :
     !count('academia') ? 'XP vem da prática. Construa uma sala de treinamento para praticar outra função.' :
-      'Treino: ' + duration(trainingHours * 6 / (count('simulador') ? 1.25 : 1)) + ' de jogo e ' + trainingCost +
+      'Treino: ' + duration(trainingHours * 6) + ' de jogo e ' + trainingCost +
       ' materiais. O morador fica fora da escala até terminar.';
   detail.append(help);
   renderPracticeTools(detail, id, home && !session);
@@ -4777,6 +4930,18 @@ function renderSystemDiagnostics() {
       renderPostShelter(post);
       byId('post-shelter').scrollIntoView({ block: 'nearest' });
     });
+    const floors = state.recovery.floors || [];
+    const openFloors = floors.filter(level => (!liftOutOfService() || staffedFloors().has(level)) &&
+      !Object.keys(state.leaks).some(lot => slots[lot].level === level && roomFlooded(lot)));
+    add('Reabrir os andares', floors.length ?
+      openFloors.length + '/' + floors.length + ' liberados · níveis ' + floors.map(level => level + 1).join(', ') + '.' :
+      'Os andares estão acessíveis.', 'Ver obras e infiltrações', () => byId('tasks-button').click());
+    const reserves = Object.entries({ food: 12, water: 12, power: 8 });
+    add('Recompor estoques', reserves.map(([key, target]) =>
+      resourceLabels[key] + ' ' + Math.floor(state.resources[key]) + '/' + target).join(' · '),
+    'Ver distribuição de energia', () => byId('power-button').click());
+    add('Reorganizar plantões', homeWorkers().length + ' moradores disponíveis no turno · ' +
+      Object.keys(state.sheltered).length + ' nos postos.', 'Ajustar moradores', () => byId('staff-button').click());
   }
   if (liftOutOfService()) add('Elevador parado', 'Reparo em até ' + duration(state.liftFaultUntil - state.clock) +
     '. As escadas permitem circular. Mecânicos numa oficina em modo Reparo podem antecipar a volta.', 'Ver tarefas',
@@ -4836,6 +5001,16 @@ function renderResourceBalance() {
     list.append(row);
   }
   renderSystemDiagnostics();
+  const climate = weather();
+  const next = seasons[(climate.index + 1) % seasons.length];
+  const daysLeft = 10 - (day() - 1) % 10;
+  const solar = operatingOutput('solar');
+  const change = solar ? (next.solar - climate.solar) * .40 * solar * 144 : 0;
+  byId('season-outlook').textContent = seasonForecast() + (daysLeft === 1 ? ' Falta um dia.' : ' Faltam ' + daysLeft + ' dias.') + (solar ?
+    ' Com os painéis atuais, a geração solar no pico muda em ' + (change >= 0 ? '+' : '') +
+      rateFormat.format(change) + ' kWh/dia no ritmo do meio-dia.' :
+    ' O rendimento da horta muda de ' + rateFormat.format(climate.crop * 100) + '% para ' +
+      rateFormat.format(next.crop * 100) + '% da produção base.');
 }
 
 function renderHud(flow = supplyRates()) {
@@ -4847,7 +5022,7 @@ function renderHud(flow = supplyRates()) {
   byId('lift-status').hidden = !liftOutOfService();
   if (liftOutOfService()) byId('lift-status').textContent = 'Elevador parado · reparo em até ' +
     duration(state.liftFaultUntil - state.clock);
-  const completed = state.research.completed.length;
+  const completed = state.research.completed.filter(key => Object.hasOwn(researchPlans, key)).length;
   const assigned = assignedStudies().length;
   byId('research-label').textContent = assigned ? 'Pesquisa · ' + assigned : 'Pesquisa';
   byId('research-button').title = completed + '/' + Object.keys(researchPlans).length + ' plantas pesquisadas';
@@ -4895,14 +5070,14 @@ function renderCrew() {
   byId('crew').innerHTML = residentIds().map(id =>
     '<div class="resident"><i style="--uniform:' + escapeMarkup(residentAppearance(id)[0]) + '"></i>' + escapeMarkup(residentName(id)) +
     '<small>' + (state.sheltered[id] !== undefined ? 'no posto ' + sectorName(state.sheltered[id]) :
-      away.has(id) ? 'em viagem' : childStage(id) ?? (state.injuries[id] ? 'em recuperação' : apprenticeshipOf(id) ?
+      state.exchange?.resident === id ? 'em intercâmbio' : away.has(id) ? 'em viagem' : childStage(id) ?? (state.injuries[id] ? 'em recuperação' : apprenticeshipOf(id) ?
         'em aprendizado' : !onShift(id) ? 'em descanso' : awaitingProfession(id) ? 'escolhendo ofício' : professionFor(id).name)) + '</small></div>'
   ).join('');
 }
 
 function gateCost() {
-  const assistant = bestOnDuty('triagem');
-  return count('triagem') ? (assistant !== null && skillLevel(assistant, 'triagem') >= 3 ? 2 : 3) : 5;
+  const assistant = bestOnDuty('cuidado');
+  return count('triagem') ? (assistant !== null && skillLevel(assistant, 'cuidado') >= 3 ? 2 : 3) : 5;
 }
 
 function renderGate() {
@@ -4912,6 +5087,7 @@ function renderGate() {
   if (!visitor) return;
   const cost = gateCost();
   const crowded = freeBeds() <= 0;
+  const bedReserved = !visitor.sick && bedPactBlocks();
   const profession = visitorProfession(visitor);
   byId('gate-title').textContent = visitor.name + ' pede abrigo';
   byId('gate-clock').textContent = 'ESPERA · ' + duration(visitor.until - state.clock);
@@ -4919,9 +5095,10 @@ function renderGate() {
     profession.skills.map(skill => skillSpecs[skill][0]).join(', ') + '. ' +
     (visitor.sick ? (count('triagem') ? 'Precisa passar pela triagem.' : 'Chegou doente. Sem triagem, vai precisar de cuidados.') : 'Chegou em condições de ajudar.') +
     (crowded ? ' Não há cama livre.' : ' Há uma cama livre.') +
-    (populationFull() ? ' A colônia está lotada.' : '');
+    (populationFull() ? ' A colônia está lotada.' : '') +
+    (bedReserved ? ' A cama de emergência está reservada. O acordo fica no Diário.' : '');
   byId('gate-accept').textContent = 'Acolher · ' + cost + ' comida';
-  byId('gate-accept').disabled = populationFull() || state.resources.food < cost;
+  byId('gate-accept').disabled = populationFull() || state.resources.food < cost || bedReserved;
   byId('gate-aid').disabled = state.resources.food < 3;
 }
 
@@ -4931,16 +5108,18 @@ function resolveVisitor(choice) {
   let message;
   if (choice === 'accept') {
     const cost = gateCost();
-    if (populationFull() || state.resources.food < cost) return;
+    if (populationFull() || state.resources.food < cost || !visitor.sick && bedPactBlocks()) return;
+    const usesBedException = !visitor.sick && freeBeds() <= 1;
     const protectedArrival = count('triagem') > 0;
-    const assistant = bestOnDuty('triagem');
+    const assistant = bestOnDuty('cuidado');
     state.profiles[state.people] = { name: visitor.name, sex: visitor.sex ?? generatedResidentSex(visitor.name), skill: visitor.skill,
       profession: visitor.profession || aptitudeProfessions[visitor.skill] || 'transporte' };
     scheduleFamilyStory(state.people);
     state.people++;
-    const reduction = assistant === null ? 0 : skillLevel(assistant, 'triagem') - 1;
+    usePactException('bed', usesBedException);
+    const reduction = assistant === null ? 0 : skillLevel(assistant, 'cuidado') - 1;
     applyEffects({ food: -cost, morale: 4, health: visitor.sick && !protectedArrival ? -Math.max(2, 7 - reduction) : 0 });
-    if (assistant !== null) gainExperience(assistant, 'triagem', visitor.sick ? 14 : 7);
+    if (assistant !== null) gainExperience(assistant, 'cuidado', visitor.sick ? 14 : 7);
     syncWalkers();
     renderCrew();
     message = visitor.name + ' foi acolhido no abrigo' + (bunkerBedsNeeded() > beds() ? ' e ainda precisa de uma cama.' : '.');
@@ -5192,6 +5371,14 @@ function openStorySector(id) {
 }
 
 function updateNeighbors() {
+  if (state.exchange && state.clock >= state.exchange.until) {
+    const { resident, neighbor } = state.exchange;
+    state.exchange = null;
+    syncWalkers();
+    gainExperience(resident, exchangeRoles[neighbor][1], 16);
+    storyUpdate(residentName(resident) + ' voltou do intercâmbio com ' + neighbors[neighbor].name + '.');
+    if (byId('surface').open) renderTrade();
+  }
   if (!state.aidReturn || state.clock < state.aidReturn.at) return;
   contactNeighbor('village', 2);
   log(state.aidReturn.name + ' voltou com notícias do Refúgio da Ponte. A ajuda foi lembrada.');
@@ -5331,13 +5518,58 @@ function renderTrade() {
     row.append(title, button);
     const partner = document.createElement('article');
     partner.append(row, renderAgreement(key));
+    if (exchangeRoles[key] && relation.trust >= 3) partner.append(renderExchange(key));
     list.append(partner);
   }
 }
 
 function residentsAtHome() {
   const away = new Set(state.missions.flatMap(mission => mission.party));
+  if (state.exchange) away.add(state.exchange.resident);
   return residentIds().filter(id => !away.has(id) && state.sheltered[id] === undefined);
+}
+
+const exchangeRoles = { village: ['Mecânica', 'mecanica'], camp: ['Hidráulica', 'hidraulica'] };
+
+function renderExchange(key) {
+  const row = document.createElement('div');
+  row.className = 'agreement';
+  const info = document.createElement('p');
+  const [role] = exchangeRoles[key];
+  const exchange = state.exchange;
+  info.textContent = exchange ? residentName(exchange.resident) + ' está em intercâmbio por mais ' +
+    duration(exchange.until - state.clock) + '.' : 'Intercâmbio por três dias. Receba ajuda em ' + role + ' e envie um adulto para trabalhar com o vizinho.';
+  row.append(info);
+  if (exchange) return row;
+  const eligible = () => residentsAtHome().filter(id => !childStage(id) && !state.injuries[id] &&
+    !state.training[id] && !apprenticeshipOf(id) && !state.oddJobs[id] &&
+    !assignedStudies().some(([, project]) => project.researcher === id));
+  const people = eligible();
+  const select = document.createElement('select');
+  select.setAttribute('aria-label', 'Morador para intercâmbio com ' + neighbors[key].name);
+  select.replaceChildren(...people.map(id => new Option(residentName(id), String(id))));
+  const button = document.createElement('button');
+  button.className = 'control';
+  button.textContent = 'Firmar intercâmbio';
+  button.disabled = people.length < 2 || (state.exchangeNext || 0) > state.clock;
+  if ((state.exchangeNext || 0) > state.clock) info.textContent += ' Próxima vaga em ' + duration(state.exchangeNext - state.clock) + '.';
+  button.onclick = () => {
+    const id = Number(select.value);
+    const valid = eligible();
+    if (state.exchange || state.ended || !valid.includes(id) || valid.length < 2 ||
+        (state.exchangeNext || 0) > state.clock || state.neighbors[key]?.trust < 3) return;
+    state.exchange = { neighbor: key, resident: id, until: state.clock + 3 * 144 };
+    state.exchangeNext = state.clock + 7 * 144;
+    syncWalkers();
+    scheduleBuilders();
+    gridDispatch = null;
+    renderCrew();
+    renderHud();
+    renderTrade();
+    storyUpdate(residentName(id) + ' iniciou um intercâmbio com ' + neighbors[key].name + '.');
+  };
+  row.append(select, button);
+  return row;
 }
 
 function bestOnDuty(skill) {
@@ -5488,7 +5720,7 @@ function updateRoutes() {
     changed = true;
   }
   if (state.clock >= state.routeNext) {
-    const busy = new Set(state.missions.flatMap(mission => [mission.tile, ...(mission.routeStops || [mission.postId])]));
+    const busy = new Set(state.missions.flatMap(mission => [mission.tile, mission.extraTile, ...(mission.routeStops || [mission.postId])]));
     const candidates = state.world.map((tile, id) => ({ tile, id })).filter(({ tile, id }) =>
       id !== baseTile && tile.scouted && !busy.has(id) && !routeClosed(id));
     if (candidates.length) {
@@ -5545,24 +5777,23 @@ function tripPlan(id, party, dog = null, mount = null, animalRescue = false) {
   const baseTime = 15 + distance * 10 + ground.delay + winterDelay + (detour?.extra || 0) - (improved ? 8 : 0);
   const transport = mount ? animalTypes[mount.type] : null;
   const handling = party.reduce((best, person) => Math.max(best, skillLevel(person, 'manejo') - 1), 0);
-  const trackers = animalRescue ? party.reduce((best, person) => Math.max(best, skillLevel(person, 'rastreio') - 1), 0) : 0;
+  const trackers = animalRescue ? party.reduce((best, person) => Math.max(best, skillLevel(person, 'busca') - 1), 0) : 0;
   const time = Math.ceil(baseTime * (transport ? transport.travel * (1 - handling * .023) : 1) * (1 - trackers * .036));
   const cargo = transport ? transport.cargo + (count('depositoCampo') ? .12 : 0) : 1;
   const trailSkill = party.reduce((best, person) => Math.max(best, skillLevel(person, 'campo') - 1 +
     (duty(person) === 'campo' ? 1 : 0)), 0);
   const bonded = party.some(person => (state.memories[person] || []).some(item => item.kind === 'rescue' && party.includes(item.buddy)));
-  const planner = count('briefing') ? homeWorkers().find(person => duty(person) === 'campo' && !party.includes(person)) : undefined;
-  const briefing = planner === undefined ? 0 : .045 + (skillLevel(planner, 'campo') - 1) * .008;
+  const planning = operatingCount('cartografia') ? .025 : 0;
   const tired = size ? party.reduce((total, id) => total + (1 - alertness(id)), 0) / size * .20 : 0;
   return {
     time,
     cargo,
     food: tripProvisions(time, size, 20) + (dog ? 1 : 0) + (mount ? 2 : 0),
     water: tripProvisions(time, size, 14) + (dog ? 1 : 0) + (mount ? 3 : 0),
-    risk: clamp(ground.risk + distance * .024 + (climate.night ? .06 : 0) +
+    risk: clamp((ground.risk + distance * .024 + (climate.night ? .06 : 0) +
       (climate.index === 3 ? .06 - Math.min(.045, guidance * .024) : 0) - Math.max(0, size - 1) * .055 - (operatingCount('radio', true) ? .12 : 0) -
-      Math.min(.19, trailSkill * .037) - (bonded ? .06 : 0) - (dog ? .055 : 0) - briefing +
-      tired - (detour ? .035 : 0) - (improved ? .07 : 0), .03, .75)
+      Math.min(.19, trailSkill * .037) - (bonded ? .06 : 0) - (dog ? .055 : 0) - planning +
+      tired - (detour ? .035 : 0) - (improved ? .07 : 0)) * difficulties[state.difficulty].hazard, .03, .75)
   };
 }
 
@@ -5698,19 +5929,20 @@ function recoveryPost(returning) {
 
 function updateRecoveryPlan(flow) {
   const accessibleFloors = liftOutOfService() ? staffedFloors() : null;
-  const damaged = Object.entries(state.rooms).some(([lot, type]) =>
+  const damaged = Object.entries(state.rooms).filter(([lot, type]) =>
     ['cisterna', 'horta', 'enfermaria', 'gerador', 'deposito'].includes(type) &&
     (roomFlooded(lot) || accessibleFloors && !accessibleFloors.has(slots[lot].level)));
-  const critical = damaged || state.resources.food < 3 || state.resources.water < 3 ||
+  const critical = damaged.length || state.resources.food < 3 || state.resources.water < 3 ||
     (state.resources.power < 3 && flow.effects.power < 0);
   if (!state.recovery) {
     if (critical) {
-      state.recovery = { started: state.clock };
+      state.recovery = { started: state.clock, floors: [...new Set(damaged.map(([lot]) => slots[lot].level))] };
       storyUpdate('A colônia abriu um plano de recuperação. Veja as prioridades no Balanço.');
     }
     return;
   }
   const plan = state.recovery;
+  plan.floors = [...new Set([...(plan.floors || []), ...damaged.map(([lot]) => slots[lot].level)])];
   const safe = !critical && state.resources.food >= 12 && state.resources.water >= 12 &&
     (state.resources.power >= 8 || flow.effects.power >= 0);
   if (!safe) {
@@ -5856,6 +6088,31 @@ function nextPostSites(destination, first) {
     state.outposts[id].stock.food >= 1 && state.outposts[id].stock.water >= 1);
 }
 
+function missionVisits(mission, sector) {
+  return mission.tile === sector || mission.extraTile === sector;
+}
+
+function extraRouteSites(destination, mission = null) {
+  return state.world.flatMap((tile, id) => id !== baseTile && id !== destination && tile.scouted && !tile.visited &&
+    !routeClosed(id) && distanceBetween(id, destination) <= 2 &&
+    !state.missions.some(active => active !== mission && missionVisits(active, id)) ? [id] : []);
+}
+
+function renderExtraRoute(destination, focus) {
+  const input = byId('route-target');
+  const options = focus === 'supplies' ? extraRouteSites(destination) : [];
+  byId('route-target-wrap').hidden = !options.length;
+  const stamp = options.join(',');
+  if (input.dataset.options !== stamp) {
+    const previous = input.value;
+    input.replaceChildren(new Option('Sem segundo setor', ''),
+      ...options.map(id => new Option(sectorName(id) + ' · ' + landmarks[state.world[id].site].name, String(id))));
+    input.value = previous && options.includes(Number(previous)) ? previous : '';
+    input.dataset.options = stamp;
+  }
+  byId('route-drop-wrap').hidden = focus !== 'supplies' || byId('route-post-wrap').hidden || !byId('route-post').value;
+}
+
 function renderPostSelect(select, routes) {
   byId(select.id + '-wrap').hidden = !routes.length;
   const stamp = routes.join(',');
@@ -5991,9 +6248,18 @@ function planDispatch(id, party, focus, mount) {
   const dog = !logistics && byId('dog-escort').checked ? readyDog() : null;
   const kit = !logistics && byId('field-kit').checked;
   const stockedKit = kit && state.fieldStocks.kits > 0;
-  const kitCost = kit && !stockedKit ? (count('costura') ? 2 : 4) : 0;
+  const kitCost = kit && !stockedKit ? 4 : 0;
   const animal = focus === 'animals' ? tracksAt(state.world[id]) : null;
   const plan = tripPlan(id, party, dog, mount, !!animal);
+  const target = byId('route-target').value;
+  const extraTile = focus === 'supplies' && target && extraRouteSites(id).includes(Number(target)) ? Number(target) : undefined;
+  const extraTime = extraTile !== undefined ? 10 + distanceBetween(id, extraTile) * 8 : 0;
+  if (extraTime) {
+    plan.food += tripProvisions(plan.time + extraTime, party.length, 20) - tripProvisions(plan.time, party.length, 20);
+    plan.water += tripProvisions(plan.time + extraTime, party.length, 14) - tripProvisions(plan.time, party.length, 14);
+    plan.time += extraTime;
+    plan.risk = Math.min(.75, plan.risk + .075);
+  }
   const load = expeditionCapacity(party.length, plan.cargo) + (operatingCount('rampaCarga') ? 4 : 0);
   const transfer = isTransfer ? selectedCargo() : null;
   const postPick = byId('route-post').value;
@@ -6060,7 +6326,9 @@ function planDispatch(id, party, focus, mount) {
   if (!error && cargoKeys.some(key => costs[key] > state.resources[key])) error = 'Provisões ou materiais insuficientes no abrigo.';
   const waterBlocked = !error && pactBlocksWater(costs.water);
   if (waterBlocked) error = 'A reserva acordada de água impede a partida.';
-  return { ...plan, dog, kit, stockedKit, animal, postId, supplies, costs, transfer, load, error, partner, waterBlocked };
+  const dropPost = focus === 'supplies' && byId('route-drop').checked ? supplies.at(-1)?.stop : undefined;
+  return { ...plan, dog, kit, stockedKit, animal, postId, supplies, costs, transfer, load, error, partner, waterBlocked,
+    extraTile, extraTime, dropPost };
 }
 
 function isLogisticsMission(focus) {
@@ -6091,7 +6359,7 @@ function renderSurfaceMap() {
   grid.replaceChildren();
   state.world.forEach((tile, id) => {
     const { site, ground } = tileInfo(id);
-    const active = state.missions.some(mission => mission.tile === id);
+    const active = state.missions.some(mission => missionVisits(mission, id));
     const button = document.createElement('button');
     button.className = 'map-tile';
     const partnership = tile.development?.kind === 'partner';
@@ -6124,6 +6392,8 @@ function renderSurfaceMap() {
       byId('mount').value = '';
       byId('route-post').value = '';
       byId('route-post-next').value = '';
+      byId('route-target').value = '';
+      byId('route-drop').checked = false;
       renderPartyPicks();
       for (const [tileId, tileButton] of Array.from(grid.children).entries()) {
         tileButton.setAttribute('aria-pressed', tileId === id);
@@ -6182,7 +6452,7 @@ function renderDispatch() {
   }
   const id = siteSelected;
   const { tile, ground, site } = tileInfo(id);
-  const active = state.missions.find(mission => mission.tile === id);
+  const active = state.missions.find(mission => missionVisits(mission, id));
   const post = state.outposts[id];
   byId('site-name').textContent = post ? 'Posto avançado de ' + sectorName(id) :
     tile.development?.kind === 'partner' ? siteProjects[tile.site].name : tile.scouted ? site.name : 'Região desconhecida';
@@ -6250,8 +6520,9 @@ function renderDispatch() {
   if (!dog) byId('dog-escort').checked = false;
   else byId('dog-option').lastChild.textContent = ' Levar ' + dog.name + ' · +1 comida e água';
   renderPostRoutes(id, !logistics);
+  renderExtraRoute(id, focus);
   byId('kit-cost').textContent = state.fieldStocks.kits
-    ? '· ' + state.fieldStocks.kits + ' no estoque' : '· ' + (count('costura') ? 2 : 4) + ' materiais';
+    ? '· ' + state.fieldStocks.kits + ' no estoque' : '· 4 materiais';
   const plan = planDispatch(id, party, focus, mount);
   const cargoLine = focus === 'supply' ? ' · mais a carga selecionada · limite de carga ' + plan.load :
     ['retrieve', 'collect', 'salvage'].includes(focus) ? ' · limite de carga ' + plan.load :
@@ -6264,7 +6535,8 @@ function renderDispatch() {
     party.length + (party.length === 1 ? ' pessoa' : ' pessoas') + ' · ' + duration(plan.time) + ' ida e volta · ' +
       plan.food + ' comida e ' + plan.water + ' água do bunker' + cargoLine +
       (logistics ? '' : ' · risco ' + (plan.risk < .15 ? 'baixo' : plan.risk < .27 ? 'moderado' : 'alto')) +
-      staging + (plan.error ? ' ' + plan.error : '') :
+      staging + (plan.extraTile !== undefined ? ' · coleta adicional em ' + sectorName(plan.extraTile) : '') +
+      (plan.error ? ' ' + plan.error : '') :
     home.length ? 'Selecione pelo menos um morador disponível neste turno.' + (plan.error ? ' ' + plan.error : '') :
       'Nenhum morador disponível neste turno.';
   byId('send-party').disabled = state.ended || !party.length || !!plan.error;
@@ -6303,6 +6575,7 @@ function renderMissions() {
     ' · ' + sectorName(mission.tile) + ' · ' + mission.party.map(id => escapeMarkup(residentName(id))).join(', ') +
     (mission.mountId === undefined ? '' : ' · ' + escapeMarkup(state.animals.find(animal => animal.id === mission.mountId)?.name || 'montaria')) +
     (mission.routeStops?.length ? ' · via ' + mission.routeStops.map(sectorName).join(' e ') : '') +
+    (mission.extraTile !== undefined ? ' · segundo setor ' + sectorName(mission.extraTile) : '') +
     (mission.encounter?.status === 'waiting' ? ' · aguardando ordens' :
       mission.encounter?.status === 'ahead' && mission.returns <= state.clock ? ' · aguardando contato' :
       (mission.focus === 'shelter' ? ' · chegada ao posto em ' : ' · retorno em ') + duration(mission.returns - state.clock)) + '</li>'
@@ -6320,7 +6593,7 @@ function sendExpedition(scout = false) {
   const party = scout ? (scoutId === undefined ? [] : [scoutId]) : available.filter(person => partyPicks.has(person));
   const focus = scout ? 'scout' : byId('mission-focus').value;
   if (!party.length || (scout ? tile.scouted : !tile.scouted) || (!scout && !availableObjectives(id).includes(focus)) ||
-      state.missions.some(mission => mission.tile === id)) return;
+      state.missions.some(mission => missionVisits(mission, id))) return;
   const mount = selectedMount();
   const plan = scout ? scoutPlan(id, mount) : planDispatch(id, party, focus, mount);
   if (plan.error || state.resources.food < plan.food || state.resources.water < plan.water) return;
@@ -6345,6 +6618,7 @@ function sendExpedition(scout = false) {
     tile: id, scout, party, focus, kit: plan.kit, dogId: plan.dog?.id, mountId: mount?.id, cargo: plan.cargo ?? 1, load: plan.load,
     transfer: plan.transfer, postId: plan.postId, animal: plan.animal, order, partner: plan.partner,
     routeStops: plan.supplies?.map(provision => provision.stop),
+    extraTile: plan.extraTile, extraTime: plan.extraTime, dropPost: plan.dropPost,
     returns: state.clock + plan.time, risk: plan.risk,
     encounter: hasEncounter ? { status: 'ahead', at: state.clock + Math.floor(plan.time * .48) } : null
   });
@@ -6400,6 +6674,20 @@ function renderFieldMessage() {
     button.onclick = () => resolveFieldMessage(mission, choice);
     choices.append(button);
   }
+  if (mission.extraTile !== undefined) {
+    const alternate = extraRouteSites(mission.tile, mission).filter(id => id !== mission.extraTile &&
+      distanceBetween(mission.tile, id) <= distanceBetween(mission.tile, mission.extraTile));
+    for (const id of alternate) {
+      const option = document.createElement('button');
+      option.className = 'control';
+      option.textContent = 'Trocar segundo destino por ' + sectorName(id);
+      option.onclick = () => {
+        mission.extraTile = id;
+        resolveFieldMessage(mission, 'continue');
+      };
+      choices.append(option);
+    }
+  }
 }
 
 function resolveFieldMessage(mission, decision) {
@@ -6411,7 +6699,9 @@ function resolveFieldMessage(mission, decision) {
   if (mission.focus === 'story') mission.storyFound = !retreat;
   if (mission.order) mission.abortedOrder = retreat;
   const useKit = !retreat && mission.kit;
-  mission.returns = state.clock + returnLeg + (retreat || useKit ? 0 : rescue ? 15 : 9);
+  mission.returns = state.clock + Math.max(8, returnLeg - (retreat ? mission.extraTime || 0 : 0)) +
+    (retreat || useKit ? 0 : rescue ? 15 : 9);
+  if (retreat) delete mission.extraTile;
   mission.risk = clamp(mission.risk + (retreat ? -.06 : useKit ? -.04 : rescue ? .18 : .12), .03, .75);
   mission.haulFactor = retreat ? .52 : rescue ? .66 : 1.3;
   mission.rescueChance = retreat ? 0 : rescue ? .86 : null;
@@ -6447,14 +6737,14 @@ function updateFieldMessages() {
 function findManual(site) {
   const nearbySkills = {
     market: ['culinaria', 'conservacao', 'negociacao'],
-    factory: ['mecanica', 'soldagem', 'eletrica', 'obras', 'manutencaoPreventiva'],
+    factory: ['mecanica', 'eletrica', 'obras', 'manutencaoPreventiva'],
     well: ['hidraulica', 'obras'],
-    village: ['triagem', 'pesquisa', 'negociacao', 'ensino'],
-    camp: ['campo', 'rastreio', 'vigia', 'meteorologia'],
-    garage: ['mecanica', 'eletrica', 'soldagem'],
-    clinic: ['cuidado', 'triagem', 'primeirosCampo', 'veterinaria', 'higiene'],
+    village: ['cuidado', 'pesquisa', 'negociacao', 'ensino'],
+    camp: ['campo', 'busca', 'vigia', 'meteorologia'],
+    garage: ['mecanica', 'eletrica'],
+    clinic: ['cuidado', 'primeirosCampo', 'veterinaria', 'higiene'],
     farm: ['cultivo', 'carpintaria', 'veterinaria', 'manejo', 'sementes'],
-    wild: ['busca', 'campo', 'rastreio', 'primeirosCampo']
+    wild: ['busca', 'campo', 'primeirosCampo']
   };
   return choose(nearbySkills[site] || nearbySkills.wild);
 }
@@ -6649,6 +6939,9 @@ function finishExpeditions() {
       continue;
     }
     const repeat = tile.visited;
+    if (!repeat && tile.site === 'ruins' && tile.ruins && mission.focus === 'supplies') {
+      storyUpdate('Página recuperada do antigo bunker, dia ' + tile.ruins.day + ' · ' + tile.ruins.page);
+    }
     if (mission.focus !== 'animals') tile.visited = true;
     contactNeighbor(tile.site, mission.rescueChance ? 1 : 0);
     const size = mission.party.length;
@@ -6658,14 +6951,34 @@ function finishExpeditions() {
     const search = (count('cartografia') ? 1.18 : 1) * (1 + searchSkill * .045);
     const multiplier = (.78 + Math.random() * .44) * (1 + .28 * (size - 1)) * (rescue ? .5 : 1) *
       (injured ? .65 : 1) * (mission.haulFactor || 1) * search * (mission.cargo ?? 1);
-    const haul = repeat || mission.focus === 'animals' ? {} : limitExpeditionLoot(
-      Object.fromEntries(Object.entries(site.loot).map(([key, base]) => [key, Math.round(base * multiplier)])),
-      mission.load ?? expeditionCapacity(size, mission.cargo ?? 1)
-    );
+    const loot = repeat || mission.focus === 'animals' ? {} :
+      Object.fromEntries(Object.entries(site.loot).map(([key, base]) => [key, Math.round(base * multiplier)]));
+    const extra = state.world[mission.extraTile];
+    if (extra && !extra.visited && !routeClosed(mission.extraTile)) {
+      extra.visited = true;
+      const second = landmarks[extra.site];
+      for (const [key, amount] of Object.entries(second.loot)) loot[key] = (loot[key] || 0) + Math.round(amount * multiplier * .66);
+      log('A equipe concluiu a segunda coleta no setor ' + sectorName(mission.extraTile) + '.');
+    }
+    const haul = limitExpeditionLoot(loot, mission.load ?? expeditionCapacity(size, mission.cargo ?? 1));
+    const drop = state.outposts[mission.dropPost];
+    if (drop && !routeClosed(mission.dropPost)) {
+      let room = Math.max(0, Math.floor(outpostCapacity - cargoTotal(drop.stock)));
+      let left = 0;
+      for (const key of cargoKeys) {
+        const amount = Math.min(room, Math.floor((haul[key] || 0) / 3));
+        if (!amount) continue;
+        drop.stock[key] += amount;
+        haul[key] -= amount;
+        room -= amount;
+        left += amount;
+      }
+      if (left) log('A equipe deixou ' + left + ' unidades de carga no posto de ' + sectorName(mission.dropPost) + '.');
+    }
     for (const id of mission.party) {
       gainExperience(id, 'campo', 5);
       if (mission.focus === 'supplies') gainExperience(id, 'busca', injured ? 9 : 14);
-      if (mission.focus === 'animals') gainExperience(id, 'rastreio', mission.animal ? 13 : 5);
+      if (mission.focus === 'animals') gainExperience(id, 'busca', mission.animal ? 13 : 5);
     }
     const before = { ...state.resources, health: state.health };
     applyEffects(haul);
@@ -6723,13 +7036,14 @@ function finishExpeditions() {
 }
 
 function canChoose(option) {
-  return (!option.needsBed || (freeBeds() > 0 && !populationFull())) &&
+  return (!option.needsBed || (freeBeds() > 0 && !populationFull() && !bedPactBlocks())) &&
     (!option.item || state.fieldStocks[option.item] > 0) &&
     Object.entries(option.cost || {}).every(([key, value]) => state.resources[key] >= value);
 }
 
 function resolveIncident(option) {
   if (!state.incident || (option && !canChoose(option))) return;
+  const lastBed = option?.needsBed && freeBeds() <= 1;
   if (option) {
     const effects = { ...option.gain };
     for (const [key, cost] of Object.entries(option.cost || {})) effects[key] = (effects[key] ?? 0) - cost;
@@ -6756,7 +7070,7 @@ function resolveIncident(option) {
     }
   } else {
     const lapse = state.incident.template.lapse;
-    const severity = 1 + Math.min(.6, Math.max(0, state.chapter.index - 1) * .1);
+    const severity = (1 + Math.min(.6, Math.max(0, state.chapter.index - 1) * .1)) * difficulties[state.difficulty].hazard;
     const effects = Object.fromEntries(Object.entries(lapse)
       .filter(([, value]) => typeof value === 'number').map(([key, value]) => [key, value * severity]));
     applyEffects(effects);
@@ -6782,6 +7096,7 @@ function resolveIncident(option) {
   const result = outcome.result;
   state.lastIncident = state.incident.template.title;
   state.incident = null;
+  usePactException('bed', lastBed);
   state.quietUntil = state.clock + Math.max(42, 84 - state.chapter.index * 8);
   setSpeed(speed);
   log(result);
@@ -6846,7 +7161,8 @@ function updateIncident() {
         state.leaks[state.incident.stormLot].pumpedUntil > state.clock) ? 'A água já foi contida.' : '';
     button.disabled = Boolean(unavailable) || !canChoose(option);
     button.title = option.needsBed && (freeBeds() <= 0 || populationFull())
-      ? 'É preciso ter uma cama e espaço na colônia.' : unavailable || (button.disabled ? 'Recursos insuficientes.' : '');
+      ? 'É preciso ter uma cama e espaço na colônia.' : option.needsBed && bedPactBlocks() ?
+        'A cama de emergência está reservada no Diário.' : unavailable || (button.disabled ? 'Recursos insuficientes.' : '');
   }
 }
 
@@ -6863,16 +7179,20 @@ function endIfNeeded() {
 }
 
 function workerWeight(workers, skill) {
-  return workers.filter(id => duty(id) === skill && state.oddJobs[id]?.kind !== 'leak' && presentForCover(id))
+  const guest = state.exchange && exchangeRoles[state.exchange.neighbor]?.[1] === skill ? 1 : 0;
+  return guest + workers.filter(id => duty(id) === skill && state.oddJobs[id]?.kind !== 'leak' && presentForCover(id))
     .reduce((sum, id) => sum + (1 + (skillLevel(id, skill) - 1) * .66) * alertness(id), 0);
 }
 
 function supplyRates(climate = weather(), apply = false) {
   const home = residentsAtHome();
-  const consumption = home.reduce((total, id) => total + (childStage(id) ? .55 : 1), 0);
+  const consumption = home.reduce((total, id) => total + (childStage(id) ? .55 : 1), state.exchange ? 1 : 0);
   const workers = homeWorkers();
   const weight = skill => workerWeight(workers, skill);
   const power = gridDispatch ??= gridAllocation();
+  if (apply) for (const [lot, consumption] of power.backupLoads) {
+    state.roomBackups[lot] = Math.max(0, state.roomBackups[lot] - consumption);
+  }
   const powered = state.resources.power > 0 || power.poweredLots.size > 0;
   const production = runProduction(apply);
   const bedding = Object.entries(state.rooms).filter(([, type]) => ['quarto', 'alojamento'].includes(type));
@@ -6904,16 +7224,18 @@ function supplyRates(climate = weather(), apply = false) {
   const animals = careForAnimals(operatingCount('clinicaAnimal', true) ? Math.min(.19, weight('veterinaria') * .035) : 0, apply);
   const waterSupply = operatingOutput('cisterna', true) * baseRoomRates.cisterna +
     operatingOutput('coletor') * (climate.index === 0 || climate.index === 2 ? .1 : .022);
+  const reclaimed = operatingLots('sucata', true).reduce((total, lot) => total + roomOutput(lot) *
+    (baseRoomRates.sucata + Math.min(.065, specialtyOutput(crewInRoom(lot, 'mecanica'), 'mecanica') * .017)), 0);
   const income = {
     food: (crops + outsideCrops + mushrooms * baseRoomRates.viveiro) * (1 + Math.min(.55, weight('cultivo') * .08)) + animals.foodProduced,
     water: waterSupply * (1 + Math.min(.45, weight('hidraulica') * (operatingCount('casaBombas', true) ? .12 : .065))),
     power: power.generation,
-    materials: production.workshops * (baseRoomRates.oficina + Math.min(.065, weight('mecanica') * .013)) +
-      operatingOutput('sucata', true) * (baseRoomRates.sucata + Math.min(.09, weight('soldagem') * .023))
+    materials: production.workshops * baseRoomRates.oficina + production.workshopBonus + reclaimed
   };
-  const meals = consumption * ((production.kitchens ? .034 - Math.min(.011, cooking * .002 + production.storageBonus * .002) : .043) -
+  const difficulty = difficulties[state.difficulty].need;
+  const meals = difficulty * consumption * ((production.kitchens ? .034 - Math.min(.011, cooking * .002 + production.storageBonus * .002) : .043) -
     baking - Math.min(kitchenPrepLimit, production.prepBonus)) * ration.food;
-  const drinking = consumption * (operatingCount('reciclagem', true) ? .0245 : .049) * climate.water;
+  const drinking = difficulty * consumption * (operatingCount('reciclagem', true) ? .0245 : .049) * climate.water;
   const costs = {
     food: meals + production.meals * .032 + animals.feed + spoilage +
       dampStock * .014 * (operatingCount('camara', true) ? .55 : 1) *
@@ -6929,7 +7251,9 @@ function supplyRates(climate = weather(), apply = false) {
     operatingOutput('refeitorio') * .028 + Math.min(.018, cooking * .004) + baking * 2.5 : 0) + production.meals * .09 -
     Math.max(0, home.length - beds()) * .022 - (!powered ? .05 : 0) - shortage * .12 +
     (home.length ? ration.morale : 0);
-  effects.health = operatingOutput('enfermaria', true) * (.14 + Math.min(.18, weight('cuidado') * .03)) *
+  const wards = operatingLots('enfermaria', true).reduce((total, lot) =>
+    total + roomOutput(lot) * (roomSpecialties.enfermaria[roomSpecialty(lot)].health ?? 1), 0);
+  effects.health = wards * (.14 + Math.min(.18, weight('cuidado') * .03)) *
     (1 - Math.min(1, shortage * 2)) - shortage * .24 - (!powered ? (cold ? .10 : .065) : 0) -
     (cold && !heated && climate.night ? .018 * coldQuarters : 0) - (state.morale < 25 ? .08 : 0);
   return { income, costs, effects };
@@ -7379,7 +7703,7 @@ function updateInitiatives() {
       (state.resources.water < 36 && workspaces.hidraulica.includes(type)) ||
       (state.resources.power < 36 && workspaces.eletrica.includes(type)) ||
       (state.raid && workspaces.vigia.includes(type)) ||
-      (state.resources.materials < 24 && workspaces.soldagem.includes(type));
+      (state.resources.materials < 24 && type === 'sucata');
     return needed && day() >= 2 && !roomFlooded(lot) && (!roomSector(type, lot) || isRoomPowered(lot));
   }).map(roomInitiative).filter(offer => offer.kind !== 'cômodo' ||
     (offer.role && !homeWorkers().some(id => duty(id) === offer.role)));
@@ -7926,6 +8250,38 @@ function renderRoomConstruction(lot, room, work, remaining) {
   byId('construction-benefit').textContent = room.detail;
 }
 
+function renderRoomBackup(lot) {
+  const panel = byId('room-backup');
+  panel.hidden = !backupRooms.has(state.rooms[lot]);
+  if (panel.hidden) return;
+  const charge = state.roomBackups[lot];
+  const grid = gridDispatch ??= gridAllocation();
+  const status = byId('room-backup-status');
+  const button = byId('room-backup-action');
+  const installed = charge !== undefined;
+  const onBackup = grid.backupLoads.has(Number(lot));
+  const input = installed ? backupCapacity - charge : backupCapacity;
+  status.textContent = installed ? rateFormat.format(charge) + ' de ' + backupCapacity + ' kWh · ' +
+    (onBackup ? 'Alimentando este cômodo.' : 'Entra em ação se faltar energia da rede.') :
+    'Energia reservada para este cômodo quando a rede falhar.';
+  button.textContent = installed ? 'Recarregar · ' + rateFormat.format(input) + ' kWh' : 'Instalar · 8 materiais, 1 peça e 6 kWh';
+  button.disabled = Boolean(state.works[lot]) || roomFlooded(lot) || input < .01 || state.resources.power < input ||
+    (installed ? onBackup || !grid.poweredLots.has(Number(lot)) : state.resources.materials < 8 || state.fieldStocks.parts < 1);
+  button.onclick = () => {
+    if (button.disabled || state.ended) return;
+    if (!installed) {
+      state.fieldStocks.parts--;
+      state.resources.materials -= 8;
+    }
+    state.resources.power -= input;
+    state.roomBackups[lot] = backupCapacity;
+    gridDispatch = null;
+    renderHud();
+    renderRoomInfo(lot);
+    saveColony();
+  };
+}
+
 function renderRoomInfo(id) {
   const work = state.works[id];
   const type = work?.type || state.rooms[id];
@@ -7956,6 +8312,7 @@ function renderRoomInfo(id) {
   renderRoomProduction(id, !state.rooms[id] || roomUnderRenovation(id) ? null : type);
   renderRoomUpgrade(id, type, work, remaining);
   renderRoomSpecialty(id, type, work);
+  renderRoomBackup(id);
   renderSchool(id, type);
   renderLeakPanel(id);
   byId('priority-button').hidden = !work;
@@ -8052,6 +8409,7 @@ function demolish(id) {
   delete state.rooms[id];
   delete state.roomLevels[id];
   delete state.roomSpecialties[id];
+  delete state.roomBackups[id];
   cancelLeakWork(id);
   delete state.leaks[id];
   delete state.roomModes[id];
@@ -9161,9 +9519,9 @@ const walkSteps = 6;
 let lift, lastWalkTick = 0;
 const workspaces = {
   cultivo: ['horta', 'estufa', 'hidroponia', 'viveiro', 'pomar'],
-  mecanica: ['oficina', 'ferramentaria'], soldagem: ['ferramentaria', 'sucata'],
+  mecanica: ['oficina', 'ferramentaria', 'sucata'],
   eletrica: ['gerador', 'estabilizador', 'solar', 'turbina', 'dinamo'], hidraulica: ['cisterna', 'casaBombas', 'coletor'],
-  cuidado: ['enfermaria', 'triagem'], triagem: ['triagem', 'enfermaria'], culinaria: ['cozinha', 'padaria'],
+  cuidado: ['enfermaria', 'triagem'], culinaria: ['cozinha', 'padaria'],
   conservacao: ['deposito', 'camara', 'silo'], negociacao: ['radio'], veterinaria: ['clinicaAnimal'],
   pesquisa: ['laboratorio'], vigia: ['guarda', 'mirante', 'alarme'], treino: ['academia'],
   refeicao: ['refeitorio'], convivencia: ['recreacao', 'refeitorio'], descanso: ['quarto', 'alojamento'], recuperacao: ['enfermaria', 'recuperacao'],
@@ -9171,9 +9529,9 @@ const workspaces = {
   manutencaoPreventiva: ['centralManutencao'], meteorologia: ['estacaoTempo'], higiene: ['lavanderia']
 };
 const activityLabels = {
-  cultivo: 'Cuidando do cultivo', mecanica: 'Trabalhando na bancada', soldagem: 'Soldando peças',
+  cultivo: 'Cuidando do cultivo', mecanica: 'Trabalhando na bancada',
   eletrica: 'Inspecionando a rede elétrica', hidraulica: 'Mantendo o abastecimento', cuidado: 'Atendendo na enfermaria',
-  triagem: 'Fazendo a triagem', culinaria: 'Cozinhando', conservacao: 'Separando mantimentos',
+  culinaria: 'Cozinhando', conservacao: 'Separando mantimentos',
   negociacao: 'Operando o rádio', veterinaria: 'Cuidando dos animais', pesquisa: 'Pesquisando',
   vigia: 'De vigia', treino: 'Treinando', refeicao: 'Fazendo uma refeição', descanso: 'Descansando',
   recuperacao: 'Em recuperação', descarga: 'Pronto para descarregar', obra: 'Construindo', infiltracao: 'Cuidando da infiltração',
@@ -9508,6 +9866,15 @@ function drawWalker(walker, x, base, moving, atEndOfPath, time) {
     rect(x + 5, y - 15 - strike * 5, 6, 3, '#a8b1a1');
   } else if (atEndOfPath && atDestination(walker, walker.destination) && Math.floor(time * 3 + walker.id) % 2 === 0) {
     const activity = walker.destination?.activity;
+    if (activity === 'infiltracao') {
+      const stroke = Math.floor(time * 6) % 3;
+      rect(x + facing * 8, y - 8 - stroke, 8, 4, '#6f9b9c');
+      rect(x + facing * 13, y - 11 - stroke, 2, 3, '#b5cbc3');
+    }
+    if (activity === 'eletrica') {
+      const stroke = Math.floor(time * 5) % 3;
+      rect(x + facing * (8 + stroke), y - 12, 5, 2, '#d4cb81');
+    }
     if (activity === 'culinaria' || activity === 'cultivo' || activity === 'refeicao') rect(x + facing * 7, y - 11, 4, 4, '#b0b77b');
     if (activity === 'mecanica' || activity === 'pesquisa') rect(x + facing * 7, y - 12, 4, 2, '#c3cec5');
     if (activity === 'descarga') {
@@ -9749,8 +10116,8 @@ function setSpeed(value) {
   timer = setInterval(runTick, tickDelay());
 }
 
-function reset(saved = null, showDefeat = true, scenario = 'normal') {
-  state = saved || fresh(scenario);
+function reset(saved = null, showDefeat = true, scenario = 'normal', options = {}) {
+  state = saved || fresh(scenario, options);
   if (saved) migrateFamilyPlans();
   syncSoundControls();
   clearTimeout(taskFocusTimer);
@@ -9777,6 +10144,8 @@ function reset(saved = null, showDefeat = true, scenario = 'normal') {
   byId('mount').value = '';
   byId('route-post').value = '';
   byId('route-post-next').value = '';
+  byId('route-target').value = '';
+  byId('route-drop').checked = false;
   byId('mission-focus').value = '';
   for (const key of cargoKeys) byId('cargo-' + key).value = '0';
   category = categories[0];
@@ -9810,14 +10179,16 @@ function reset(saved = null, showDefeat = true, scenario = 'normal') {
 
 function showMenuPage(page) {
   menuPage = page;
-  for (const name of ['home', 'scenarios', 'confirm', 'help', 'saves', 'import']) byId('menu-' + name).hidden = name !== page;
+  for (const name of ['home', 'scenarios', 'confirm', 'help', 'saves', 'import', 'cloud']) byId('menu-' + name).hidden = name !== page;
   if (page !== 'import') pendingImport = null;
   const resumable = campaignStarted && !state.ended;
   const climate = weather();
   byId('menu-save').hidden = !campaignStarted;
   byId('menu-save-title').textContent = state.ended ? 'Partida encerrada' : 'Última partida';
   byId('menu-save-detail').textContent = scenarios[state.scenario].title + ' · Dia ' + day() + ' · ' + climate.name + ' · ' +
-    state.people + (state.people === 1 ? ' morador' : ' moradores');
+    state.people + (state.people === 1 ? ' morador' : ' moradores') + ' · ' + difficulties[state.difficulty].name +
+    (state.mapCode ? ' · Mapa ' + state.mapCode : '');
+  byId('menu-ruins-option').hidden = !campaignStarted;
   byId('menu-continue').hidden = !resumable;
   byId('menu-new').classList.toggle('primary', !resumable);
   if (page === 'scenarios') renderScenarios();
@@ -9854,6 +10225,7 @@ function openMainMenu(page = 'home') {
   menuArtDirty = true;
   showMenuPage(page);
   if (!byId('main-menu').open) byId('main-menu').showModal();
+  queueCloudSync();
   updateMachineSound();
   focusMenuPage();
 }
@@ -9870,6 +10242,185 @@ function focusMenuPage() {
 
 let pendingImport;
 let saveFileRequest = 0;
+let cloud = readCloudConfiguration();
+let cloudTimer, cloudBusy = false, cloudConflict;
+
+function readCloudConfiguration() {
+  try {
+    const config = JSON.parse(localStorage.getItem('abrigo-cloud-v1'));
+    return config?.url && /^[0-9a-f]{64}$/.test(config.token) ? config : null;
+  } catch {
+    return null;
+  }
+}
+
+function persistCloud() {
+  try {
+    if (cloud) localStorage.setItem('abrigo-cloud-v1', JSON.stringify(cloud));
+    else localStorage.removeItem('abrigo-cloud-v1');
+  } catch {
+    byId('cloud-status').textContent = 'O navegador não permitiu guardar esta conexão.';
+  }
+}
+
+function cloudStatus(message) {
+  byId('cloud-status').textContent = message;
+  byId('cloud-conflict').hidden = !cloudConflict;
+  byId('menu-sync').textContent = cloudConflict ? 'Sincronização · revisar cópias' : 'Sincronização';
+}
+
+function queueCloudSync() {
+  if (!cloud || cloudConflict) return;
+  clearTimeout(cloudTimer);
+  cloudTimer = setTimeout(syncColony, 1200);
+}
+
+async function saveHash(value) {
+  if (!value) return '';
+  const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(hash), byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function cloudRequest(config, method, data) {
+  const response = await fetch(config.url, {
+    method, headers: { Authorization: 'Bearer ' + config.token,
+      ...(data ? { 'Content-Type': 'application/json' } : {}) },
+    body: data ? JSON.stringify(data) : undefined,
+    signal: AbortSignal.timeout(8000)
+  });
+  if (response.status === 409) return null;
+  if (!response.ok) throw new Error('Serviço indisponível ou código de conta inválido.');
+  return response.json();
+}
+
+async function applyCloudSave(remote, config) {
+  let candidate;
+  try {
+    candidate = decodeColony(JSON.parse(remote.snapshot, (key, value) =>
+      ['__proto__', 'constructor', 'prototype'].includes(key) ? undefined : value));
+  } catch {
+    candidate = null;
+  }
+  if (!candidate || config !== cloud) throw new Error('A cópia remota não pôde ser carregada.');
+  const previous = campaignStarted ? readColony() : null;
+  const hadCampaign = campaignStarted;
+  try {
+    reset(candidate, false);
+    campaignStarted = true;
+    if (!saveColony()) throw new Error('Falha no armazenamento deste aparelho.');
+  } catch (error) {
+    campaignStarted = hadCampaign;
+    reset(previous, false);
+    throw error;
+  }
+  config.revision = remote.revision;
+  config.baseline = await saveHash(localStorage.getItem(saveKey));
+  cloudConflict = null;
+  persistCloud();
+  showMenuPage(menuPage);
+  cloudStatus('Partida atualizada com a cópia da nuvem.');
+}
+
+async function syncColony(preference) {
+  if (!cloud || cloudBusy) return;
+  const config = cloud;
+  cloudBusy = true;
+  let retry = false;
+  try {
+    const remote = await cloudRequest(config, 'GET');
+    if (config !== cloud) return;
+    if (!Number.isSafeInteger(remote?.revision) || (remote.revision && typeof remote.snapshot !== 'string')) {
+      throw new Error('Resposta de sincronização inválida.');
+    }
+    if (preference && cloudConflict?.revision !== remote.revision) preference = undefined;
+    const local = campaignStarted ? localStorage.getItem(saveKey) : null;
+    const fingerprint = await saveHash(local);
+    if (config !== cloud) return;
+    if (remote.snapshot === local || !remote.snapshot && !local) {
+      config.revision = remote.revision;
+      config.baseline = fingerprint;
+    } else if (preference === 'remote' || (preference !== 'local' && remote.snapshot && byId('main-menu').open &&
+        (!local || fingerprint === config.baseline) && local === (campaignStarted ? localStorage.getItem(saveKey) : null))) {
+      await applyCloudSave(remote, config);
+      return;
+    } else if (remote.snapshot && remote.revision !== config.revision && preference !== 'local') {
+      cloudConflict = remote;
+      byId('cloud-use-local').disabled = !local;
+      cloudStatus('Há duas cópias da partida. Escolha qual delas manter antes de retomar a sincronização.');
+      return;
+    } else if (local && (remote.revision === 0 || fingerprint !== config.baseline || preference === 'local')) {
+      const published = await cloudRequest(config, 'PUT', { revision: remote.revision, snapshot: local });
+      if (config !== cloud) return;
+      if (!published) {
+        retry = true;
+        return;
+      }
+      config.revision = published.revision;
+      config.baseline = fingerprint;
+      retry = local !== localStorage.getItem(saveKey);
+    }
+    cloudConflict = null;
+    persistCloud();
+    cloudStatus('Sincronização ativa.');
+  } catch (error) {
+    if (config === cloud) cloudStatus(['TimeoutError', 'TypeError'].includes(error.name) ?
+      'Não foi possível conectar ao serviço. A partida local foi preservada.' :
+      error.message || 'Não foi possível conectar ao serviço.');
+  } finally {
+    cloudBusy = false;
+    if (retry && config === cloud) {
+      clearTimeout(cloudTimer);
+      cloudTimer = setTimeout(syncColony, 1200);
+    }
+  }
+}
+
+function openCloudPanel() {
+  showMenuPage('cloud');
+  byId('cloud-address').value = cloud?.url?.replace(/\/save$/, '') || '';
+  byId('cloud-token').value = cloud?.token || '';
+  byId('cloud-disconnect').disabled = !cloud;
+  byId('cloud-address').focus();
+}
+
+byId('menu-sync').onclick = openCloudPanel;
+byId('cloud-create').onclick = () => {
+  byId('cloud-token').value = Array.from(crypto.getRandomValues(new Uint8Array(32)),
+    byte => byte.toString(16).padStart(2, '0')).join('');
+};
+byId('cloud-connect').onclick = () => {
+  try {
+    const url = new URL(byId('cloud-address').value);
+    if ((url.protocol !== 'https:' && !(url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname))) ||
+        url.username || url.password || url.search || url.hash || !['', '/', '/save'].includes(url.pathname)) {
+      throw new Error('Informe o endereço HTTPS do serviço.');
+    }
+    url.pathname = '/save';
+    const token = byId('cloud-token').value.trim().toLowerCase();
+    if (!/^[0-9a-f]{64}$/.test(token)) throw new Error('Use um código de conta válido.');
+    if (cloud?.url !== url.href || cloud.token !== token) {
+      cloud = { url: url.href, token, revision: 0, baseline: null };
+      cloudConflict = null;
+    }
+    persistCloud();
+    byId('cloud-disconnect').disabled = false;
+    cloudStatus('Conectando…');
+    if (cloudBusy) queueCloudSync();
+    else syncColony();
+  } catch (error) {
+    cloudStatus(error.message === 'Invalid URL' ? 'Informe o endereço do serviço.' : error.message);
+  }
+};
+byId('cloud-disconnect').onclick = () => {
+  clearTimeout(cloudTimer);
+  cloud = null;
+  cloudConflict = null;
+  persistCloud();
+  byId('cloud-disconnect').disabled = true;
+  cloudStatus('Sincronização desativada neste aparelho.');
+};
+byId('cloud-use-local').onclick = () => syncColony('local');
+byId('cloud-use-remote').onclick = () => syncColony('remote');
 
 function portableSave() {
   return { format: 'abrigo', version: 1, exportedAt: new Date().toISOString(), colony: colonySnapshot() };
@@ -10023,8 +10574,13 @@ function playFromMenu(newGame = false) {
   if (!newGame && (!campaignStarted || state.ended)) return;
   if (newGame) {
     const preference = state.soundConfigured ? state.sound : null;
+    const ruins = campaignStarted && byId('menu-ruins').checked ? {
+      day: day(), page: (state.campaignHistory.at(-1) || state.log[0])?.message || 'Restos de uma colônia anterior.'
+    } : undefined;
+    const mapCode = byId('menu-map-code').value.trim().toUpperCase() ||
+      (Date.now().toString(36) + Math.random().toString(36).slice(2, 6)).toUpperCase();
     campaignStarted = true;
-    reset(null, false, menuScenario);
+    reset(null, false, menuScenario, { difficulty: byId('menu-difficulty').value, mapCode, ruins });
     if (byId('menu-guided').checked) state.tutorial = { completed: [] };
     if (preference !== null) {
       state.sound = preference;
@@ -10128,9 +10684,8 @@ byId('tutorial-dismiss').onclick = dismissTutorial;
 byId('journal-epilogue').onclick = openEpilogue;
 byId('epilogue-new').onclick = () => {
   byId('epilogue').close();
-  menuScenario = 'normal';
-  byId('menu-guided').checked = false;
   openMainMenu('scenarios');
+  byId('menu-new').click();
 };
 byId('power-button').onclick = () => {
   renderPowerBoard();
@@ -10143,6 +10698,9 @@ byId('menu-continue').onclick = () => playFromMenu();
 byId('menu-new').onclick = () => {
   menuScenario = 'normal';
   byId('menu-guided').checked = false;
+  byId('menu-difficulty').value = 'normal';
+  byId('menu-map-code').value = '';
+  byId('menu-ruins').checked = false;
   showMenuPage('scenarios');
   focusMenuPage();
 };
@@ -10237,6 +10795,8 @@ byId('dog-escort').onchange = renderDispatch;
 byId('mission-focus').onchange = renderDispatch;
 byId('route-post').onchange = renderDispatch;
 byId('route-post-next').onchange = renderDispatch;
+byId('route-target').onchange = renderDispatch;
+byId('route-drop').onchange = renderDispatch;
 for (const key of cargoKeys) byId('cargo-' + key).oninput = renderDispatch;
 byId('mount').onchange = renderDispatch;
 byId('raid-seal').onclick = () => prepareRaid('sealed');
@@ -10373,6 +10933,10 @@ document.addEventListener('keydown', event => {
   }
 });
 window.addEventListener('pagehide', saveColony);
+window.addEventListener('focus', queueCloudSync);
+setInterval(() => {
+  if (!document.hidden) queueCloudSync();
+}, 30000);
 setupConstruction();
 setupHudIcons();
 setupBunkerCamera();

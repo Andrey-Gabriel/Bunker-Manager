@@ -116,6 +116,11 @@
   #sound-toggle[aria-pressed="true"] { color: #f4ead1; background: #405746; border-color: #627359; }
   .menu-settings { margin-top: 14px; padding-top: 12px; border-top: 1px solid #9f997e; }
   .menu-settings h3 { margin: 0 0 7px; }
+  .sound-setting { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; margin-top: 8px; font-size: 13px; }
+  .sound-setting input { grid-column: 1 / -1; width: 100%; margin: 0; accent-color: #405746; }
+  .sound-setting output { font-variant-numeric: tabular-nums; }
+  .motion-setting { display: flex; align-items: center; gap: 7px; margin-top: 10px; min-height: 32px; font-size: 13px; }
+  .motion-setting input { accent-color: #405746; }
   .district { display: grid; gap: 4px; margin: 10px 0; }
   .district label { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
   .resident-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
@@ -193,7 +198,6 @@
   .trade-row { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 10px; padding-top: 8px; }
   .trade-row b { font-size: 12px; }
   #surface-button[data-attention="true"] { color: var(--amber); border-color: var(--amber); }
-  .floor-key { display: flex; flex-wrap: wrap; gap: 4px 13px; font: 10px ui-monospace, monospace; color: var(--muted); }
   @media (max-width: 740px) {
     .room-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .clock { padding: 0; }
@@ -407,7 +411,7 @@
     .staff-tab { flex-basis: 133px; }
     .scene .control, dialog .control, .scenario-list button { min-height: 44px; }
     #stats .stat-label { font-size: 10px; }
-    .bunker-touch { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px;
+    .bunker-touch { display: grid;
       padding: 6px 10px 9px; background: #23342b; }
     .phone-picker { display: grid; gap: 4px; min-width: 0; color: var(--muted); font-size: 12px; }
     .phone-picker select { width: 100%; color: var(--text); background: #1d2b24; border: 1px solid #617263; padding: 6px; }
@@ -459,12 +463,17 @@
     scrollbar-width: none; overscroll-behavior: contain;
     background: repeating-linear-gradient(176deg, #302b1e 0 24px, #28251b 24px 27px, #322b1d 27px 49px); }
   #cutaway-view::-webkit-scrollbar { display: none; }
-  #cutaway-view .cutaway { width: max(100%, calc(100vh * 960 / 451)); width: max(100%, calc(100dvh * 960 / 451)); }
+  #cutaway-view .cutaway {
+    --scene-fit: min(100%, calc(100dvh * 960 / 451));
+    --scene-detail: max(100%, calc(100dvh * 960 / 451));
+    width: calc((var(--scene-fit) + (var(--scene-detail) - var(--scene-fit)) * var(--zoom-blend, 1)) * var(--zoom-scale, 1));
+    margin-inline: auto;
+  }
   #cutaway-view[data-dragging="true"], #cutaway-view[data-dragging="true"] * { cursor: grabbing; }
   #cutaway-view .cutaway { user-select: none; }
   .masthead { position: absolute; z-index: 4; top: var(--hud-top); right: var(--hud-edge); }
   .masthead .timeboard, .stats, .command-column, #build-catalog, .scene-alerts > section,
-  .view-header, .bunker-touch, .floor-key { background: var(--plate); border: 1px solid var(--plate-line);
+  .view-header, .bunker-touch, .camera-controls, .surface-count { background: var(--plate); border: 1px solid var(--plate-line);
     box-shadow: 0 3px #10140fa8, inset 0 1px #d4c18a1f; }
   .masthead .timeboard { display: flex; align-items: center; gap: 9px; padding: 6px 8px; }
   .masthead .clock { color: var(--text); gap: 1px 5px; }
@@ -513,8 +522,16 @@
   #build-status { flex: 1 1 auto; }
   #lift-status { flex: 1 0 100%; order: 1; }
   .view-header .control { min-height: 32px; padding: 5px 7px; font-size: 11px; }
-  .floor-key { position: absolute; bottom: var(--above-dock); left: var(--hud-edge); z-index: 2;
-    max-width: min(550px, 46%); padding: 5px 8px; border: 1px solid var(--plate-line); }
+  .surface-count { position: absolute; left: 50%; top: 23.5%; transform: translateX(-50%); pointer-events: none;
+    padding: 2px 6px; white-space: nowrap; color: #e9d4a7; font: 10px ui-monospace, monospace; }
+  .camera-controls { position: absolute; z-index: 4; top: var(--hud-top); left: var(--hud-edge);
+    display: flex; gap: 3px; padding: 3px; }
+  .camera-controls .control { min-inline-size: 38px; min-block-size: 34px; padding: 3px 6px;
+    font: 700 18px ui-monospace, monospace; }
+  #bunker-zoom[aria-pressed="true"] { color: #fff0c9; border-color: #c6a46c; background: #485339; }
+  #bunker-zoom .camera-icon { display: block; width: 15px; height: 15px; margin: auto;
+    border: solid currentColor; border-width: 2px; clip-path: polygon(0 0, 32% 0, 32% 30%, 68% 30%, 68% 0, 100% 0,
+      100% 32%, 70% 32%, 70% 68%, 100% 68%, 100% 100%, 68% 100%, 68% 70%, 32% 70%, 32% 100%, 0 100%, 0 68%, 30% 68%, 30% 32%, 0 32%); }
   #build-catalog { position: absolute; z-index: 5; right: var(--hud-edge); bottom: var(--above-dock);
     width: min(550px, calc(100% - 2 * var(--hud-edge))); max-height: min(61dvh, 520px);
     overflow-y: auto; overscroll-behavior: contain; background: var(--plate); }
@@ -534,7 +551,7 @@
     .command-column .command .command-short { display: inline; }
   }
   @media (max-width: 675px) {
-    .app { --hud-edge: 7px; --alert-top: calc(var(--hud-top) + 103px); --dock-height: 54px; }
+    .app { --hud-edge: 7px; --stat-alert-offset: 111px; --alert-top: calc(var(--hud-top) + 111px); --dock-height: 54px; }
     .masthead .timeboard { padding: 3px 4px; gap: 5px; }
     .masthead #clock-phase { display: none; }
     .masthead .clock { display: block; white-space: nowrap; }
@@ -545,22 +562,21 @@
     .masthead #pause { font-size: 0; }
     .masthead #pause::before { content: 'Ⅱ'; font-size: 14px; }
     .masthead #pause[data-paused="true"]::before { content: '▶'; }
-    .scene .stats { top: calc(var(--hud-top) + 51px); }
+    .scene .stats { top: calc(var(--hud-top) + 58px); }
     #stats .stat { grid-template-columns: minmax(0, 1fr); grid-template-areas: "label" "value" "meter"; padding: 4px 6px; }
     #cutaway-view { padding-top: 52px; }
-    #cutaway-view .cutaway { width: max(100%, 900px, calc((100dvh - 52px) * 960 / 451)); }
+    #cutaway-view .cutaway { --scene-detail: max(100%, 900px, calc((100dvh - 52px) * 960 / 451));
+      --scene-fit: min(100%, calc(max(1px, 100dvh - 96px) * 960 / 451)); }
     #cutaway-view[data-zoom="overview"] { padding-top: 96px; }
-    #cutaway-view[data-zoom="overview"] .cutaway { width: 100%; }
     .command-column { padding: 3px; }
     .command-column .command { display: grid; justify-content: stretch; justify-items: center;
       align-content: center; gap: 1px; padding: 3px 1px; min-height: 46px; text-align: center; }
     .command-column .command .command-short { display: block; width: auto; color: inherit; font-size: 9px; line-height: 1.1; }
-    .floor-key { display: none; }
     .bunker-touch { position: absolute; z-index: 3; left: var(--hud-edge); right: var(--hud-edge);
       bottom: var(--above-dock); padding: 4px 5px; gap: 4px; }
     .bunker-touch .phone-picker { gap: 2px; font-size: 10px; }
-    .bunker-touch .phone-picker select, .bunker-touch .control { min-height: 40px; }
-    .bunker-touch .control { font-size: 11px; padding-inline: 6px; }
+    .bunker-touch .phone-picker select, .camera-controls .control { min-block-size: 44px; }
+    .camera-controls .control { min-inline-size: 44px; }
     .view-header { left: var(--hud-edge); right: var(--hud-edge); max-width: none;
       bottom: calc(var(--above-dock) + 67px); }
     #build-catalog { max-height: 43dvh; }
@@ -569,8 +585,17 @@
     .scene-alerts .control { min-height: 40px; }
     #notice { bottom: calc(max(7px, env(safe-area-inset-bottom)) + 124px); }
   }
+  @media (max-width: 435px) {
+    .app { --stat-alert-offset: 124px; --alert-top: calc(var(--hud-top) + 124px); }
+    .masthead .timeboard { display: grid; gap: 3px; justify-items: end; }
+    .masthead .clock { grid-row: 2; display: flex; align-items: baseline; }
+    .scene .stats { top: calc(var(--hud-top) + 70px); }
+    #cutaway-view[data-zoom="overview"] { padding-top: 117px; }
+    #cutaway-view .cutaway { --scene-fit: min(100%, calc(max(1px, 100dvh - 117px) * 960 / 451)); }
+  }
   @media (max-width: 388px) {
     .masthead .playback .control { min-width: 34px; }
+    .camera-controls { gap: 2px; padding: 2px; }
   }
   @media (max-width: 355px) {
     .app { --dock-height: 102px; }
@@ -578,7 +603,6 @@
     #notice { bottom: calc(max(7px, env(safe-area-inset-bottom)) + 170px); }
   }
   @media (min-width: 676px) and (max-height: 475px) {
-    .floor-key { display: none; }
     #build-catalog { max-height: 54dvh; }
   }
 </style>
@@ -651,16 +675,21 @@
     </section>
       <div class="bunker-touch phone-only">
         <label class="phone-picker"><span id="touch-lot-label">Cômodos e obras</span><select id="touch-lot"></select></label>
-        <button type="button" class="control" id="bunker-zoom" aria-controls="cutaway-view">Visão geral</button>
+      </div>
+      <div class="camera-controls" role="group" aria-label="Câmera do bunker">
+          <button type="button" class="control" id="bunker-zoom-out" aria-controls="cutaway-view" aria-label="Afastar câmera" title="Afastar câmera">−</button>
+          <button type="button" class="control" id="bunker-zoom" aria-controls="cutaway-view" aria-label="Visão geral do bunker"
+            title="Visão geral do bunker" aria-pressed="false"><span class="camera-icon" aria-hidden="true"></span></button>
+          <button type="button" class="control" id="bunker-zoom-in" aria-controls="cutaway-view" aria-label="Aproximar câmera" title="Aproximar câmera">+</button>
       </div>
       <div class="viewport" id="cutaway-view" tabindex="0" aria-label="Vista do bunker" data-zoom="detail">
         <div class="cutaway">
           <canvas id="bunker" width="960" height="451" role="img" aria-label="Vista lateral do bunker com moradores caminhando entre os cômodos e usando o elevador"></canvas>
           <div class="slots" id="slots" aria-label="Lotes para construção"></div>
           <div class="resident-targets" id="resident-targets" aria-label="Moradores no abrigo"></div>
+          <span class="surface-count" id="outside-use"></span>
         </div>
       </div>
-    <div class="floor-key"><span id="outside-use"></span><span>N1 · exposto ao frio</span><span>N2 · seco</span><span>N3–4 · umidade crescente</span></div>
     <section id="build-catalog" aria-label="Catálogo de construções" hidden>
       <div class="catalog-heading"><h2>Construção</h2><button type="button" class="control" id="close-catalog">Fechar</button></div>
       <div id="categories" class="categories" aria-label="Categorias"></div>
@@ -692,6 +721,11 @@
         <section class="menu-settings" aria-labelledby="menu-settings-title">
           <h3 id="menu-settings-title">Configurações</h3>
           <button class="control" id="sound-toggle" type="button" aria-label="Som do jogo" aria-pressed="true">Som ligado</button>
+          <div class="sound-setting"><label for="ambient-volume">Som ambiente</label><output for="ambient-volume" id="ambient-volume-value">100%</output>
+            <input type="range" min="0" max="100" id="ambient-volume" value="100"></div>
+          <div class="sound-setting"><label for="alert-volume">Alertas e efeitos</label><output for="alert-volume" id="alert-volume-value">100%</output>
+            <input type="range" min="0" max="100" id="alert-volume" value="100"></div>
+          <label class="motion-setting"><input type="checkbox" id="reduced-motion"> Reduzir movimento</label>
         </section>
       </section>
       <section id="menu-scenarios" hidden>
@@ -721,6 +755,7 @@
           <li><b>Energia:</b> escolha quais setores manter ligados com a reserva baixa.</li>
           <li><b>Diário:</b> acompanhe famílias, aulas da escola e o aprendizado dos jovens com mentores.</li>
           <li>Use <b>⏭</b> ao lado do relógio para acelerar até a próxima decisão.</li>
+          <li>Use <b>−</b> e <b>+</b> para afastar e aproximar a câmera. O botão entre eles mostra todo o bunker e volta à vista anterior.</li>
           <li>Use <b>Esc</b> para fechar um painel ou abrir o menu. A partida é salva automaticamente quando o navegador permite.</li>
         </ul>
         <div class="menu-actions"><button type="button" class="control" data-menu-back>Voltar</button></div>
@@ -1025,10 +1060,11 @@
 
 const byId = id => document.getElementById(id);
 const saveKey = 'abrigo-colonia-v1';
+const presentationKey = 'abrigo-apresentacao-v1';
 const saveCopiesKey = 'abrigo-copias-v1';
 const rooms = {
   quarto: { name: 'Dormitório', category: 'Moradia', hours: 4, cost: 12, color: '#ad8ba9', detail: '+2 camas' },
-  alojamento: { name: 'Alojamento', category: 'Moradia', hours: 8, cost: 22, color: '#bc9cbb', detail: '+4 camas', art: 'quarto' },
+  alojamento: { name: 'Alojamento', category: 'Moradia', hours: 8, cost: 22, color: '#bc9cbb', detail: '+4 camas' },
   recreacao: { name: 'Recreação', category: 'Moradia', hours: 4, cost: 10, color: '#d096a3', detail: 'Melhora o ânimo' },
   cozinha: { name: 'Cozinha', category: 'Moradia', hours: 3, cost: 8, color: '#e0ba75', detail: 'Reduz o consumo de comida' },
   enfermaria: { name: 'Enfermaria', category: 'Moradia', hours: 6, cost: 13, color: '#d38e82', detail: 'Recupera saúde com energia' },
@@ -1098,13 +1134,22 @@ const rooms = {
   sementeira: { name: 'Sementeira', category: 'Produção', hours: 6, cost: 15, color: '#a8bd78', detail: 'Com um selecionador e energia, recupera parte da colheita das hortas no inverno', art: 'horta' },
   centralManutencao: { name: 'Central de manutenção', category: 'Infraestrutura', hours: 7, cost: 17, color: '#ba966c', detail: 'Um técnico no local acelera reparos do elevador sem mudar o modo da oficina', art: 'oficina' },
   estacaoTempo: { name: 'Estação meteorológica', category: 'Superfície', hours: 6, cost: 16, color: '#a1b3ca', detail: 'Um observador reduz os atrasos e riscos de viagens no inverno. Mostra a próxima mudança de estação', art: 'mirante' },
-  lavanderia: { name: 'Lavanderia', category: 'Moradia', hours: 5, cost: 12, color: '#9ab9b7', detail: 'Melhora o descanso dos moradores quando há alguém trabalhando, energia e água suficiente', art: 'cisterna' }
+  lavanderia: { name: 'Lavanderia', category: 'Moradia', hours: 5, cost: 12, color: '#9ab9b7', detail: 'Melhora o descanso dos moradores quando há alguém trabalhando, energia e água suficiente', art: 'cisterna' },
+  cabineAcustica: { name: 'Cabine acústica', category: 'Moradia', hours: 4, cost: 10, color: '#a99c86',
+    detail: 'Protege do ruído dos geradores todos os dormitórios deste andar, sem usar energia' },
+  dinamo: { name: 'Dínamo de reserva', category: 'Infraestrutura', hours: 5, cost: 13, color: '#d0a774',
+    detail: 'Gera cerca de 20 kWh por dia com um eletricista no local. A equipe prioriza a operação abaixo de 22 kWh' },
+  composteira: { name: 'Composteira', category: 'Produção', hours: 4, cost: 9, color: '#a0a974',
+    detail: 'Aumenta em 12% a colheita das hortas. Até duas composteiras de superfície contribuem sem consumir energia' },
+  rampaCarga: { name: 'Rampa de carga', category: 'Superfície', hours: 6, cost: 15, color: '#a6a58d',
+    detail: 'Acrescenta 4 unidades à carga das expedições na partida. O bônus vale uma vez por viagem' }
 };
 const maxRoomLevel = 3;
 const outputUpgrade = .20;
 const generatorUpgrade = .30;
 const baseRoomRates = { horta: .17, hidroponia: .222, estufa: .185, viveiro: .10, cisterna: .21,
-  gerador: .34, oficina: .055, sucata: .034 };
+  gerador: .34, dinamo: .14, oficina: .055, sucata: .034 };
+const dynamoPriorityReserve = 22;
 const kitchenPrepRate = .01;
 const kitchenPrepLimit = .008;
 const depositProtection = .30;
@@ -1162,7 +1207,8 @@ const roomSpecialties = {
 };
 // Category controls where a plan is listed. Placement describes its physical requirements.
 const exteriorRooms = new Set(['solar', 'coletor', 'mirante', 'barreira', 'defesa', 'sucata', 'correio',
-  'galinheiro', 'estabulo', 'cavalaria', 'asinario', 'torreAgua', 'turbina', 'silo', 'depositoCampo', 'pomar', 'baliza', 'forragem', 'estacaoTempo']);
+  'galinheiro', 'estabulo', 'cavalaria', 'asinario', 'torreAgua', 'turbina', 'silo', 'depositoCampo', 'pomar', 'baliza', 'forragem', 'estacaoTempo',
+  'composteira', 'rampaCarga']);
 const flexibleRooms = new Set(['estufa', 'canil']);
 const researchTopics = {
   anexos: { title: 'Estruturas externas', legacyHours: 14, unlock: ['solar', 'torreAgua', 'silo'] },
@@ -1199,7 +1245,8 @@ Object.assign(researchPlans, {
   lavanderia: { title: 'Higiene no abrigo', group: 'educacao', hours: 10, cost: 6 },
   sementeira: { title: 'Conservação de sementes', group: 'cultivo', hours: 14, cost: 8 },
   centralManutencao: { title: 'Inspeção de máquinas', group: 'rede', hours: 16, cost: 9, after: 'bateria' },
-  estacaoTempo: { title: 'Observação do clima', group: 'rotas', hours: 12, cost: 7, after: 'cartografia' }
+  estacaoTempo: { title: 'Observação do clima', group: 'rotas', hours: 12, cost: 7, after: 'cartografia' },
+  rampaCarga: { title: 'Movimentação de cargas', group: 'rotas', hours: 11, cost: 7, after: 'cartografia' }
 });
 const duties = {
   geral: ['Geral', 'Assume obras vagas durante o plantão. Horta, cisterna e gerador têm produção básica. Funções especializadas aumentam o rendimento.'],
@@ -2009,6 +2056,7 @@ function decodeColony(saved) {
       Number.isInteger(mission?.tile) && mission.tile >= 0 && mission.tile < saved.world.length &&
       Number.isFinite(mission.returns) && Array.isArray(mission.party) && mission.party.every(id =>
         Number.isInteger(id) && id >= 0 && id < saved.people) &&
+      (mission.load === undefined || Number.isInteger(mission.load) && mission.load > 0) &&
       (mission.routeStops === undefined || Array.isArray(mission.routeStops) && mission.routeStops.length <= 2 &&
         mission.routeStops.every(id => Number.isInteger(id) && id >= 0 && id < saved.world.length)))) return null;
     saved.orders ??= {};
@@ -2198,6 +2246,7 @@ const sectorDefinitions = {
 
 let gridDispatch, ambientMachine;
 let soundRevision = 0;
+const presentation = loadPresentation();
 const gameSoundCues = {
   queue: ['triangle', [255, 185], .075, .075, .055],
   built: ['triangle', [392, 494, 587], .085, .15, .07],
@@ -2214,8 +2263,12 @@ function roomSector(type, lot) {
 
 function baseGeneration(climate = weather()) {
   const rates = { gerador: baseRoomRates.gerador, solar: .40 * climate.sun * climate.solar, turbina: climate.index === 3 ? .33 : .22 };
-  return Object.entries(state.rooms).reduce((total, [lot, type]) => total +
-    (rates[type] && roomEquipmentAvailable(lot) ? rates[type] * roomOutput(lot) : 0), 0);
+  return Object.entries(state.rooms).reduce((total, [lot, type]) => {
+    if (!roomEquipmentAvailable(lot)) return total;
+    if (type === 'dinamo') return total + baseRoomRates.dinamo *
+      Math.min(1.3, specialtyOutput(crewInRoom(lot, 'eletrica'), 'eletrica'));
+    return total + (rates[type] || 0) * roomOutput(lot);
+  }, 0);
 }
 
 function gridAllocation() {
@@ -2334,12 +2387,13 @@ function updateMachineSound() {
   const running = audible && powerSectorActive('production');
   const generator = audible && Object.keys(state.rooms).some(lot => state.rooms[lot] === 'gerador' && roomEquipmentAvailable(lot));
   ambientMachine.master.gain.setTargetAtTime(enabled ? .75 : 0, ambientMachine.context.currentTime, .025);
-  ambientMachine.gain.gain.setTargetAtTime(running ? .021 : generator ? .010 : 0, ambientMachine.context.currentTime, .14);
+  const volume = (running ? .021 : generator ? .010 : 0) * presentation.ambient / 100;
+  ambientMachine.gain.gain.setTargetAtTime(volume, ambientMachine.context.currentTime, .14);
   ambientMachine.motor.frequency.setTargetAtTime(running ? 59 : 44, ambientMachine.context.currentTime, .3);
 }
 
 function playGameSound(cue) {
-  if (!state.sound || !ambientMachine || document.hidden || ambientMachine.context.state !== 'running' ||
+  if (!state.sound || !presentation.alerts || !ambientMachine || document.hidden || ambientMachine.context.state !== 'running' ||
       byId('main-menu').open) return;
   const { context, master } = ambientMachine;
   const [wave, frequencies, gap, length, volume] = gameSoundCues[cue];
@@ -2351,12 +2405,56 @@ function playGameSound(cue) {
     oscillator.type = wave;
     oscillator.frequency.value = frequency;
     envelope.gain.setValueAtTime(.0001, when);
-    envelope.gain.linearRampToValueAtTime(volume, when + .012);
+    envelope.gain.linearRampToValueAtTime(Math.max(.0001, volume * presentation.alerts / 100), when + .012);
     envelope.gain.exponentialRampToValueAtTime(.0001, when + length);
     oscillator.connect(envelope).connect(master);
     oscillator.start(when);
     oscillator.stop(when + length + .015);
   }
+}
+
+function loadPresentation() {
+  let saved;
+  try {
+    saved = JSON.parse(localStorage.getItem(presentationKey));
+  } catch {
+    saved = null;
+  }
+  return {
+    ambient: Number.isInteger(saved?.ambient) ? clamp(saved.ambient, 0, 100) : 100,
+    alerts: Number.isInteger(saved?.alerts) ? clamp(saved.alerts, 0, 100) : 100,
+    reduced: typeof saved?.reduced === 'boolean' ? saved.reduced :
+      Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)
+  };
+}
+
+function setupPresentation() {
+  const save = () => {
+    try {
+      localStorage.setItem(presentationKey, JSON.stringify(presentation));
+    } catch {
+      // Keep the selected settings for this session when storage is unavailable.
+    }
+  };
+  for (const [key, id] of [['ambient', 'ambient-volume'], ['alerts', 'alert-volume']]) {
+    const slider = byId(id);
+    const output = byId(id + '-value');
+    slider.value = presentation[key];
+    output.value = presentation[key] + '%';
+    slider.oninput = () => {
+      presentation[key] = Number(slider.value);
+      output.value = slider.value + '%';
+      if (key === 'ambient') updateMachineSound();
+    };
+    slider.onchange = save;
+  }
+  const motion = byId('reduced-motion');
+  motion.checked = presentation.reduced;
+  motion.onchange = () => {
+    presentation.reduced = motion.checked;
+    if (presentation.reduced) animationTime = 0;
+    save();
+  };
 }
 
 function syncSoundControls() {
@@ -3282,6 +3380,11 @@ function alertness(id) {
   return clamp(1 - Math.max(0, fatigueOf(id) - 42) * .011, .43, 1);
 }
 
+function acousticProtection(lot) {
+  return Object.entries(state.rooms).some(([id, type]) => type === 'cabineAcustica' &&
+    slots[id].level === slots[lot].level && roomEquipmentAvailable(id));
+}
+
 function evolveFatigue() {
   const home = new Set(residentsAtHome());
   const bedding = bedAssignments();
@@ -3293,7 +3396,7 @@ function evolveFatigue() {
     const away = !home.has(id);
     const working = onShift(id);
     const bed = bedding.get(id);
-    const noisy = bed !== undefined && hasNeighborRoom(bed, ['gerador'], roomEquipmentAvailable);
+    const noisy = bed !== undefined && hasNeighborRoom(bed, ['gerador'], roomEquipmentAvailable) && !acousticProtection(bed);
     const shelter = state.outposts[state.sheltered[id]];
     const rest = shelter ? (shelter.shelterShort ? .12 : -.55) :
       away ? .39 : working ? (overtime ? .69 : .32) : -sleepRate * (noisy ? .65 : 1);
@@ -5891,7 +5994,7 @@ function planDispatch(id, party, focus, mount) {
   const kitCost = kit && !stockedKit ? (count('costura') ? 2 : 4) : 0;
   const animal = focus === 'animals' ? tracksAt(state.world[id]) : null;
   const plan = tripPlan(id, party, dog, mount, !!animal);
-  const load = expeditionCapacity(party.length, plan.cargo);
+  const load = expeditionCapacity(party.length, plan.cargo) + (operatingCount('rampaCarga') ? 4 : 0);
   const transfer = isTransfer ? selectedCargo() : null;
   const postPick = byId('route-post').value;
   const postId = !logistics && postPick !== '' && postSites(id).includes(Number(postPick)) ? Number(postPick) : null;
@@ -6239,7 +6342,7 @@ function sendExpedition(scout = false) {
   const fieldMission = !!order || ['supplies', 'people', 'animals'].includes(focus);
   const hasEncounter = focus === 'story' || (fieldMission && (!state.world.some(tile => tile.visited) || Math.random() < .66));
   state.missions.push({
-    tile: id, scout, party, focus, kit: plan.kit, dogId: plan.dog?.id, mountId: mount?.id, cargo: plan.cargo ?? 1,
+    tile: id, scout, party, focus, kit: plan.kit, dogId: plan.dog?.id, mountId: mount?.id, cargo: plan.cargo ?? 1, load: plan.load,
     transfer: plan.transfer, postId: plan.postId, animal: plan.animal, order, partner: plan.partner,
     routeStops: plan.supplies?.map(provision => provision.stop),
     returns: state.clock + plan.time, risk: plan.risk,
@@ -6386,7 +6489,7 @@ function returnLogistics(mission) {
     tile.visited = true;
     tile.development = { kind: 'salvage' };
     const loot = { ...site.loot, materials: (site.loot.materials || 0) + 5 };
-    const packed = limitExpeditionLoot(loot, expeditionCapacity(mission.party.length, mission.cargo ?? 1));
+    const packed = limitExpeditionLoot(loot, mission.load ?? expeditionCapacity(mission.party.length, mission.cargo ?? 1));
     const report = Object.entries(packed).map(([key, amount]) => {
       const room = Math.max(0, Math.floor(capacity(key) - state.resources[key] + .0001));
       return Math.min(room, amount) + ' ' + resourceLabels[key];
@@ -6557,7 +6660,7 @@ function finishExpeditions() {
       (injured ? .65 : 1) * (mission.haulFactor || 1) * search * (mission.cargo ?? 1);
     const haul = repeat || mission.focus === 'animals' ? {} : limitExpeditionLoot(
       Object.fromEntries(Object.entries(site.loot).map(([key, base]) => [key, Math.round(base * multiplier)])),
-      expeditionCapacity(size, mission.cargo ?? 1)
+      mission.load ?? expeditionCapacity(size, mission.cargo ?? 1)
     );
     for (const id of mission.party) {
       gainExperience(id, 'campo', 5);
@@ -6791,7 +6894,8 @@ function supplyRates(climate = weather(), apply = false) {
   const seeds = climate.index === 3 ? Math.min(.25, specialtyOutput(specialistsIn('sementeira', 'sementes'), 'sementes') * .12) : 0;
   const gardens = operatingLots('horta', true).reduce((total, lot) => total +
     roomOutput(lot) * (roomSpecialties.horta[roomSpecialty(lot)].seasons?.[climate.index] ?? 1), 0);
-  const crops = gardens * baseRoomRates.horta * (climate.crop + seeds) +
+  const compost = Math.min(2, operatingCount('composteira')) * .12;
+  const crops = gardens * baseRoomRates.horta * (climate.crop + seeds) * (1 + compost) +
     operatingOutput('hidroponia', true) * baseRoomRates.hidroponia + operatingOutput('estufa', true, slot => !slot.outside) * baseRoomRates.estufa;
   const fruit = climate.index === 3 ? 0 : operatingOutput('pomar') * .26 * climate.sun;
   const outsideCrops = outdoorGreenhouses * .37 * climate.sun * (climate.index === 3 ? .77 : 1) + fruit;
@@ -7501,8 +7605,9 @@ function renderRoomProduction(id, type) {
   control.hidden = !modes;
   const status = byId('production-status');
   if (!modes) {
-    if (['quarto', 'alojamento'].includes(type) && hasNeighborRoom(id, ['gerador'])) {
-      byId('room-info').textContent += ' Gerador ao lado · descanso 35% mais lento enquanto ligado.';
+    if (['quarto', 'alojamento'].includes(type) && hasNeighborRoom(id, ['gerador'], roomEquipmentAvailable)) {
+      byId('room-info').textContent += acousticProtection(id) ? ' Protegido do ruído pela cabine acústica.' :
+        ' Gerador ao lado · descanso 35% mais lento enquanto ligado.';
     } else if (type === 'gerador' && hasNeighborRoom(id, ['quarto', 'alojamento'])) {
       byId('room-info').textContent += ' O ruído afeta o descanso nos dormitórios adjacentes.';
     }
@@ -7831,9 +7936,16 @@ function renderRoomInfo(id) {
   const level = slots[id].level;
   const climate = slots[id].outside ? null : floorExposure(level);
   const floor = climate ? 'Nível ' + (level + 1) + ' · ' +
-    (climate.cold > .65 ? 'exposto ao frio' : 'protegido do frio') + ' · ' + (climate.damp > .5 ? 'úmido.' : 'seco.') :
+    (climate.cold > .65 ? 'exposto ao frio' : 'protegido do frio') + ' · ' +
+    (climate.damp >= 1.5 ? 'umidade alta.' : climate.damp > .5 ? 'úmido.' : 'seco.') :
     'Lote externo ' + (slots[id].col + 1) + '.';
   byId('room-info').textContent = (work || roomUpgrades[type] ? '' : room.detail + '. ') + floor;
+  if (!work && type === 'dinamo') {
+    const operators = crewInRoom(id, 'eletrica');
+    byId('room-info').textContent += roomEquipmentAvailable(id) ?
+      operators.length ? ' Em operação com ' + operators.map(walker => residentName(walker.id)).join(', ') + '.' :
+        ' Aguardando alguém em Eletricidade.' : ' Equipamento indisponível.';
+  }
   const sector = !work && roomSector(type, id);
   if (sector) byId('room-info').textContent += ' ' + sectorDefinitions[sector][0] +
     (isRoomPowered(id, type) ? ' · com energia.' : ' · sem energia.');
@@ -8037,6 +8149,50 @@ function setupHudIcons() {
 
 function setupBunkerCamera() {
   const view = byId('cutaway-view');
+  const scene = view.querySelector('.cutaway');
+  const out = byId('bunker-zoom-out');
+  const overview = byId('bunker-zoom');
+  const inward = byId('bunker-zoom-in');
+  const levels = [0, .5, 1, 1.3, 1.65];
+  let level = 2, previousLevel = level;
+  let overviewAnchor = { x: .5, y: .5 };
+
+  function changeZoom(next) {
+    if (next === level || next < 0 || next >= levels.length) return;
+    const viewport = view.getBoundingClientRect();
+    const center = { x: viewport.left + view.clientWidth / 2, y: viewport.top + view.clientHeight / 2 };
+    const bounds = scene.getBoundingClientRect();
+    const anchor = level === 0 ? overviewAnchor : {
+      x: clamp((center.x - bounds.left) / bounds.width, 0, 1),
+      y: clamp((center.y - bounds.top) / bounds.height, 0, 1)
+    };
+    if (next === 0) {
+      previousLevel = level;
+      overviewAnchor = anchor;
+    }
+    level = next;
+    const zoom = levels[level];
+    view.dataset.zoom = level === 0 ? 'overview' : 'detail';
+    view.style.setProperty('--zoom-blend', Math.min(zoom, 1));
+    view.style.setProperty('--zoom-scale', Math.max(zoom, 1));
+    out.disabled = level === 0;
+    overview.setAttribute('aria-pressed', String(level === 0));
+    overview.title = level === 0 ? 'Voltar à ampliação anterior' : 'Visão geral do bunker';
+    inward.disabled = level === levels.length - 1;
+    const updated = scene.getBoundingClientRect();
+    view.scrollLeft += updated.left + anchor.x * updated.width - center.x;
+    view.scrollTop += updated.top + anchor.y * updated.height - center.y;
+  }
+
+  out.onclick = () => changeZoom(level - 1);
+  overview.onclick = () => changeZoom(level === 0 ? previousLevel : 0);
+  inward.onclick = () => changeZoom(level + 1);
+  view.addEventListener('keydown', event => {
+    if (event.ctrlKey || event.metaKey || event.altKey || !['+', '=', '-', '0'].includes(event.key)) return;
+    event.preventDefault();
+    if (event.key === '0') overview.click();
+    else changeZoom(level + (event.key === '-' ? -1 : 1));
+  });
   let origin;
   let dragged = false;
   view.addEventListener('pointerdown', event => {
@@ -8300,7 +8456,7 @@ function drawEntrance() {
   }
 }
 
-function drawExterior(slot, type, work) {
+function drawExterior(slot, type, work, grade) {
   const { x, y, width } = slot;
   const base = y + 49;
   if (!type && !work) {
@@ -8312,7 +8468,7 @@ function drawExterior(slot, type, work) {
   const room = rooms[type || work.type];
   const color = room.color;
   rect(x + 1, base - 3, width - 2, 4, '#555247');
-  if (work) {
+  if (work && !work.upgrade) {
     rect(x + 8, base - 25, 3, 22, '#9b8057');
     rect(x + 60, base - 25, 3, 22, '#9b8057');
     rect(x + 8, base - 24, 55, 2, '#9b8057');
@@ -8321,21 +8477,36 @@ function drawExterior(slot, type, work) {
     return;
   }
   if (type === 'solar') {
+    const rows = grade === 3 ? [base - 36, base - 23] : [base - (grade === 2 ? 29 : 24)];
     for (const u of [x + 5, x + 36]) {
-      rect(u + 12, base - 19, 4, 16, '#4c534c');
-      rect(u, base - 24, 27, 13, '#405d71');
-      rect(u + 1, base - 24, 25, 2, color);
-      for (let i = 6; i <= 24; i += 6) rect(u + i, base - 22, 1, 9, '#708598');
+      rect(u + 12, rows[0] + 4, grade > 1 ? 6 : 4, base - rows[0] - 6, '#4c534c');
+      for (const top of rows) {
+        const height = grade === 2 ? 17 : 13;
+        rect(u, top, 27, height, '#405d71');
+        rect(u + 1, top, 25, 2, color);
+        for (let i = 6; i <= 24; i += 6) rect(u + i, top + 2, 1, height - 4, '#708598');
+      }
     }
   } else if (type === 'turbina' || type === 'mirante' || type === 'estacaoTempo') {
-    rect(x + 32, base - 38, 5, 36, '#575c55');
+    const hub = base - 37 - (grade - 1) * 4;
+    rect(x + 32, hub, grade > 1 ? 7 : 5, base - hub - 2, '#575c55');
     if (type === 'turbina') {
       const phase = animationTime * 2.5;
       for (let i = 0; i < 3; i++) {
         const theta = phase + i * Math.PI * 2 / 3;
-        for (let r = 3; r < 12; r++) rect(x + 34 + Math.cos(theta) * r, base - 37 + Math.sin(theta) * r, 2, 2, color);
+        for (let r = 3; r < 12 + (grade - 1) * 3; r++) rect(x + 34 + Math.cos(theta) * r, hub + Math.sin(theta) * r, grade === 3 ? 3 : 2, 2, color);
       }
-      rect(x + 32, base - 39, 5, 5, '#6e766f');
+      rect(x + 31, hub - 2, grade > 1 ? 8 : 5, 5, '#6e766f');
+      if (grade > 1) {
+        rect(x + 23, base - 26, 3, 23, '#646c63');
+        rect(x + 43, base - 26, 3, 23, '#646c63');
+        rect(x + 25, base - 26, 19, 2, '#85897a');
+      }
+      if (grade === 3) {
+        rect(x + 48, base - 30, 14, 19, '#626e67');
+        rect(x + 51, base - 26, 8, 3, color);
+        rect(x + 11, base - 8, 50, 5, '#8a8270');
+      }
     } else {
       rect(x + 21, base - 41, 27, 13, '#3e4942');
       rect(x + 20, base - 43, 29, 3, color);
@@ -8346,27 +8517,62 @@ function drawExterior(slot, type, work) {
       }
     }
   } else if (type === 'torreAgua' || type === 'silo') {
-    rect(x + 21, base - 21, 4, 18, '#595b4f');
-    rect(x + 44, base - 21, 4, 18, '#595b4f');
-    rect(x + 20, base - 37, 29, 22, '#535f5a');
-    rect(x + 18, base - 35, 33, 15, color);
-    rect(x + 19, base - 28, 31, 2, '#596a64');
-    rect(x + 25, base - 39, 19, 3, '#6e786a');
+    const containers = grade === 1 ? [18] : [5, 37];
+    const tankWidth = grade === 1 ? 33 : 28;
+    const top = base - 35 - (grade - 1) * 4;
+    for (const left of containers) {
+      for (const foot of [3, tankWidth - 7]) rect(x + left + foot, base - 22, 4, 19, '#595b4f');
+      rect(x + left + 2, top - 2, tankWidth - 4, base - top - 13, '#535f5a');
+      rect(x + left, top, tankWidth, 15 + (grade - 1) * 3, color);
+      rect(x + left + 1, top + 7, tankWidth - 2, 2, '#596a64');
+      rect(x + left + 6, top - 4, tankWidth - 12, 3, '#6e786a');
+    }
+    if (grade === 3) rect(x + 10, base - 10, 50, 3, '#8d9c8c');
+  } else if (type === 'sucata') {
+    const stacks = grade === 1 ? [8, 34] : [6, 25, 44];
+    for (const left of stacks) {
+      const height = 10 + (left % 5) + grade * 3;
+      rect(x + left, base - height, 17, height - 3, '#5b6058');
+      rect(x + left + 2, base - height - 4, 13, 4, color);
+      rect(x + left + 4, base - height + 4, 9, 2, '#989b88');
+    }
+    if (grade === 3) {
+      rect(x + 8, base - 35, 49, 3, '#9e8661');
+      rect(x + 9, base - 34, 4, 17, '#9e8661');
+      rect(x + 47, base - 34, 2, 8, '#939889');
+    }
+  } else if (type === 'composteira' || type === 'rampaCarga') {
+    if (type === 'composteira') for (const offset of [7, 35]) {
+      rect(x + offset, base - 21, 26, 18, '#544530');
+      rect(x + offset + 3, base - 25, 20, 5, '#788654');
+      for (const stripe of [7, 12, 17]) rect(x + offset + stripe, base - 20, 1, 14, '#8a7852');
+    }
+    else {
+      rect(x + 18, base - 15, 44, 12, '#555a4e');
+      rect(x + 34, base - 29, 23, 14, '#786145');
+      rect(x + 38, base - 25, 15, 2, color);
+      for (let step = 0; step < 7; step++) rect(x + 5 + step * 3, base - 5 - step * 2, 5, 2, '#9a9987');
+    }
   } else {
-    rect(x + 8, base - 21, 55, 18, '#535241');
-    rect(x + 5, base - 25, 60, 4, color);
+    const roof = base - 25 - (grade - 1) * 5;
+    rect(x + 8, roof + 4, 55, base - roof - 7, '#535241');
+    rect(x + 5, roof, 60, grade === 3 ? 6 : 4, color);
     rect(x + 13, base - 18, 12, 15, '#393c33');
     rect(x + 30, base - 16, 27, 4, '#899176');
     if (type === 'coletor') {
-      rect(x + 5, base - 28, 60, 3, '#afd0d0');
+      rect(x + 5, roof - 3, 60, 3, '#afd0d0');
       rect(x + 30, base - 20, 6, 13, '#79948f');
+      if (grade > 1) for (const barrel of grade === 3 ? [9, 25, 42] : [9, 45]) {
+        rect(x + barrel, base - 17, 14, 14, '#52767a');
+        rect(x + barrel + 2, base - 16, 10, 2, color);
+      }
     } else if (type === 'estufa') {
-      rect(x + 11, base - 20, 48, 14, '#748e6d');
-      for (let i = 17; i < 60; i += 9) rect(x + i, base - 20, 1, 14, '#a5b791');
+      rect(x + 11, roof + 5, 48, base - roof - 11, '#748e6d');
+      for (let i = 17; i < 60; i += grade === 3 ? 6 : 9) rect(x + i, roof + 5, 1, base - roof - 11, '#a5b791');
     } else if (type === 'pomar' || type === 'forragem') {
       const tall = type === 'pomar';
       for (const offset of [13, 32, 49]) {
-        const rise = tall ? 18 : 10;
+        const rise = tall ? 18 + (grade - 1) * 4 : 10;
         rect(x + offset + 2, base - rise, 3, rise, '#4d4634');
         rect(x + offset - 3, base - rise - 4, 13, tall ? 11 : 7, '#68744d');
         rect(x + offset + 4, base - rise - 2, 4, 3, tall ? '#c18b63' : '#b3bc81');
@@ -8376,15 +8582,23 @@ function drawExterior(slot, type, work) {
       rect(x + 26, base - 34, 13, 2, '#95856a');
       rect(x + 29, base - 43, 7, 4, state.resources.power > 0 && Math.floor(animationTime * 3) % 2 ? '#f7ca91' : '#8d644b');
     }
+    if (grade > 1) rect(x + 64, roof + 4, 2, base - roof - 7, grade === 3 ? '#c5ab79' : '#788178');
   }
   const short = { solar: 'SOLAR', coletor: 'CHUVA', defesa: 'PORTARIA', mirante: 'VIGIA', barreira: 'PORTÃO',
     sucata: 'SUCATA', correio: 'TROCAS', galinheiro: 'GALINHAS', estabulo: 'CABRAS', cavalaria: 'CAVALOS',
     asinario: 'BURROS', torreAgua: 'ÁGUA', turbina: 'EÓLICA', silo: 'SILO', depositoCampo: 'CARGA',
-    estufa: 'ESTUFA', canil: 'CANIL', pomar: 'POMAR', forragem: 'FORRAGEM', baliza: 'BALIZA', estacaoTempo: 'CLIMA' };
+    estufa: 'ESTUFA', canil: 'CANIL', pomar: 'POMAR', forragem: 'FORRAGEM', baliza: 'BALIZA', estacaoTempo: 'CLIMA',
+    composteira: 'COMPOSTO', rampaCarga: 'RAMPA' };
   const text = short[type];
   if (text) {
-    rect(x + 6, y + 3, 58, 11, '#232922');
-    label(text, x + 10, y + 11, color, 8);
+    const sign = type === 'turbina' ? base - 13 : y + 3;
+    rect(x + 6, sign, 58, 11, '#232922');
+    label(text, x + 10, sign + 8, color, 8);
+  }
+  if (work?.upgrade) {
+    rect(x + 7, base - 13, 56, 9, '#30281d');
+    label('REFORMA', x + 10, base - 6, '#f1d4a2', 8);
+    rect(x + 8, base - 4, 54 * (1 - work.remaining / work.total), 2, '#e2b771');
   }
 }
 
@@ -8421,7 +8635,7 @@ function drawEmpty(slot, open) {
   if (selected || open) label('+', x + 67, y + 42, cue, 15);
 }
 
-function drawRoom(slot, type, powerOn) {
+function drawRoom(slot, type, powerOn, grade) {
   const { x, y } = slot;
   const room = rooms[type];
   rect(x, y, roomWidth, 69, '#23271e');
@@ -8443,6 +8657,18 @@ function drawRoom(slot, type, powerOn) {
   rect(x + 138, y + 4, 4, 65, '#64604c');
   rect(x + 2, y + 46, 4, 21, '#252923');
   rect(x + 138, y + 46, 4, 21, '#252923');
+  if (grade > 1) {
+    const beam = grade === 3 ? '#9f8864' : '#738476';
+    rect(x + 5, y + 19, 134, 3, beam);
+    for (const column of [7, 132]) {
+      rect(x + column, y + 21, grade === 3 ? 5 : 3, 35, beam);
+      rect(x + column - 1, y + 53, 7, 3, '#353d34');
+    }
+    if (grade === 3) {
+      rect(x + 11, y + 57, 121, 3, '#b39767');
+      for (const fixture of [37, 86]) rect(x + fixture, y + 22, 21, 2, powerOn ? '#c9c49c' : '#6e756a');
+    }
+  }
   rect(x + 8, y + 3, 2, 14, room.color);
   label(room.name.toUpperCase(), x + 14, y + 14, room.color, room.name.length > 16 ? 8 : 10);
   rect(x + 116, y + 7, 15, 3, '#24271e');
@@ -8459,7 +8685,7 @@ function drawRoom(slot, type, powerOn) {
     ctx.fill();
     ctx.globalAlpha = 1;
   }
-  drawProps(x, y, room.art || type, room.color, powerOn);
+  drawProps(x, y, room.art || type, room.color, powerOn, grade);
   if (type === 'bercario') {
     for (const offset of [25, 82]) {
       rect(x + offset, y + 39, 31, 13, '#8d745c');
@@ -8467,6 +8693,10 @@ function drawRoom(slot, type, powerOn) {
       for (let rail = 4; rail < 29; rail += 5) rect(x + offset + rail, y + 41, 1, 11, '#66584a');
       rect(x + offset + 2, y + 50, 2, 8, '#705b4b');
       rect(x + offset + 27, y + 50, 2, 8, '#705b4b');
+    }
+    if (grade > 1) {
+      rect(x + 33, y + 27, grade === 3 ? 74 : 34, 5, '#8f7962');
+      for (const blanket of grade === 3 ? [36, 59, 82] : [36, 51]) rect(x + blanket, y + 24, 12, 3, room.color);
     }
   }
   if (!powerOn) {
@@ -8496,13 +8726,30 @@ function drawRoomGrade(slot, level) {
   label('G' + level, x + 2, y + 8, '#e2c68b', 8);
 }
 
-function drawProps(x, y, type, color, powerOn) {
+function drawProps(x, y, type, color, powerOn, grade = 1) {
   const prop = (a, b, w, h, shade) => rect(x + a, y + b, w, h, shade);
   const frame = '#24261e';
   const metal = '#676953';
   const wood = '#68543b';
   const light = '#d4c89e';
   switch (type) {
+    case 'cabineAcustica':
+      for (const offset of [19, 48, 77, 106]) {
+        prop(offset, 25, 20, 23, '#736758');
+        for (let rib = 2; rib < 18; rib += 4) prop(offset + rib, 27, 1, 19, color);
+      }
+      prop(31, 48, 87, 5, wood);
+      break;
+    case 'dinamo':
+      prop(44, 34, 48, 22, wood);
+      prop(50, 38, 35, 13, metal);
+      prop(20, 34, 24, 20, frame);
+      prop(23, 37, 18, 14, '#8b795d');
+      prop(29, 36, 6, 16, metal);
+      prop(32, 41, 22, 3, color);
+      prop(93, 35, 22, 21, frame);
+      prop(99, 39, 10, 4, powerOn ? '#bdd479' : metal);
+      break;
     case 'escola':
       prop(16, 25, 49, 18, '#273b30');
       prop(15, 24, 51, 2, wood);
@@ -8549,9 +8796,9 @@ function drawProps(x, y, type, color, powerOn) {
       }
       break;
     case 'viveiro':
-      for (const shelf of [34, 49]) {
+      for (const shelf of grade === 3 ? [31, 42, 53] : [34, 49]) {
         prop(27, shelf, 90, 5, wood);
-        for (let i = 36; i < 112; i += 13) {
+        for (let i = 36; i < 112; i += grade > 1 ? 10 : 13) {
           prop(i, shelf - 6, 7, 3, i % 3 ? color : '#dec1a1');
           prop(i + 2, shelf - 3, 2, 3, light);
         }
@@ -8656,16 +8903,23 @@ function drawProps(x, y, type, color, powerOn) {
         prop(offset, 36, 11, 2, light);
         prop(offset, 49, 17, 5, color);
       }
+      if (grade > 1) {
+        prop(20, 30, 102, 3, wood);
+        for (const tray of grade === 3 ? [23, 43, 63, 83, 103] : [31, 57, 83]) prop(tray, 26, 13, 4, light);
+      }
       break;
     case 'estufa':
-      prop(31, 27, 83, 30, '#4e6658');
-      prop(34, 30, 77, 24, '#354d40');
-      prop(35, 48, 74, 5, wood);
-      for (const offset of [42, 58, 74, 90]) {
-        prop(offset, 37, 4, 11, '#789359');
-        prop(offset - 3, 40, 10, 4, color);
+      prop(31, grade > 1 ? 23 : 27, 83, grade > 1 ? 34 : 30, '#4e6658');
+      prop(34, grade > 1 ? 26 : 30, 77, grade > 1 ? 28 : 24, '#354d40');
+      for (const shelf of grade === 3 ? [38, 53] : [48]) {
+        prop(35, shelf, 74, 5, wood);
+        for (const offset of [42, 58, 74, 90]) {
+          prop(offset, shelf - 11, 4, 11, '#789359');
+          prop(offset - 3, shelf - 8, 10, 4, color);
+        }
       }
-      prop(70, 28, 2, 27, '#87977c');
+      prop(70, grade > 1 ? 24 : 28, 2, grade > 1 ? 31 : 27, '#87977c');
+      if (grade === 2) prop(37, 31, 69, 2, '#a2b587');
       break;
     case 'coletor':
       prop(30, 27, 68, 4, color);
@@ -8676,6 +8930,17 @@ function drawProps(x, y, type, color, powerOn) {
       prop(105, 29, 3, 26, metal);
       break;
     case 'camara':
+      if (grade > 1) {
+        const doors = grade === 3 ? [22, 57, 92] : [28, 71];
+        const width = grade === 3 ? 30 : 40;
+        for (const left of doors) {
+          prop(left, 24, width, 33, frame);
+          prop(left + 2, 28, width - 4, 26, '#637e7b');
+          prop(left + 5, 31, width - 10, 2, color);
+          prop(left + width - 8, 40, 4, 3, light);
+        }
+        break;
+      }
       prop(28, 25, 87, 32, frame);
       prop(31, 28, 81, 26, '#5b6d6c');
       prop(71, 28, 2, 26, frame);
@@ -8708,40 +8973,76 @@ function drawProps(x, y, type, color, powerOn) {
       prop(97, 34, 14, 8, '#303b35');
       break;
     case 'quarto':
-      for (const a of [23, 80]) {
-        prop(a, 33, 40, 21, frame);
-        prop(a, 37, 40, 3, light);
-        prop(a, 41, 40, 9, color);
-        prop(a + 3, 42, 10, 7, '#ded0b5');
-        prop(a, 50, 40, 4, wood);
-        prop(a + 2, 53, 4, 4, wood);
-        prop(a + 34, 53, 4, 4, wood);
-      }
-      break;
-    case 'horta':
-      for (const a of [23, 73]) {
-        prop(a, 45, 47, 9, wood);
-        prop(a + 2, 44, 43, 3, frame);
-        for (let i = 5; i < 46; i += 10) {
-          prop(a + i, 35 + i % 4, 2, 9, '#9cb467');
-          prop(a + i - 3, 36 + i % 4, 7, 4, i % 3 ? '#799744' : '#b0bd62');
-          prop(a + i + 2, 34 + i % 4, 3, 4, '#68864d');
+    case 'alojamento': {
+      const shared = type === 'alojamento';
+      const positions = shared && grade > 1 ? [17, 55, 93] : [23, 80];
+      const width = positions.length === 3 ? 32 : 40;
+      const upper = shared ? (grade === 3 ? 3 : 2) : grade - 1;
+      const bed = (left, top) => {
+        prop(left, top, width, 21, frame);
+        prop(left, top + 4, width, 3, light);
+        prop(left, top + 8, width, 9, color);
+        prop(left + 3, top + 9, 10, 7, '#ded0b5');
+        prop(left, top + 17, width, 4, wood);
+      };
+      positions.forEach((left, index) => {
+        bed(left, 35);
+        if (index < upper) {
+          bed(left, 19);
+          prop(left + width - 4, 21, 2, 35, '#998a70');
+          for (const rung of [27, 34, 41, 48]) prop(left + width - 8, rung, 6, 1, '#998a70');
         }
-        prop(a + 4, 27, 38, 2, powerOn ? '#d9cd7e' : metal);
+      });
+      break;
+    }
+    case 'horta': {
+      const racks = grade === 3 ? [35, 53] : [grade === 2 ? 49 : 47];
+      for (const a of [23, 73]) {
+        for (const bottom of racks) {
+          prop(a, bottom, 47, 6, wood);
+          prop(a + 2, bottom - 2, 43, 3, frame);
+          for (let i = 5; i < 46; i += grade > 1 ? 8 : 10) {
+            const leaf = bottom - 13 + i % 4;
+            prop(a + i, leaf, 2, 9, '#9cb467');
+            prop(a + i - 3, leaf + 1, 7, 4, i % 3 ? '#799744' : '#b0bd62');
+          }
+        }
+        prop(a + 4, grade === 3 ? 25 : 27, 38, 2, powerOn ? '#d9cd7e' : metal);
+        if (grade > 1) prop(a + 45, 28, 2, 28, '#9cae8b');
+      }
+      if (grade === 2) prop(25, 32, 93, 2, '#90a890');
+      break;
+    }
+    case 'cisterna': {
+      const tankWidth = grade === 1 ? 39 : 29;
+      const top = 30 - (grade - 1) * 3;
+      for (const a of grade === 1 ? [27, 76] : [21, 58, 95]) {
+        prop(a + 5, top - 4, tankWidth - 10, 4, metal);
+        prop(a, top, tankWidth, 53 - top, '#446663');
+        prop(a + 4, top + 3, 4, 51 - top, color);
+        prop(a, 43, tankWidth, 2, '#8aa79a');
+        for (const leg of [7, tankWidth - 10]) prop(a + leg, 53, 5, 4, metal);
+      }
+      prop(grade === 1 ? 64 : 24, 49, grade === 1 ? 14 : 96, grade === 3 ? 4 : 3, '#798e85');
+      if (grade === 3) {
+        prop(53, 19, 40, 8, '#526761');
+        prop(61, 21, 25, 2, powerOn ? '#bad0a6' : metal);
       }
       break;
-    case 'cisterna':
-      for (const a of [27, 76]) {
-        prop(a + 5, 26, 29, 4, metal);
-        prop(a, 30, 39, 23, '#446663');
-        prop(a + 4, 33, 4, 18, color);
-        prop(a, 43, 39, 2, '#8aa79a');
-        prop(a + 10, 53, 5, 4, metal);
-        prop(a + 25, 53, 5, 4, metal);
-      }
-      prop(64, 49, 14, 3, metal);
-      break;
+    }
     case 'gerador':
+      if (grade > 1) {
+        prop(19, 48, 105, 8, metal);
+        for (const offset of grade === 3 ? [27, 59, 91] : [32, 77]) {
+          prop(offset, 30, grade === 3 ? 26 : 32, 22, wood);
+          prop(offset + 4, 33, 18, 12, frame);
+          for (let rib = 6; rib < 20; rib += 4) prop(offset + rib, 35, 2, 8, metal);
+          prop(offset + 5, 47, 6, 2, powerOn ? '#bdd479' : metal);
+        }
+        prop(22, 25, 98, grade === 3 ? 5 : 3, color);
+        if (grade === 3) prop(112, 25, 6, 22, metal);
+        break;
+      }
       prop(39, 29, 66, 27, wood);
       prop(43, 33, 58, 19, '#755d40');
       prop(48, 37, 24, 11, frame);
@@ -8753,6 +9054,23 @@ function drawProps(x, y, type, color, powerOn) {
       prop(21, 38, 5, 16, metal);
       break;
     case 'enfermaria':
+      if (grade > 1) {
+        for (const left of [24, 79]) {
+          prop(left, 41, 42, 8, color);
+          prop(left + 1, 42, 12, 4, light);
+          prop(left, 49, 43, 4, metal);
+        }
+        prop(69, 31, 4, 25, '#9ba294');
+        prop(60, 28, 20, 9, '#2b3d37');
+        prop(64, 31, 13, 2, powerOn ? '#bdd479' : light);
+        if (grade === 3) {
+          prop(25, 26, 26, 9, '#4e645a');
+          prop(93, 26, 29, 9, '#4e645a');
+          prop(30, 29, 15, 2, light);
+          prop(99, 29, 15, 2, light);
+        }
+        break;
+      }
       prop(40, 43, 62, 8, '#b3b59c');
       prop(40, 51, 62, 4, metal);
       prop(45, 53, 4, 4, metal);
@@ -8768,6 +9086,18 @@ function drawProps(x, y, type, color, powerOn) {
       prop(42, 35, 22, 7, color);
       prop(78, 27, 34, 12, frame);
       for (let i = 0; i < 4; i++) prop(82 + i * 7, 29, 3, 7, light);
+      if (grade > 1) {
+        prop(22, 39, 100, 5, '#7d8578');
+        prop(27, 26, 39, 13, '#586159');
+        for (const tool of [31, 40, 51]) prop(tool, 29, 3, 7, light);
+        prop(93, 45, 22, 11, '#5e6251');
+      }
+      if (grade === 3) {
+        prop(26, 38, 21, 5, color);
+        prop(30, 29, 15, 10, '#7e8a80');
+        prop(31, 29, 10, 3, '#afb1a0');
+        prop(52, 43, 66, 4, '#a3916a');
+      }
       break;
     case 'recreacao':
       prop(24, 43, 32, 12, color);
@@ -8776,6 +9106,12 @@ function drawProps(x, y, type, color, powerOn) {
       prop(88, 38, 24, 8, '#8a5b62');
       prop(64, 44, 17, 4, light);
       prop(71, 47, 4, 9, wood);
+      if (grade > 1) {
+        prop(45, 24, 52, 12, frame);
+        prop(49, 27, 44, 6, grade === 3 ? '#879e91' : '#68726a');
+        prop(59, 36, 26, 3, metal);
+        if (grade === 3) for (const side of [31, 102]) prop(side, 25, 10, 11, '#78766a');
+      }
       break;
     case 'cozinha':
       prop(19, 45, 104, 11, wood);
@@ -8784,8 +9120,27 @@ function drawProps(x, y, type, color, powerOn) {
       prop(34, 28, 17, 12, frame);
       prop(78, 36, 16, 6, '#a5aaa0');
       prop(83, 33, 7, 3, metal);
+      if (grade > 1) {
+        prop(65, 23, 49, 7, metal);
+        for (const hook of [72, 87, 102]) prop(hook, 27, 2, 8, light);
+        if (grade === 3) {
+          prop(96, 32, 19, 24, '#758886');
+          prop(99, 41, 13, 2, frame);
+        }
+      }
       break;
     case 'deposito':
+      if (grade > 1) {
+        for (const shelf of grade === 3 ? [28, 40, 53] : [35, 53]) {
+          prop(20, shelf, 104, 3, metal);
+          for (const left of [25, 47, 70, 93]) {
+            prop(left, shelf - 7, 18, 7, wood);
+            prop(left + 2, shelf - 6, 14, 2, color);
+          }
+        }
+        for (const post of [20, 121]) prop(post, 25, 3, 32, '#9a8967');
+        break;
+      }
       for (let i = 0; i < 4; i++) {
         prop(24 + i * 24, 41 - (i % 2) * 7, 20, 15 + (i % 2) * 7, wood);
         prop(25 + i * 24, 42 - (i % 2) * 7, 18, 2, color);
@@ -8807,7 +9162,7 @@ let lift, lastWalkTick = 0;
 const workspaces = {
   cultivo: ['horta', 'estufa', 'hidroponia', 'viveiro', 'pomar'],
   mecanica: ['oficina', 'ferramentaria'], soldagem: ['ferramentaria', 'sucata'],
-  eletrica: ['gerador', 'estabilizador', 'solar', 'turbina'], hidraulica: ['cisterna', 'casaBombas', 'coletor'],
+  eletrica: ['gerador', 'estabilizador', 'solar', 'turbina', 'dinamo'], hidraulica: ['cisterna', 'casaBombas', 'coletor'],
   cuidado: ['enfermaria', 'triagem'], triagem: ['triagem', 'enfermaria'], culinaria: ['cozinha', 'padaria'],
   conservacao: ['deposito', 'camara', 'silo'], negociacao: ['radio'], veterinaria: ['clinicaAnimal'],
   pesquisa: ['laboratorio'], vigia: ['guarda', 'mirante', 'alarme'], treino: ['academia'],
@@ -8929,6 +9284,10 @@ function chooseWalkerDestination(walker, bedding, classes = new Map()) {
   const types = workspaces[activity];
   const locations = types ? Object.entries(state.rooms).filter(([, type]) => types.includes(type))
     .sort(([, a], [, b]) => types.indexOf(a) - types.indexOf(b)).map(([lot]) => Number(lot)) : [];
+  if (activity === 'eletrica' && state.resources.power <= dynamoPriorityReserve) {
+    const generators = locations.filter(lot => state.rooms[lot] === 'dinamo' && roomEquipmentAvailable(lot) && canReachLot(walker, lot));
+    if (generators.length) return lotDestination(generators[id % generators.length], id, activity);
+  }
   if (activity === 'recuperacao') {
     const available = locations.filter(lot => isRoomPowered(lot) && canReachLot(walker, lot));
     const bed = bedding.get(id);
@@ -9215,7 +9574,7 @@ const menuArt = byId('menu-art').getContext('2d');
 function drawScene(timestamp) {
   const dt = Math.min(.05, (timestamp - (lastFrame || timestamp)) / 1000);
   lastFrame = timestamp;
-  if (campaignStarted && !paused && !state.ended && !byId('main-menu').open &&
+  if (!presentation.reduced && campaignStarted && !paused && !state.ended && !byId('main-menu').open &&
       !byId('journal').open && !byId('staff').open && !byId('research-board').open) {
     const step = dt * (1 + (activeSpeed() - 1) * .18);
     animationTime += step;
@@ -9226,7 +9585,7 @@ function drawScene(timestamp) {
   drawSurfaceLight(climate);
   drawEntrance();
   for (const id of outsideIds) {
-    drawExterior(slots[id], state.rooms[id], state.works[id]);
+    drawExterior(slots[id], state.rooms[id], state.works[id], roomLevel(id));
     if (!state.works[id]) drawRoomGrade(slots[id], roomLevel(id));
   }
   drawWeather(climate);
@@ -9241,8 +9600,8 @@ function drawScene(timestamp) {
     if (slot.outside) return;
     const room = state.rooms[id];
     if (room) {
-      const powered = isRoomPowered(id, room);
-      drawRoom(slot, room, powered);
+      const powered = room === 'dinamo' ? roomEquipmentAvailable(id) && crewInRoom(id, 'eletrica').length > 0 : isRoomPowered(id, room);
+      drawRoom(slot, room, powered, roomLevel(id));
       const leak = state.leaks[id];
       if (leak && leak.water > 0) {
         const width = Math.min(66, 9 + Math.floor(leak.water / 2));
@@ -9267,7 +9626,7 @@ function drawScene(timestamp) {
     else if (state.works[id]) drawWork(slot, state.works[id]);
     else drawEmpty(slot, slot.level <= deepest);
   });
-  const frame = clamp((timestamp - lastWalkTick) / tickDelay(), 0, 1) * walkSteps;
+  const frame = presentation.reduced ? walkSteps : clamp((timestamp - lastWalkTick) / tickDelay(), 0, 1) * walkSteps;
   const from = Math.min(Math.floor(frame), walkSteps - 1);
   for (const [id, type] of Object.entries(state.rooms)) if (type === 'escada') {
     const slot = slots[id];
@@ -9288,7 +9647,8 @@ function drawScene(timestamp) {
     const x = mix(a.x, b.x);
     const y = mix(a.y, b.y);
     const last = walker.path[walkSteps] || b;
-    drawWalker(walker, x, y, a.x !== b.x || (a.y !== b.y && x !== shaft), x === last.x && y === last.y, animationTime);
+    const moving = !presentation.reduced && (a.x !== b.x || (a.y !== b.y && x !== shaft));
+    drawWalker(walker, x, y, moving, x === last.x && y === last.y, animationTime);
     walker.button.hidden = Boolean(selected);
     walker.button.style.left = x / 960 * 100 + '%';
     walker.button.style.top = (y + 3) / 451 * 100 + '%';
@@ -9847,16 +10207,6 @@ byId('touch-lot').onchange = event => {
   event.target.value = '';
   buildSlot(Number(value));
 };
-let detailCenter = .5;
-byId('bunker-zoom').onclick = () => {
-  const view = byId('cutaway-view');
-  const button = byId('bunker-zoom');
-  const detailed = view.dataset.zoom !== 'detail';
-  if (!detailed && view.scrollWidth) detailCenter = (view.scrollLeft + view.clientWidth / 2) / view.scrollWidth;
-  view.dataset.zoom = detailed ? 'detail' : 'overview';
-  button.textContent = detailed ? 'Visão geral' : 'Aproximar';
-  view.scrollLeft = detailed ? detailCenter * view.scrollWidth - view.clientWidth / 2 : 0;
-};
 byId('propose-building').onclick = () => requestInitiative(constructionInitiative(selected));
 byId('propose-room').onclick = () => requestInitiative(roomInitiative(inspected));
 byId('upgrade-room').onclick = () => startRoomUpgrade(inspected);
@@ -10026,6 +10376,7 @@ window.addEventListener('pagehide', saveColony);
 setupConstruction();
 setupHudIcons();
 setupBunkerCamera();
+setupPresentation();
 const savedCampaign = readColony();
 campaignStarted = Boolean(savedCampaign);
 reset(savedCampaign, false);

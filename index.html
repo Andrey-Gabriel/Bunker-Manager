@@ -23,12 +23,6 @@
   button:focus-visible { outline: 2px solid var(--green); outline-offset: -3px; }
   button:disabled { opacity: .48; cursor: not-allowed; }
   [hidden] { display: none !important; }
-  .app { max-width: 1280px; margin: auto; padding: 20px clamp(12px, 3vw, 36px) 30px; }
-  header, .scene-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  header { margin-bottom: 12px; }
-  .brand { display: flex; align-items: center; gap: 12px; }
-  .brand-mark { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid #817147; color: var(--amber); background: #383423; box-shadow: inset 0 0 0 3px #292619; font: 26px ui-monospace, monospace; }
-  h1 { font: 800 25px ui-monospace, monospace; letter-spacing: .18em; margin: 0; line-height: 1; }
   .clock, .kicker, .stat-label, .room small, .log time { font: 11px ui-monospace, monospace; }
   .controls { display: flex; align-items: center; gap: 8px; }
   .clock { color: var(--green); padding-right: 7px; white-space: nowrap; }
@@ -36,8 +30,6 @@
   .control:hover:not(:disabled) { border-color: var(--green); }
   .primary { background: var(--green); color: #222719; border-color: var(--green); font-weight: 700; }
   .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 3px; }
-  .scene { container-type: inline-size; overflow: hidden; box-shadow: 0 10px 28px #0005; }
-  .scene-footer { padding: 9px 12px; }
   .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); background: #292c24; }
   .stat { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 2px 9px; padding: 9px 6px; text-align: center; }
   .stat + .stat { border-left: 1px solid var(--line); }
@@ -48,11 +40,8 @@
   h2, h3, p { margin: 0; }
   h2 { font-size: 15px; }
   .kicker { color: var(--muted); }
-  .build-controls { display: flex; align-items: center; gap: 9px; }
   #build-status { color: var(--green); }
-  .viewport { overflow: auto hidden; background: #27241b; border-block: 1px solid #535044;
-    max-height: max(calc(var(--scene-bottom, 451) * 650px / 960), calc(var(--scene-bottom, 451) * 100cqw / 960)); }
-  .cutaway { position: relative; min-width: 650px; aspect-ratio: 960 / 451; }
+  .cutaway { position: relative; aspect-ratio: 960 / 451; }
   canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
   .slots, .resident-targets { position: absolute; inset: 0; }
   .resident-targets { pointer-events: none; }
@@ -134,7 +123,6 @@
   .slot.available { outline: 1px dashed #daf0a0a0; outline-offset: -4px; background: #a3cf5415; }
   .slot:hover, .slot:focus-visible { box-shadow: inset 0 0 0 2px var(--green); }
   .slot:focus-visible { outline: 2px solid var(--green); }
-  .caption { font-size: 11px; color: var(--muted); }
   .scroll-hint { display: none; }
   .phone-only { display: none; }
   .room-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; padding: 0 12px 12px; }
@@ -205,15 +193,11 @@
   .trade-row { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 10px; padding-top: 8px; }
   .trade-row b { font-size: 12px; }
   #surface-button[data-attention="true"] { color: var(--amber); border-color: var(--amber); }
-  .build-controls { flex-wrap: wrap; }
-  .floor-key { display: flex; flex-wrap: wrap; gap: 4px 13px; padding: 7px 12px; background: #20211c; border-bottom: 1px solid #454435; font: 10px ui-monospace, monospace; color: var(--muted); }
+  .floor-key { display: flex; flex-wrap: wrap; gap: 4px 13px; font: 10px ui-monospace, monospace; color: var(--muted); }
   @media (max-width: 740px) {
     .room-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .clock { padding: 0; }
     .controls { flex-wrap: wrap; justify-content: flex-end; }
-    .scene-footer { align-items: flex-start; }
-    .build-controls { flex-direction: column; align-items: flex-start; gap: 5px; }
-    .caption { text-align: right; }
   }
   @media (max-width: 675px) {
     .scroll-hint { display: inline; }
@@ -227,24 +211,13 @@
     font-family: system-ui, sans-serif;
   }
   body { background: #11161a; }
-  .app { padding-top: 26px; }
-  .masthead { margin-bottom: 16px; }
-  .brand { gap: 11px; }
-  .brand-mark { width: 38px; height: 38px; border: 0; box-shadow: none; color: #171b19; background: #dab385; clip-path: polygon(16% 0,100% 0,100% 83%,84% 100%,0 100%,0 17%); }
-  .brand-mark::after { content: ''; width: 19px; height: 18px; background: #252826; clip-path: polygon(50% 0,100% 44%,100% 100%,65% 100%,65% 60%,35% 60%,35% 100%,0 100%,0 44%); }
-  h1 { font-size: 27px; letter-spacing: .22em; }
-  .timeboard { display: flex; align-items: center; gap: 16px; }
   .clock { display: grid; grid-template-columns: auto auto; gap: 2px 8px; color: var(--text); padding: 0; }
   #clock-date { font-size: 10px; letter-spacing: .08em; color: var(--muted); }
   #clock-phase { grid-row: 1 / 3; color: var(--amber); align-self: center; font-size: 20px; }
   #clock-time { font-size: 15px; letter-spacing: .06em; }
-  .playback { display: flex; }
   .control { border: 1px solid #4a5659; background: #263139; color: var(--text); font-weight: 600; box-shadow: none; padding: 8px 11px; }
   .control:hover:not(:disabled), .control:focus-visible { border-color: #d9b487; }
   .primary { background: #ddb587; color: #242521; border-color: #ddb587; }
-  .playback .control { min-height: 35px; }
-  .playback .control + .control { border-left: 0; min-width: 42px; font-family: ui-monospace, monospace; }
-  .scene { border-radius: 2px; border-color: #495252; box-shadow: 0 8px 0 #0d1114; }
   .stats { background: #202a31; }
   .stat { display: grid; grid-template-columns: 20px auto; grid-template-areas: "symbol label" "symbol value" "meter meter"; gap: 2px 8px; padding: 9px clamp(7px, 1.4vw, 20px) 7px; justify-content: stretch; text-align: left; }
   .stat-symbol { grid-area: symbol; align-self: center; color: var(--meter-color); font: bold 19px ui-monospace, monospace; }
@@ -253,20 +226,12 @@
   .stat-rate { grid-area: rate; font: 10px ui-monospace, monospace; white-space: nowrap; color: var(--muted); }
   .stat-rate[data-trend="up"] { color: var(--green); }
   .stat-rate[data-trend="down"] { color: #efa699; }
-  #resource-balance-button { padding: 4px 7px; font-size: 11px; }
   .balance-values { margin: 4px 0; }
   .balance-info { color: var(--muted); }
   .stat strong { grid-area: value; font-size: 16px; line-height: 1.2; }
   .stat-meter { grid-area: meter; height: 2px; margin-top: 4px; background: #344249; }
   .stat-meter i { display: block; height: 100%; background: var(--meter-color); }
   .stat.warn .stat-meter i { background: var(--red); }
-  .scene-footer { background: #161e23; padding: 0 12px; min-height: 44px; gap: 6px; }
-  .build-controls { display: flex; flex-direction: row; align-items: center; gap: 0; flex-wrap: wrap; }
-  .command { display: inline-flex; align-items: center; gap: 6px; min-height: 43px; padding: 0 12px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: #ced5cd; font-size: 12px; font-weight: 650; }
-  .command:hover, .command[aria-expanded="true"] { background: #27343b; border-bottom-color: var(--amber); color: var(--text); }
-  .command span { color: #d5ac7b; font: 15px ui-monospace, monospace; }
-  #build-status { margin: 4px 0 4px 10px; font-size: 10px; }
-  #build-catalog { background: #202a2f; padding-top: 6px; border-top: 1px solid #39494e; }
   .categories { border-bottom: 1px solid #35434a; padding-bottom: 0; margin-bottom: 8px; gap: 3px; }
   .categories .control { background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: 0; padding: 7px 9px; color: var(--muted); }
   .categories .control[aria-pressed="true"] { border-bottom-color: var(--amber); color: var(--text); }
@@ -274,7 +239,6 @@
   .room:hover, .room[aria-pressed="true"] { background: #303b3a; border-color: #b7ba7c; }
   .room small { font: 11px system-ui, sans-serif; color: #b5c1bb; }
   .room .room-spec { margin-bottom: 5px; font: 10px ui-monospace, monospace; color: #d4bb95; }
-  .floor-key { background: #1a2328; color: #acb7b1; border-color: #354148; }
   #notice { border-radius: 2px; background: #e0be96; color: #252625; }
   dialog { border-color: #566265; background: #1b252b; color: var(--text); }
   dialog .surface-header { padding-bottom: 9px; border-bottom: 1px solid #465157; }
@@ -318,20 +282,10 @@
   .room[data-locked="true"] { opacity: .65; }
   #mount { color: var(--text); background: #172025; border: 1px solid #536166; border-radius: 2px; padding: 5px; max-width: 100%; }
   @media (max-width: 675px) {
-    .app { padding-top: 14px; }
-    h1 { font-size: 20px; }
-    .brand { gap: 6px; }
-    .brand-mark { width: 28px; height: 28px; }
-    .brand-mark::after { width: 14px; height: 14px; }
-    .timeboard { gap: 6px; }
     .stat { grid-template-columns: 1fr; grid-template-areas: "label" "value" "meter"; padding: 7px 5px; }
     #stats .stat { grid-template-areas: "label" "value" "rate" "meter"; }
     .stat-symbol { display: none; }
     .stat strong { font-size: 13px; }
-    .scene-footer .caption { display: none; }
-    .scene-footer { padding: 0 4px; }
-    .command { padding: 0 7px; font-size: 11px; }
-    .command span { font-size: 12px; }
     .staff-layout { grid-template-columns: 1fr; gap: 8px; }
     .staff-list { display: flex; overflow-x: auto; }
     .staff-tab { flex: 0 0 95px; }
@@ -343,39 +297,10 @@
     --text: #f0e7ce; --muted: #b4bead; --green: #c5d49b; --amber: #efbb78;
   }
   body { background: #172320; }
-  .app { max-width: 1440px; padding-top: 18px; }
-  .masthead { background: #e7ddbf; color: #26352b; border-top: 4px solid #bc7852; padding: 10px 14px; margin-bottom: 12px; }
-  .brand-mark { background: #34483a; }
-  .brand-mark::after { background: #f1e5c5; }
-  .masthead h1 { font: 800 clamp(22px, 3.1vw, 34px) Georgia, serif; letter-spacing: .13em; }
-  .masthead .clock { color: #24352d; }
-  .masthead #clock-date { color: #52604c; }
-  .masthead #clock-phase { color: #86563a; }
-  .masthead .control { color: #29392e; border-color: #a39676; background: #d8ccab; }
-  .console-layout { display: grid; grid-template-columns: 174px minmax(0, 1fr); gap: 12px; align-items: start; }
-  .command-column { color: #26342b; background: #e7ddbf; box-shadow: 0 5px #121a17; }
-  .command-column h2 { padding: 12px 12px 10px; font: 700 12px ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; border-bottom: 1px solid #b6a785; }
-  .command-column .build-controls { display: grid; gap: 0; }
-  .command-column .command { width: 100%; min-height: 43px; padding: 0 11px; border: 0; border-bottom: 1px solid #c8bb9a; gap: 8px; font-size: 12px; white-space: nowrap; color: #26342b; }
-  .command-column .command b { overflow: hidden; text-overflow: ellipsis; }
-  .command-column .command span { color: #83503d; width: 14px; text-align: center; }
-  .command-column .command:hover, .command-column .command[aria-expanded="true"] { color: #f2e8cf; background: #405141; }
-  .command-column .command:hover span, .command-column .command[aria-expanded="true"] span { color: #f3c085; }
-  .command-column #surface-button[data-attention="true"], .command-column #journal-button.warn { color: #712d25; background: #e2c5a1; }
-  .shift-sheet { padding: 12px; font-size: 11px; line-height: 1.65; }
-  .shift-sheet strong { display: block; font-size: 12px; }
-  .shift-sheet p + p { margin-top: 5px; }
-  .scene { background: #202c26; border-color: #4d5c50; box-shadow: 0 5px #121a17; }
   .stats { background: #24362e; }
   .stat { padding-block: 10px; }
   .stat + .stat { border-color: #46584d; }
   .stat-meter { background: #46564c; }
-  .view-header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; min-height: 38px; padding: 8px 11px; background: #1b2822; }
-  .view-header h2 { font: 700 13px Georgia, serif; letter-spacing: .035em; }
-  #build-status { margin: 0; text-align: right; }
-  .view-header p { font-size: 11px; color: var(--muted); }
-  .floor-key { border-top: 0; border-bottom: 0; background: #27382e; }
-  #build-catalog { background: #28382f; }
   .room-list { max-height: 225px; overflow-y: auto; }
   .room { background: #304139; border-color: #4b5a4e; }
   .control { color: #f2e7cb; background: #35483f; border-color: #59685a; }
@@ -404,10 +329,12 @@
   .story-entry p { font-size: 12px; margin: 5px 0; }
   .story-entry .choices { margin-bottom: 4px; }
   .map-tile[data-status="outpost"] { border-color: #d3b37e; background: #434b39; color: #f0db9e; }
+  .map-tile[data-route-work]::before { content: ''; position: absolute; top: 4px; left: 4px;
+    width: 10px; height: 5px; border-block: 2px solid #b8d49a; }
   #outpost-stock { color: #e9bd84; }
   .cargo-fields { display: flex; flex-wrap: wrap; gap: 5px 8px; }
   .cargo-fields label { display: grid !important; gap: 2px; }
-  .cargo-fields input, #route-post { color: var(--text); background: #1d2b24; border: 1px solid #617263; padding: 5px; min-width: 55px; }
+  .cargo-fields input, #route-post, #route-post-next { color: var(--text); background: #1d2b24; border: 1px solid #617263; padding: 5px; min-width: 55px; }
   .cargo-fields input { width: 64px; }
   #main-menu { width: 940px; max-width: calc(100% - 26px); padding: 0; border: 1px solid #8c8166; }
   #main-menu::backdrop { background: #0f1915e8; }
@@ -428,6 +355,23 @@
   #menu-art { display: block; width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; }
   .menu-help { margin: 0; padding-left: 17px; font-size: 12px; line-height: 1.45; }
   .menu-help li + li { margin-top: 6px; }
+  #menu-save-file { max-width: 100%; font: inherit; }
+  #menu-transfer-status { margin-top: 8px; }
+  #menu-save-copies { margin-top: 12px; }
+  #menu-save-copies .menu-save { margin-top: 6px; }
+  .save-copy-actions { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+  #menu-scenarios > label { display: block; margin-top: 12px; }
+  #tutorial-steps { padding-left: 24px; }
+  #tutorial-steps li { margin: 6px 0; }
+  #tutorial-steps [aria-current] { color: var(--green); }
+  #tutorial-steps p { margin-top: 4px; }
+  .diagnostic-card { display: grid; gap: 5px; }
+  .diagnostic-card .control { justify-self: start; }
+  .diagnostic-card[data-critical="true"] { border-left: 3px solid var(--amber); }
+  #room-specialty-options { display: grid; gap: 6px; margin-top: 8px; }
+  #room-specialty-options .control { display: grid; gap: 3px; text-align: left; }
+  #room-specialty-options .control[data-installed="true"] { border-color: var(--green); opacity: 1; }
+  #room-specialty-options small { font-weight: normal; color: var(--muted); }
   .scenario-list { display: grid; gap: 6px; }
   .scenario-list button { width: 100%; padding: 7px 9px; color: #294034; background: #ddd2ae; border: 1px solid #b1a17e; text-align: left; }
   .scenario-list button[aria-pressed="true"] { background: #405746; color: #f4e8cb; border-color: #405746; }
@@ -457,55 +401,12 @@
     #menu-art { object-position: center; }
     .menu-panel h2 { font-size: 38px; }
   }
-  @media (max-width: 360px) {
-    .masthead .brand-mark { display: none; }
-    .masthead .clock { font-size: 10px; }
-  }
-  @media (max-width: 850px) {
-    .console-layout { grid-template-columns: 1fr; gap: 7px; }
-    .command-column h2, .shift-sheet { display: none; }
-    .command-column .build-controls { display: flex; flex-wrap: nowrap; overflow-x: auto; }
-    .command-column .command { flex: 0 0 auto; width: auto; }
-  }
   @media (max-width: 675px) {
-    .app { padding-top: 10px; }
-    .masthead { padding: 7px; }
-    .masthead h1 { font-size: 20px; }
-    .masthead .clock { gap: 2px 5px; }
-    .masthead .control { padding-inline: 6px; }
-    .view-header { flex-wrap: wrap; }
-    .view-header p { display: none; }
     dialog .surface-header { margin: -14px -14px 12px; padding: 8px 12px; }
     #research-board { padding: 14px; }
     .staff-tab { flex-basis: 133px; }
-  }
-  @media (max-width: 560px) {
-    .masthead { display: grid; grid-template-columns: auto 1fr; row-gap: 6px; }
-    .timeboard { display: contents; }
-    .masthead .clock { justify-self: end; }
-    .playback { grid-column: 1 / -1; justify-self: end; flex-wrap: wrap; justify-content: end; }
-  }
-  @media (max-width: 675px) {
-    .app { padding: 8px max(8px, env(safe-area-inset-right)) 20px max(8px, env(safe-area-inset-left)); }
-    .masthead { margin-bottom: 8px; padding: 8px; }
-    .masthead .playback .control, .scene .control, dialog .control, .scenario-list button { min-height: 44px; }
-    .command-column .build-controls { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); overflow: visible; }
-    .command-column .command { grid-column: span 3; min-width: 0; width: 100%; min-height: 48px; justify-content: center;
-      border-right: 1px solid #c8bb9a; padding: 5px 2px; gap: 3px; font-size: 12px; white-space: normal; }
-    .command-column .command:nth-child(n+5) { grid-column: span 4; }
-    .command-column .command b { overflow-wrap: anywhere; text-overflow: unset; }
-    .command-column .command span { flex: 0 0 auto; width: auto; }
-    .scene { min-width: 0; }
-    #stats .stat { padding: 8px 4px; }
-    #stats .stat strong { font-size: 15px; }
+    .scene .control, dialog .control, .scenario-list button { min-height: 44px; }
     #stats .stat-label { font-size: 10px; }
-    .view-header { align-items: center; }
-    .view-header h2 { font-size: 16px; }
-    #build-status, #lift-status { flex-basis: 100%; order: 1; text-align: left; }
-    #cutaway-view { --min-scene-width: 0px; overscroll-behavior-x: contain;
-      max-height: max(calc(var(--scene-bottom, 451) * var(--min-scene-width) / 960), calc(var(--scene-bottom, 451) * 100cqw / 960)); }
-    #cutaway-view[data-zoom="detail"] { --min-scene-width: 720px; }
-    #cutaway-view .cutaway { min-width: var(--min-scene-width); }
     .bunker-touch { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px;
       padding: 6px 10px 9px; background: #23342b; }
     .phone-picker { display: grid; gap: 4px; min-width: 0; color: var(--muted); font-size: 12px; }
@@ -543,19 +444,148 @@
     .skill-row { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) auto; gap: 5px; }
     .skill-row b, .staff-detail small { overflow-wrap: anywhere; }
     .shift-control { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-    #notice { width: max-content; bottom: max(8px, env(safe-area-inset-bottom)); }
   }
-  @media (max-width: 560px) {
-    .masthead .playback { width: 100%; display: grid; grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(44px, 1fr)); }
-    .playback .control + .control { min-width: 0; }
-    .command-column .command { display: grid; justify-items: center; align-content: center; gap: 2px; }
+
+  .app { position: fixed; inset: 0;
+    --hud-edge: clamp(10px, 1.5vw, 22px); --hud-top: max(var(--hud-edge), env(safe-area-inset-top));
+    --hud-bottom: max(var(--hud-edge), env(safe-area-inset-bottom));
+    --plate: #202a22f5; --plate-raised: #303c2e; --plate-line: #697053; --plate-accent: #d7b478;
+    --dock-height: 48px; --above-dock: calc(var(--hud-bottom) + var(--dock-height) + 5px);
+    --alert-top: 83px; --stat-alert-offset: 53px;
+  }
+  .console-layout, .scene { position: absolute; inset: 0; }
+  .scene { overflow: hidden; background: #2a261b; }
+  #cutaway-view { position: absolute; inset: 0; overflow: auto;
+    scrollbar-width: none; overscroll-behavior: contain;
+    background: repeating-linear-gradient(176deg, #302b1e 0 24px, #28251b 24px 27px, #322b1d 27px 49px); }
+  #cutaway-view::-webkit-scrollbar { display: none; }
+  #cutaway-view .cutaway { width: max(100%, calc(100vh * 960 / 451)); width: max(100%, calc(100dvh * 960 / 451)); }
+  #cutaway-view[data-dragging="true"], #cutaway-view[data-dragging="true"] * { cursor: grabbing; }
+  #cutaway-view .cutaway { user-select: none; }
+  .masthead { position: absolute; z-index: 4; top: var(--hud-top); right: var(--hud-edge); }
+  .masthead .timeboard, .stats, .command-column, #build-catalog, .scene-alerts > section,
+  .view-header, .bunker-touch, .floor-key { background: var(--plate); border: 1px solid var(--plate-line);
+    box-shadow: 0 3px #10140fa8, inset 0 1px #d4c18a1f; }
+  .masthead .timeboard { display: flex; align-items: center; gap: 9px; padding: 6px 8px; }
+  .masthead .clock { color: var(--text); gap: 1px 5px; }
+  .masthead #clock-date { color: #c3baa0; font-size: 9px; letter-spacing: .02em; }
+  .masthead #clock-phase { color: var(--plate-accent); font-size: 16px; }
+  .masthead .playback { display: flex; width: auto; flex-wrap: nowrap; gap: 3px; }
+  .masthead .playback .control { min-width: 34px; min-height: 34px; border: 1px solid #647057; padding: 5px 7px;
+    color: #eee3c7; background: var(--plate-raised); }
+  .masthead #next-decision[aria-pressed="true"] { background: var(--plate-accent); color: #221e14; }
+  .scene .stats { position: absolute; z-index: 3; top: var(--hud-top); left: 50%; transform: translateX(-50%);
+    width: min(460px, 39vw); }
+  .hud-guidance { position: absolute; top: calc(var(--hud-top) + var(--stat-alert-offset)); left: var(--hud-edge);
+    right: var(--hud-edge); z-index: 3; display: flex; justify-content: center; gap: 5px; pointer-events: none; }
+  .hud-guidance .control { min-height: 34px; pointer-events: auto; }
+  #diagnostic-warning {
+    padding: 5px 10px; background: #3b3022; border-color: #bd9561; color: #ffe1ae; }
+  .scene:has(.hud-guidance .control:not([hidden])) .scene-alerts {
+    top: max(var(--alert-top), calc(var(--hud-top) + var(--stat-alert-offset) + 47px)); }
+  #stats .stat { grid-template-columns: 16px minmax(0, 1fr); grid-template-areas: "symbol label" "symbol value" "meter meter";
+    gap: 1px 5px; padding: 6px 7px; min-width: 0; }
+  .stat-rate { display: none; }
+  #stats .stat strong { font-size: 14px; }
+  .stat-meter { margin-top: 3px; }
+  .command-column { position: absolute; z-index: 4; bottom: var(--hud-bottom); inset-inline: var(--hud-edge);
+    width: min(880px, calc(100% - 2 * var(--hud-edge))); margin-inline: auto; padding: 4px; color: var(--text); }
+  .command-column .build-controls { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 2px; }
+  .command-column .command { display: flex; justify-content: center; align-items: center; gap: 7px;
+    padding: 4px 7px; min-width: 0; min-height: 38px; width: 100%; color: #efe3c7; background: #2b372b;
+    border: 1px solid #556148; text-align: center; font-size: 11px; white-space: nowrap; }
+  .command-label { overflow: hidden; text-overflow: ellipsis; }
+  .command-column .command .hud-icon { display: block; width: 20px; height: 20px; flex: 0 0 auto; }
+  .hud-icon canvas { width: 100%; height: 100%; display: block; }
+  .command-column .command .command-short { display: none; }
+  .command-column .command:hover, .command-column .command[aria-expanded="true"],
+  .command-column .command[data-placement="true"] { background: #46513a; color: #fff0c9; border-color: #bc9c68; }
+  .command-column #surface-button[data-attention="true"], .command-column #journal-button.warn,
+  .command-column #tasks-button[data-attention="true"] { color: #ffe2ac; background: #4b3927; border-color: #bb925c; }
+  .scene-alerts { position: absolute; z-index: 3; top: var(--alert-top); right: var(--hud-edge); display: grid; gap: 5px;
+    width: min(350px, calc(100% - 2 * var(--hud-edge))); max-height: 43%; overflow: auto; overscroll-behavior: contain; pointer-events: none; }
+  .scene-alerts > section { pointer-events: auto; border-left: 3px solid #c89358; }
+  .scene-alerts #raid { border-left-color: #cd7e65; }
+  .scene-alerts .control { min-height: 34px; }
+  .view-header { position: absolute; z-index: 3; bottom: var(--above-dock); right: var(--hud-edge);
+    display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; max-width: min(490px, 58%); gap: 5px 8px; padding: 6px 8px; }
+  .view-header:not(:has(> :not([hidden]))) { display: none; }
+  #build-status { flex: 1 1 auto; }
+  #lift-status { flex: 1 0 100%; order: 1; }
+  .view-header .control { min-height: 32px; padding: 5px 7px; font-size: 11px; }
+  .floor-key { position: absolute; bottom: var(--above-dock); left: var(--hud-edge); z-index: 2;
+    max-width: min(550px, 46%); padding: 5px 8px; border: 1px solid var(--plate-line); }
+  #build-catalog { position: absolute; z-index: 5; right: var(--hud-edge); bottom: var(--above-dock);
+    width: min(550px, calc(100% - 2 * var(--hud-edge))); max-height: min(61dvh, 520px);
+    overflow-y: auto; overscroll-behavior: contain; background: var(--plate); }
+  .catalog-heading { display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    padding: 6px 10px; background: #354231; border-bottom: 1px solid var(--plate-line); }
+  .catalog-heading h2 { font: 700 16px Georgia, serif; color: #f1d8a6; }
+  .catalog-heading .control { padding: 4px 8px; }
+  #build-catalog .categories { padding-top: 8px; }
+  #build-catalog .room-list { grid-template-columns: repeat(3, minmax(0, 1fr)); max-height: none; overflow: visible; }
+  #notice { z-index: 6; width: max-content; bottom: 72px; }
+  @media (max-width: 1100px) {
+    .app { --alert-top: 122px; --stat-alert-offset: 102px; }
+    .scene .stats { top: calc(var(--hud-top) + 49px); width: min(460px, calc(100% - 2 * var(--hud-edge))); }
+  }
+  @media (max-width: 820px) {
+    .command-column .command .command-label { display: none; }
+    .command-column .command .command-short { display: inline; }
+  }
+  @media (max-width: 675px) {
+    .app { --hud-edge: 7px; --alert-top: calc(var(--hud-top) + 103px); --dock-height: 54px; }
+    .masthead .timeboard { padding: 3px 4px; gap: 5px; }
+    .masthead #clock-phase { display: none; }
+    .masthead .clock { display: block; white-space: nowrap; }
+    .masthead #clock-time, .masthead #clock-date { display: block; }
+    .masthead #clock-time { font-size: 12px; }
+    .masthead #clock-date { font-size: 8px; }
+    .masthead .playback .control { min-width: 38px; min-height: 42px; padding: 3px 5px; }
+    .masthead #pause { font-size: 0; }
+    .masthead #pause::before { content: 'Ⅱ'; font-size: 14px; }
+    .masthead #pause[data-paused="true"]::before { content: '▶'; }
+    .scene .stats { top: calc(var(--hud-top) + 51px); }
+    #stats .stat { grid-template-columns: minmax(0, 1fr); grid-template-areas: "label" "value" "meter"; padding: 4px 6px; }
+    #cutaway-view { padding-top: 52px; }
+    #cutaway-view .cutaway { width: max(100%, 900px, calc((100dvh - 52px) * 960 / 451)); }
+    #cutaway-view[data-zoom="overview"] { padding-top: 96px; }
+    #cutaway-view[data-zoom="overview"] .cutaway { width: 100%; }
+    .command-column { padding: 3px; }
+    .command-column .command { display: grid; justify-content: stretch; justify-items: center;
+      align-content: center; gap: 1px; padding: 3px 1px; min-height: 46px; text-align: center; }
+    .command-column .command .command-short { display: block; width: auto; color: inherit; font-size: 9px; line-height: 1.1; }
+    .floor-key { display: none; }
+    .bunker-touch { position: absolute; z-index: 3; left: var(--hud-edge); right: var(--hud-edge);
+      bottom: var(--above-dock); padding: 4px 5px; gap: 4px; }
+    .bunker-touch .phone-picker { gap: 2px; font-size: 10px; }
+    .bunker-touch .phone-picker select, .bunker-touch .control { min-height: 40px; }
+    .bunker-touch .control { font-size: 11px; padding-inline: 6px; }
+    .view-header { left: var(--hud-edge); right: var(--hud-edge); max-width: none;
+      bottom: calc(var(--above-dock) + 67px); }
+    #build-catalog { max-height: 43dvh; }
+    #build-catalog .room-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .scene-alerts { max-height: min(34dvh, 290px); }
+    .scene-alerts .control { min-height: 40px; }
+    #notice { bottom: calc(max(7px, env(safe-area-inset-bottom)) + 124px); }
+  }
+  @media (max-width: 388px) {
+    .masthead .playback .control { min-width: 34px; }
+  }
+  @media (max-width: 355px) {
+    .app { --dock-height: 102px; }
+    .command-column .build-controls { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    #notice { bottom: calc(max(7px, env(safe-area-inset-bottom)) + 170px); }
+  }
+  @media (min-width: 676px) and (max-height: 475px) {
+    .floor-key { display: none; }
+    #build-catalog { max-height: 54dvh; }
   }
 </style>
 </head>
 <body>
 <div class="app">
   <header class="masthead">
-    <div class="brand"><span class="brand-mark" aria-hidden="true"></span><h1>ABRIGO</h1></div>
     <div class="timeboard">
       <div class="clock" id="clock"><span id="clock-phase" aria-hidden="true"></span><b id="clock-time"></b><span id="clock-date"></span></div>
       <div class="playback">
@@ -570,20 +600,24 @@
   </header>
   <div class="console-layout">
     <aside class="command-column" aria-label="Posto de comando">
-      <h2>Comandos</h2>
       <nav class="build-controls" aria-label="Comandos do abrigo">
-        <button class="command" id="build-button" aria-expanded="false" aria-controls="build-catalog"><span aria-hidden="true">▦</span>Construir</button>
-        <button class="command" id="surface-button"><span aria-hidden="true">↗</span><b id="surface-label">Expedições</b></button>
-        <button class="command" id="tasks-button"><span aria-hidden="true">☷</span><b id="tasks-label">Tarefas</b></button>
-        <button class="command" id="power-button"><span aria-hidden="true">ϟ</span>Energia</button>
-        <button class="command" id="staff-button"><span aria-hidden="true">♙</span>Moradores</button>
-        <button class="command" id="research-button"><span aria-hidden="true">◇</span><b id="research-label">Pesquisa</b></button>
-        <button class="command" id="journal-button"><span aria-hidden="true">▤</span><b id="journal-label">Diário</b></button>
+        <button class="command" id="build-button" aria-label="Construir" aria-expanded="false" aria-controls="build-catalog"><span class="hud-icon" aria-hidden="true" data-icon="build">▦</span><b class="command-label">Construir</b><span class="command-short" aria-hidden="true">Obras</span></button>
+        <button class="command" id="surface-button" aria-label="Expedições"><span class="hud-icon" aria-hidden="true" data-icon="map">↗</span><b class="command-label" id="surface-label">Expedições</b><span class="command-short" aria-hidden="true">Mapa</span></button>
+        <button class="command" id="tasks-button" aria-label="Tarefas"><span class="hud-icon" aria-hidden="true" data-icon="tasks">☷</span><b class="command-label" id="tasks-label">Tarefas</b><span class="command-short" aria-hidden="true">Tarefas</span></button>
+        <button class="command" id="power-button" aria-label="Energia"><span class="hud-icon" aria-hidden="true" data-icon="power">ϟ</span><b class="command-label">Energia</b><span class="command-short" aria-hidden="true">Energia</span></button>
+        <button class="command" id="staff-button" aria-label="Moradores"><span class="hud-icon" aria-hidden="true" data-icon="staff">♙</span><b class="command-label">Moradores</b><span class="command-short" aria-hidden="true">Equipe</span></button>
+        <button class="command" id="research-button" aria-label="Pesquisa"><span class="hud-icon" aria-hidden="true" data-icon="research">◇</span><b class="command-label" id="research-label">Pesquisa</b><span class="command-short" aria-hidden="true">Pesquisa</span></button>
+        <button class="command" id="journal-button" aria-label="Diário"><span class="hud-icon" aria-hidden="true" data-icon="journal">▤</span><b class="command-label" id="journal-label">Diário</b><span class="command-short" aria-hidden="true">Diário</span></button>
+        <button class="command" id="resource-balance-button" aria-label="Balanço" aria-haspopup="dialog"><span class="hud-icon" aria-hidden="true" data-icon="balance">▥</span><b class="command-label">Balanço</b><span class="command-short" aria-hidden="true">Balanço</span></button>
       </nav>
-      <div class="shift-sheet"><strong id="shift-summary"></strong><p id="shift-detail"></p></div>
     </aside>
-  <main class="panel scene" aria-label="Seu bunker">
+  <main class="scene" aria-label="Seu bunker">
       <section class="stats" id="stats" aria-label="Reservas do bunker"></section>
+      <div class="hud-guidance">
+        <button type="button" class="control" id="diagnostic-warning" aria-controls="resource-balance" aria-haspopup="dialog" hidden></button>
+        <button type="button" class="control" id="tutorial-button" aria-controls="tutorial" aria-haspopup="dialog" hidden></button>
+      </div>
+      <div class="scene-alerts">
       <section id="event" hidden>
         <div class="event-heading"><h2 id="event-title"></h2><span id="event-clock" class="kicker"></span></div>
         <div aria-live="polite">
@@ -608,18 +642,18 @@
           <button class="control" id="raid-stash">Recolher suprimentos · 5 materiais</button>
         </div>
       </section>
-    <section class="view-header" aria-label="Vista do bunker">
-      <h2>Vista do abrigo</h2>
+      </div>
+    <section class="view-header" aria-label="Estado do bunker">
       <span class="kicker" id="build-status" hidden></span>
-      <p id="view-tip">Clique em um cômodo ou morador para inspecionar.</p>
-      <button type="button" class="control" id="resource-balance-button" aria-haspopup="dialog">Balanço</button>
+      <button type="button" class="control" id="propose-building" hidden>Pedir proposta de obra</button>
+      <button type="button" class="control" id="cancel-placement" hidden>Sair da seleção</button>
       <span id="lift-status" hidden></span>
     </section>
       <div class="bunker-touch phone-only">
         <label class="phone-picker"><span id="touch-lot-label">Cômodos e obras</span><select id="touch-lot"></select></label>
-        <button type="button" class="control" id="bunker-zoom" aria-controls="cutaway-view" aria-pressed="false">Aproximar</button>
+        <button type="button" class="control" id="bunker-zoom" aria-controls="cutaway-view">Visão geral</button>
       </div>
-      <div class="viewport" id="cutaway-view">
+      <div class="viewport" id="cutaway-view" tabindex="0" aria-label="Vista do bunker" data-zoom="detail">
         <div class="cutaway">
           <canvas id="bunker" width="960" height="451" role="img" aria-label="Vista lateral do bunker com moradores caminhando entre os cômodos e usando o elevador"></canvas>
           <div class="slots" id="slots" aria-label="Lotes para construção"></div>
@@ -628,10 +662,10 @@
       </div>
     <div class="floor-key"><span id="outside-use"></span><span>N1 · exposto ao frio</span><span>N2 · seco</span><span>N3–4 · umidade crescente</span></div>
     <section id="build-catalog" aria-label="Catálogo de construções" hidden>
+      <div class="catalog-heading"><h2>Construção</h2><button type="button" class="control" id="close-catalog">Fechar</button></div>
       <div id="categories" class="categories" aria-label="Categorias"></div>
       <label class="phone-picker phone-only catalog-picker">Categoria<select id="touch-category"></select></label>
       <div class="room-list" id="room-list"></div>
-      <button class="control" id="propose-building" hidden>Pedir proposta de obra</button>
       <section class="task-board" id="work-queue" hidden><h3>Fila de obras</h3>
         <div id="work-list"></div><button class="control" id="construction-staff">Ajustar funções da equipe</button>
       </section>
@@ -653,6 +687,7 @@
           <button type="button" class="control primary" id="menu-continue">Continuar</button>
           <button type="button" class="control" id="menu-new">Novo jogo</button>
           <button type="button" class="control" id="menu-guide">Como jogar</button>
+          <button type="button" class="control" id="menu-transfer">Transferir partida</button>
         </div>
         <section class="menu-settings" aria-labelledby="menu-settings-title">
           <h3 id="menu-settings-title">Configurações</h3>
@@ -662,6 +697,7 @@
       <section id="menu-scenarios" hidden>
         <h3>Escolha um começo</h3>
         <div class="scenario-list" id="scenario-list"></div>
+        <label><input type="checkbox" id="menu-guided"> Primeiro turno guiado</label>
         <div class="menu-actions">
           <button type="button" class="control primary" id="menu-scenario-start">Iniciar partida</button>
           <button type="button" class="control" data-menu-back>Voltar</button>
@@ -689,6 +725,31 @@
         </ul>
         <div class="menu-actions"><button type="button" class="control" data-menu-back>Voltar</button></div>
       </section>
+      <section id="menu-saves" hidden>
+        <h3>Transferir partida</h3>
+        <p>Baixe uma cópia para guardar ou importe o arquivo em outro aparelho.</p>
+        <div class="menu-actions">
+          <button type="button" class="control" id="menu-export">Exportar save</button>
+          <button type="button" class="control" id="menu-store-copy">Guardar cópia neste navegador</button>
+          <label for="menu-save-file">Importar save (.json)</label>
+          <input type="file" id="menu-save-file" accept=".json,application/json">
+          <button type="button" class="control" data-menu-back>Voltar</button>
+        </div>
+        <p id="menu-transfer-status" role="status"></p>
+        <section id="menu-save-copies" aria-label="Cópias locais"></section>
+      </section>
+      <section id="menu-import" hidden>
+        <h3>Importar partida</h3>
+        <div class="menu-save">
+          <strong>Partida do arquivo</strong>
+          <span id="menu-import-detail"></span>
+        </div>
+        <p id="menu-import-copy"></p>
+        <div class="menu-actions">
+          <button type="button" class="control" id="menu-import-apply">Importar partida</button>
+          <button type="button" class="control" data-menu-back>Voltar</button>
+        </div>
+      </section>
     </div>
     <div class="menu-illustration" aria-hidden="true">
       <canvas id="menu-art" width="960" height="245"></canvas>
@@ -707,7 +768,7 @@
   <div class="surface-layout">
     <div>
       <div id="surface-grid" class="surface-grid" aria-label="Locais para explorar"></div>
-      <div class="map-key"><span>⌂ Bunker</span><span>? Desconhecido</span><span>▣ Posto avançado</span><span>◇ Parceria</span><span>× Rota fechada</span><span>↗ Equipe em viagem</span><span>• Pista de encomenda</span><span>✓ Vasculhado</span></div>
+      <div class="map-key"><span>⌂ Bunker</span><span>? Desconhecido</span><span>▣ Posto avançado</span><span>◇ Parceria</span><span>═ Rota melhorada</span><span>× Rota fechada</span><span>↗ Equipe em viagem</span><span>• Pista de encomenda</span><span>✓ Vasculhado</span></div>
       <p>Os batedores revelam o destino. A expedição é quem traz o que encontrar.</p>
       <p id="surface-paused" hidden>O tempo está pausado. Feche o mapa e clique em Continuar para retomar as viagens.</p>
     </div>
@@ -738,7 +799,8 @@
         <button class="control" id="field-volunteer" hidden></button>
         <label for="mission-focus">Objetivo</label>
         <select id="mission-focus"></select>
-        <div id="route-post-wrap" hidden><label for="route-post">Parada</label><select id="route-post"></select></div>
+        <div id="route-post-wrap" hidden><label for="route-post">Primeira parada</label><select id="route-post"></select></div>
+        <div id="route-post-next-wrap" hidden><label for="route-post-next">Segunda parada</label><select id="route-post-next"></select></div>
         <div class="cargo-fields" id="cargo-fields" hidden>
           <label for="cargo-food">Comida<input id="cargo-food" type="number" min="0" max="45" step="1" value="0"></label>
           <label for="cargo-water">Água<input id="cargo-water" type="number" min="0" max="45" step="1" value="0"></label>
@@ -749,6 +811,7 @@
         <p id="trip-estimate"></p>
         <button class="control primary" id="send-party">Enviar expedição</button>
       </div>
+      <button type="button" class="control" id="dispatch-pact" hidden>Ver acordo de água</button>
     </section>
   </div>
   <ul class="log" id="mission-list" aria-label="Expedições em andamento"></ul>
@@ -790,6 +853,7 @@
   <section class="journal-section">
     <h3>Futuro da colônia</h3>
     <div id="legacy-list"></div>
+    <button type="button" class="control" id="journal-epilogue" hidden>Rever epílogo</button>
   </section>
   <section class="journal-section">
     <h3>Histórias da colônia</h3>
@@ -797,6 +861,10 @@
   </section>
   <section class="journal-section">
     <h3>Convivência e famílias</h3>
+    <section class="bunker-panel" id="community-pacts" hidden aria-labelledby="community-pacts-title">
+      <h4 id="community-pacts-title" tabindex="-1">Acordos dos moradores</h4>
+      <div id="community-pact-list"></div>
+    </section>
     <div id="community-log"></div>
   </section>
   <section class="journal-section">
@@ -830,7 +898,38 @@
     <form method="dialog"><button class="control">Fechar</button></form>
   </div>
   <p id="resource-balance-intro">Projeção para um dia no ritmo atual. Mudanças de turno, luz do sol, obras, expedições e incidentes alteram o estoque.</p>
+  <section id="system-diagnostics" aria-labelledby="system-diagnostics-title" hidden>
+    <h3 id="system-diagnostics-title">Sistemas em atenção</h3>
+    <div id="system-issues"></div>
+  </section>
   <div id="resource-rates"></div>
+</dialog>
+<dialog id="tutorial" aria-labelledby="tutorial-title">
+  <div class="surface-header"><h2 id="tutorial-title">Primeiro turno</h2>
+    <form method="dialog"><button class="control">Fechar</button></form>
+  </div>
+  <ol id="tutorial-steps"></ol>
+  <p><button type="button" class="control" id="tutorial-action"></button>
+    <button type="button" class="control" id="tutorial-dismiss">Encerrar guia</button></p>
+</dialog>
+<dialog id="epilogue" aria-labelledby="epilogue-title">
+  <div class="surface-header"><h2 id="epilogue-title">Primeiro legado</h2>
+    <form method="dialog"><button class="control">Fechar</button></form>
+  </div>
+  <section class="bunker-panel">
+    <h3 id="epilogue-legacy"></h3>
+    <p id="epilogue-outcome"></p>
+    <p id="epilogue-founders"></p>
+    <p id="epilogue-generation"></p>
+    <p id="epilogue-region"></p>
+  </section>
+  <section class="bunker-panel" id="epilogue-decisions" hidden>
+    <h3>Do diário da colônia</h3><ul id="epilogue-log" class="menu-help"></ul>
+  </section>
+  <form method="dialog" class="choices">
+    <button class="control primary">Continuar neste mundo</button>
+    <button type="button" class="control" id="epilogue-new">Começar outra colônia</button>
+  </form>
 </dialog>
 <dialog id="power-board" aria-labelledby="power-title">
   <div class="surface-header"><h2 id="power-title">Distribuição de energia</h2>
@@ -890,6 +989,11 @@
       </div>
     </div>
   </section>
+  <section class="bunker-panel" id="room-specialty" hidden aria-labelledby="room-specialty-title">
+    <h3 id="room-specialty-title" tabindex="-1">Especialização</h3>
+    <p id="room-specialty-status"></p>
+    <div id="room-specialty-options"></div>
+  </section>
   <section class="bunker-panel" id="room-school" hidden aria-label="Aulas da escola">
     <label for="school-course">Matéria</label>
     <select id="school-course"></select>
@@ -921,6 +1025,7 @@
 
 const byId = id => document.getElementById(id);
 const saveKey = 'abrigo-colonia-v1';
+const saveCopiesKey = 'abrigo-copias-v1';
 const rooms = {
   quarto: { name: 'Dormitório', category: 'Moradia', hours: 4, cost: 12, color: '#ad8ba9', detail: '+2 camas' },
   alojamento: { name: 'Alojamento', category: 'Moradia', hours: 8, cost: 22, color: '#bc9cbb', detail: '+4 camas', art: 'quarto' },
@@ -1033,6 +1138,27 @@ const upgradePrerequisites = {
   oficina: { 3: { room: 'ferramentaria', skill: ['mecanica', 2] } },
   deposito: { 3: { floorRoom: 'dreno' } },
   solar: { 3: { room: 'estabilizador', supplies: { parts: 1 } } }
+};
+const specializationCost = 6;
+const pactRestThreshold = 55;
+const colonyPacts = {
+  water: { title: 'Reserva de água', condition: () => state.resources.water <= 24 },
+  rest: { title: 'Descanso protegido', condition: () => Object.values(state.restRequests).some(request => request.asked !== undefined) ||
+    Object.values(state.overtimeWorked).some(ticks => ticks >= 18) }
+};
+const roomSpecialties = {
+  horta: {
+    standard: { name: 'Canteiros padrão', detail: 'Mantém a produção normal em todas as estações.' },
+    cold: { name: 'Cultivo de inverno', detail: '+32% no inverno · −7% nas demais estações.', seasons: [.93, .93, .93, 1.32] },
+    yield: { name: 'Colheita intensiva', detail: '+18% na primavera e no verão · −14% no inverno.', seasons: [1.18, 1.18, 1, .86] }
+  },
+  oficina: {
+    standard: { name: 'Oficina versátil', detail: 'Mantém o rendimento normal em todos os modos.' },
+    tooling: { name: 'Fabricação de peças e kits', detail: '+40% nos lotes · −15% em materiais e reparos.',
+      output: { normal: .85, parts: 1.4, kits: 1.4, repair: .85 } },
+    service: { name: 'Manutenção de emergência', detail: '+65% em reparos · −10% em materiais e −18% nos lotes.',
+      output: { normal: .9, parts: .82, kits: .82, repair: 1.65 } }
+  }
 };
 // Category controls where a plan is listed. Placement describes its physical requirements.
 const exteriorRooms = new Set(['solar', 'coletor', 'mirante', 'barreira', 'defesa', 'sucata', 'correio',
@@ -1200,6 +1326,7 @@ const missionLabels = {
   animals: 'Resgate animal', establish: 'Montagem de posto', supply: 'Abastecimento',
   retrieve: 'Retirada de carga', story: 'Busca da família', salvage: 'Desmontar para aproveitar a carga',
   restore: 'Restaurar com os vizinhos', collect: 'Buscar a produção da parceria',
+  trail: 'Melhorar acesso com os vizinhos',
   shelter: 'Transferência para o posto', recall: 'Volta do abrigo temporário'
 };
 const orderTypes = {
@@ -1233,6 +1360,7 @@ const routeEvents = {
   rubble: { notice: 'Uma queda de entulho fechou a passagem', reopened: 'Passagem lateral por terreno firme', stop: 99, extra: 5 },
   snow: { notice: 'A neve cobriu o caminho', reopened: 'Trilha aberta depois da neve', stop: 122, extra: 9 }
 };
+const routeWorkCost = 12;
 const legacies = {
   shelter: { title: 'Abrigo de portas abertas', note: 'Vire um refúgio para quem ainda viaja pela região.', days: 7 },
   network: { title: 'Rede de postos', note: 'Sustente uma rede para que equipes e vizinhos possam cruzar a região.', days: 8 },
@@ -1320,6 +1448,8 @@ const fmt = value => String(value).padStart(2, '0');
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const choose = list => list[Math.floor(Math.random() * list.length)];
 const categories = [...new Set(Object.values(rooms).map(room => room.category))];
+const escapeMarkup = value => String(value).replace(/[&<>"']/g, character =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 
 function duration(ticks) {
   if (!Number.isFinite(ticks)) return 'aguardando equipe';
@@ -1407,6 +1537,25 @@ const chapters = [
 ];
 const laterChapters = [
   {
+    title: 'Antes da próxima geada',
+    entry: 'O abrigo cresceu. A equipe quer manter os dormitórios aquecidos e colher mesmo quando o frio chegar.',
+    observation: () => basicNeeds(42) ||
+      (!poweredCount('caldeira') && 'Mantenha uma caldeira ligada para sustentar o aquecimento.') ||
+      (!operatingCount('hidroponia', true) && !operatingCount('estufa', true, slot => !slot.outside) &&
+        !specialistsIn('sementeira', 'sementes').length &&
+        'Mantenha hidroponia, estufa com energia ou um banco de sementes com alguém no local.')
+  },
+  {
+    title: 'Uma rota para os vizinhos',
+    entry: 'As equipes querem um lugar seguro para reabastecer e uma troca que ajude tanto a colônia quanto os vizinhos.',
+    observation: () => basicNeeds(36) ||
+      (!Object.keys(state.outposts).some(id => !routeClosed(Number(id)) &&
+        ['food', 'water'].every(key => state.outposts[id].stock[key] >= 5)) &&
+        'Abasteça um posto acessível com pelo menos 5 kg de comida e 5 L de água.') ||
+      (!Object.values(state.agreements).some(agreement => agreement.delivered > 0) &&
+        'Mantenha um acordo com um vizinho e conclua pelo menos uma entrega.')
+  },
+  {
     title: 'Linhas de abastecimento',
     entry: 'O pessoal da despensa quer reservas que resistam a perdas. A oficina pode manter uma boa pilha de peças à mão.',
     observation: () => basicNeeds(56) ||
@@ -1445,6 +1594,20 @@ function basicNeeds(reserve) {
   if (state.health < 70 || state.morale < 55) return 'A equipe anda debilitada. É difícil manter a rotina assim.';
   return '';
 }
+
+const stormIncident = {
+  title: 'Tempestade sobre o abrigo',
+  body: 'A chuva entrou por uma fissura e o elevador parou. Você pode restaurar o acesso ou ganhar tempo com a bomba. A parede ainda precisa de vedação.',
+  options: [
+    { label: 'Religar o elevador · 1 peça', item: 'parts', stormRepair: true,
+      result: 'O elevador voltou. Envie alguém para vedar a infiltração.' },
+    { label: 'Reparo provisório · 8 materiais', cost: { materials: 8 }, stormRepair: true,
+      result: 'O elevador voltou com um reparo provisório. A infiltração continua.' },
+    { label: 'Bombear a água · 6 energia', cost: { power: 6 }, stormPump: true,
+      result: 'O nível da água baixou. O elevador continua em reparo.' }
+  ],
+  lapse: { result: 'A chuva perdeu força. A infiltração e o reparo do elevador ainda exigem atenção.' }
+};
 
 const incidents = [
   {
@@ -1612,7 +1775,8 @@ const incidents = [
       { label: 'Isolar o elevador', liftFault: 48, result: 'Elevador fechado por 8 horas. Uma oficina em modo Reparo pode liberar a cabine antes.' }
     ],
     lapse: { liftFault: 48, result: 'O elevador foi fechado por 8 horas. Uma oficina em modo Reparo pode liberar a cabine antes.' }
-  }
+  },
+  stormIncident
 ];
 
 let state, selected = null, inspected = null, paused = false, speed = 1;
@@ -1685,11 +1849,13 @@ function fresh(scenario = 'normal') {
     roomModes: {},
     schoolCourses: {},
     roomLevels: {},
+    roomSpecialties: {},
     oddJobs: {},
     initiatives: { offers: {}, dismissed: {} },
     liftFaultUntil: 0,
     leaks: {},
     nextLeak: clock + 144,
+    nextStorm: clock + 2 * 144,
     grid: {},
     sound: true,
     soundConfigured: false,
@@ -1697,6 +1863,7 @@ function fresh(scenario = 'normal') {
     children: {},
     familyPlans: {},
     restRequests: {},
+    colonyPacts: {},
     overtimeWorked: {},
     world,
     missions: [],
@@ -1708,8 +1875,10 @@ function fresh(scenario = 'normal') {
     sheltered: {},
     injuries: {},
     routes: {},
+    routeWorks: {},
     routeNext: clock + 240,
     legacy: { path: null, streak: 0, completed: [], endings: {} },
+    recovery: null,
     stories: {},
     storyUnread: false,
     schedules: {},
@@ -1738,41 +1907,74 @@ function fresh(scenario = 'normal') {
     quietUntil: clock + 72,
     chapter: { index: 0, started: startDay, steady: 0, responses: 0 },
     ended: false,
+    campaignHistory: [],
     log: [{ stamp: 'D' + startDay + ' ' + stamp, message: config.intro }]
   };
 }
 
+function colonySnapshot() {
+  const incident = state.incident && {
+    incidentIndex: incidents.indexOf(state.incident.template),
+    deadline: state.incident.deadline,
+    postId: state.incident.postId,
+    stormLot: state.incident.stormLot
+  };
+  const liftTransit = lift?.rider ? { person: lift.rider.id, destination: lift.dropoff, y: lift.y } : null;
+  const positions = Object.fromEntries(walkers.map(({ id, x, level, stair }) => [id, { x, level, stair }]));
+  return { ...state, incident, speed, liftTransit, positions };
+}
+
 function saveColony() {
-  if (!campaignStarted) return;
+  if (!campaignStarted) return false;
   try {
-    const incident = state.incident && {
-      incidentIndex: incidents.indexOf(state.incident.template),
-      deadline: state.incident.deadline,
-      postId: state.incident.postId
-    };
-    const liftTransit = lift?.rider ? { person: lift.rider.id, destination: lift.dropoff, y: lift.y } : null;
-    localStorage.setItem(saveKey, JSON.stringify({ ...state, incident, speed, liftTransit, positions: Object.fromEntries(
-      walkers.map(({ id, x, level, stair }) => [id, { x, level, stair }])
-    ) }));
+    localStorage.setItem(saveKey, JSON.stringify(colonySnapshot()));
+    return true;
   } catch {
-    // Storage can be disabled for local files and private windows.
+    return false;
   }
 }
 
 function readColony() {
   try {
-    const saved = JSON.parse(localStorage.getItem(saveKey));
-    if (!saved || !Number.isInteger(saved.clock) || !saved.rooms || !saved.chapter) return null;
+    return decodeColony(JSON.parse(localStorage.getItem(saveKey)));
+  } catch {
+    return null;
+  }
+}
+
+function decodeColony(saved) {
+  try {
+    if (!saved || !Number.isSafeInteger(saved.clock) || saved.clock < 0 || !saveRecord(saved.rooms) ||
+        !saveRecord(saved.chapter) || !Number.isInteger(saved.chapter.index) || saved.chapter.index < 0 ||
+        !Number.isInteger(saved.people) || saved.people < 0 || saved.people > populationLimit ||
+        !Object.keys(resourceLabels).every(key => Number.isFinite(saved.resources?.[key]) && saved.resources[key] >= 0) ||
+        !Number.isFinite(saved.health) || !Number.isFinite(saved.morale) ||
+        !Array.isArray(saved.log) || !saved.log.every(entry => typeof entry?.message === 'string' && typeof entry.stamp === 'string')) return null;
     saved.works ??= {};
+    if (!saveRecord(saved.works) ||
+        !Object.entries(saved.rooms).every(([lot, type]) => validSavedRoom(lot, type)) ||
+        !Object.entries(saved.works).every(([lot, work]) => validSavedRoom(lot, work?.type) &&
+          Number.isFinite(work.remaining) && Number.isFinite(work.total) && work.total > 0)) return null;
     saved.buildAssignments ??= {};
     saved.roomModes ??= {};
     saved.schoolCourses ??= {};
     saved.roomLevels ??= {};
+    saved.roomSpecialties = Object.fromEntries(Object.entries(saved.roomSpecialties || {}).filter(([lot, key]) =>
+      saved.roomLevels[lot] === maxRoomLevel && Object.hasOwn(roomSpecialties[saved.rooms[lot]] || {}, key)));
     saved.oddJobs ??= {};
     saved.initiatives ??= { offers: {}, dismissed: {} };
     saved.liftFaultUntil ??= 0;
     saved.leaks ??= {};
+    if (!saveRecord(saved.leaks) || !Object.entries(saved.leaks).every(([lot, leak]) =>
+      validSavedRoom(lot, saved.rooms[lot]) && slots[lot].level > 0 && Number.isFinite(leak?.water) &&
+      leak.water >= 0 && leak.water <= 100 && (!leak.task ||
+        Object.hasOwn(leakActions, leak.task.action) && Number.isInteger(leak.task.person) &&
+        leak.task.person >= 0 && leak.task.person < saved.people))) return null;
     saved.nextLeak ??= saved.clock + 144;
+    saved.nextStorm ??= saved.clock + 144;
+    if (!Array.isArray(saved.campaignHistory)) saved.campaignHistory = saved.log.filter(campaignMoment).reverse();
+    else saved.campaignHistory = saved.campaignHistory.filter(entry =>
+      typeof entry?.stamp === 'string' && typeof entry.message === 'string').slice(-24);
     saved.grid ??= {};
     if (saved.soundConfigured !== true) saved.sound = true;
     saved.soundConfigured ??= false;
@@ -1780,15 +1982,35 @@ function readColony() {
     saved.children ??= {};
     saved.familyPlans ??= {};
     saved.restRequests ??= {};
+    saved.colonyPacts = Object.fromEntries(Object.entries(saved.colonyPacts || {}).filter(([key, pact]) =>
+      Object.hasOwn(colonyPacts, key) && ['offered', 'active', 'declined'].includes(pact?.status)));
     saved.overtimeWorked ??= {};
     saved.world ??= newWorld();
-    if (!scenarios[saved.scenario]) saved.scenario = 'normal';
+    if (!Array.isArray(saved.world) || saved.world.length !== mapWidth * 5 || !saved.world.every(tile =>
+      Object.hasOwn(groundTypes, tile?.ground) && Object.hasOwn(landmarks, tile?.site))) return null;
+    if (!Object.hasOwn(scenarios, saved.scenario)) saved.scenario = 'normal';
     saved.injuries ??= {};
     saved.routes ??= {};
+    saved.routeWorks = Object.fromEntries(Object.entries(saved.routeWorks || {}).filter(([id, partner]) =>
+      saved.world[id]?.scouted && ['village', 'camp'].includes(partner)));
     saved.routeNext ??= saved.clock + 180;
     saved.legacy ??= { path: null, streak: 0, completed: [] };
     saved.legacy.endings ??= {};
+    if (!Number.isFinite(saved.recovery?.started)) saved.recovery = null;
+    if (saved.tutorial) {
+      if (!Array.isArray(saved.tutorial.completed)) delete saved.tutorial;
+      else saved.tutorial.completed = tutorialSteps.map(([key]) => key).filter(key => saved.tutorial.completed.includes(key));
+    }
+    const epilogue = saved.legacy.epilogue;
+    if (epilogue && !['founders', 'grown', 'decisions'].every(key =>
+        Array.isArray(epilogue[key]) && epilogue[key].every(entry => typeof entry === 'string'))) delete saved.legacy.epilogue;
     saved.missions ??= [];
+    if (!Array.isArray(saved.missions) || !saved.missions.every(mission =>
+      Number.isInteger(mission?.tile) && mission.tile >= 0 && mission.tile < saved.world.length &&
+      Number.isFinite(mission.returns) && Array.isArray(mission.party) && mission.party.every(id =>
+        Number.isInteger(id) && id >= 0 && id < saved.people) &&
+      (mission.routeStops === undefined || Array.isArray(mission.routeStops) && mission.routeStops.length <= 2 &&
+        mission.routeStops.every(id => Number.isInteger(id) && id >= 0 && id < saved.world.length)))) return null;
     saved.orders ??= {};
     saved.orderClaims ??= {};
     saved.fieldStocks ??= { medicine: 0, parts: 0 };
@@ -1803,6 +2025,10 @@ function readColony() {
     saved.resting ??= {};
     saved.overtime ??= {};
     saved.profiles ??= {};
+    if (!saveRecord(saved.profiles) || !Object.values(saved.profiles).every(profile =>
+      saveRecord(profile) && (profile.name === undefined || typeof profile.name === 'string') &&
+      (profile.appearance === undefined || Array.isArray(profile.appearance) &&
+        profile.appearance.length === 3 && profile.appearance.every(color => typeof color === 'string')))) return null;
     saved.duties ??= {};
     saved.experience ??= {};
     saved.training ??= {};
@@ -1810,6 +2036,8 @@ function readColony() {
     saved.manuals ??= {};
     saved.tools ??= {};
     saved.animals ??= [];
+    if (!Array.isArray(saved.animals) || !saved.animals.every(animal =>
+      Object.hasOwn(animalTypes, animal?.type) && typeof animal.name === 'string' && Number.isFinite(animal.health))) return null;
     saved.animalId ??= 0;
     saved.memories ??= {};
     saved.rations ??= 'normal';
@@ -1824,13 +2052,23 @@ function readColony() {
     });
     if (saved.incident) {
       const template = incidents[saved.incident.incidentIndex];
-      saved.incident = template ? { template, deadline: saved.incident.deadline, postId: saved.incident.postId } : null;
+      const { deadline, postId, stormLot } = saved.incident;
+      saved.incident = template && Number.isFinite(deadline) && (template !== stormIncident ||
+        Number.isInteger(stormLot) && slots[stormLot]?.level > 0) ? { template, deadline, postId, stormLot } : null;
     }
     relocateExterior(saved);
     return saved;
   } catch {
     return null;
   }
+}
+
+function saveRecord(value) {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function validSavedRoom(lot, type) {
+  return String(Number(lot)) === lot && Number.isInteger(Number(lot)) && Boolean(slots[lot]) && Object.hasOwn(rooms, type);
 }
 
 function migrateResearch(saved) {
@@ -1873,6 +2111,12 @@ function roomLevel(lot) {
 
 function roomOutput(lot) {
   return roomOutputAtGrade(state.rooms[lot], roomLevel(lot));
+}
+
+function roomSpecialty(lot) {
+  const options = roomSpecialties[state.rooms[lot]];
+  const installed = state.roomSpecialties[lot];
+  return roomLevel(lot) === maxRoomLevel && Object.hasOwn(options || {}, installed) ? installed : 'standard';
 }
 
 function roomOutputAtGrade(type, grade) {
@@ -2049,6 +2293,7 @@ function renderPowerBoard() {
       state.grid[key] = select.value;
       gridDispatch = null;
       renderPowerBoard();
+      renderHud();
       section.querySelector('[data-sector="' + key + '"]')?.focus();
       saveColony();
     };
@@ -2152,7 +2397,7 @@ function runProduction(apply = true) {
     const job = type === 'cozinha' ? 'culinaria' : 'mecanica';
     const crew = crewInRoom(lot, job);
     const mode = roomProduction(lot);
-    const output = roomOutput(lot);
+    const output = roomOutput(lot) * (roomSpecialties[type]?.[roomSpecialty(lot)]?.output?.[mode] ?? 1);
     if (floorsWithStaff && !floorsWithStaff.has(slots[lot].level)) continue;
     if (type === 'cozinha') {
       result.kitchens++;
@@ -2286,6 +2531,10 @@ function advanceCommunity() {
       state.restRequests[id] = { asked: state.clock };
       storyUpdate(residentName(id) + ' pediu uma folga depois de vários plantões extras.');
     }
+  }
+  if (state.clock % 12 === 0) {
+    proposeColonyPacts();
+    announceSuccessions();
   }
   if (state.clock % 6 !== 0) return;
   const together = walkers.filter(walker => !childStage(walker.id) && atDestination(walker, walker.destination) &&
@@ -2499,6 +2748,7 @@ function advanceApprenticeships() {
     if (lesson.left > 0) continue;
     state.profiles[id] ??= {};
     state.profiles[id].profession = lesson.profession;
+    child.graduation = { mentor: lesson.mentor, skill: lesson.skill, profession: lesson.profession };
     delete child.apprenticeship;
     gainExperience(id, lesson.skill, 24, false);
     const result = residentName(id) + ' concluiu o aprendizado de ' + professions[lesson.profession].name +
@@ -2552,6 +2802,77 @@ function renderApprenticeships(list) {
   }
 }
 
+function successionDuty(id) {
+  const graduate = state.children[id]?.graduation;
+  if (!graduate || graduate.served || state.oddJobs[id] || !homeWorkers().includes(id) ||
+      !Object.hasOwn(duties, graduate.skill) || state.profiles[id]?.profession !== graduate.profession ||
+      assignedStudies().some(([, project]) => project.researcher === id)) return null;
+  const { mentor, skill } = graduate;
+  if (!Number.isInteger(mentor) || mentor === id || mentor < 0 || mentor >= state.people || duty(mentor) !== skill ||
+      (!state.injuries[mentor] && residentsAtHome().includes(mentor) && !(state.restRequests[mentor]?.until > state.clock))) return null;
+  const walker = walkers.find(person => person.id === id);
+  if (!walker) return null;
+  if (['obras', 'carpintaria'].includes(skill)) {
+    const lot = Object.keys(state.works).map(Number).find(lot => buildSkill(state.works[lot].type) === skill &&
+      !assignedTo(lot, true).length && !roomFlooded(lot) && canReachLot(walker, lot));
+    return lot === undefined ? null : { kind: 'build', lot };
+  }
+  const locations = workspaces[skill] || [];
+  const lot = Object.keys(state.rooms).map(Number).find(lot => locations.includes(state.rooms[lot]) &&
+    roomEquipmentAvailable(lot) && (!roomSector(state.rooms[lot], lot) || isRoomPowered(lot)) &&
+    canReachLot(walker, lot) && !crewInRoom(lot, skill).length &&
+    !Object.values(state.oddJobs).some(job => job.kind === 'cover' && job.lot === lot));
+  return lot === undefined ? null : { kind: 'cover', lot, type: state.rooms[lot], role: skill,
+    remaining: 24, expires: state.clock + 144 };
+}
+
+function announceSuccessions() {
+  for (const id of residentIds()) {
+    const graduate = state.children[id]?.graduation;
+    if (!graduate || graduate.announced || !successionDuty(id)) continue;
+    graduate.announced = true;
+    storyUpdate(residentName(id) + ' pode assumir o trabalho de ' + residentName(graduate.mentor) +
+      ' durante o afastamento. Confira o Diário.');
+  }
+}
+
+function renderSuccessions(list) {
+  for (const id of residentIds()) {
+    const job = successionDuty(id);
+    if (!job) continue;
+    const graduate = state.children[id].graduation;
+    const room = rooms[job.type || state.works[job.lot].type];
+    const row = document.createElement('div');
+    row.className = 'bunker-panel';
+    const title = document.createElement('strong');
+    title.textContent = 'Passagem de responsabilidade';
+    const message = document.createElement('p');
+    message.textContent = residentName(id) + ' pode assumir o trabalho de ' + residentName(graduate.mentor) +
+      ' em ' + room.name + (job.kind === 'build' ? ' até concluir a obra.' : ' por até 4 horas de trabalho.');
+    const accept = document.createElement('button');
+    accept.className = 'control';
+    accept.textContent = 'Autorizar substituição';
+    accept.onclick = () => {
+      const current = successionDuty(id);
+      if (!current) {
+        renderCommunityJournal();
+        return;
+      }
+      state.oddJobs[id] = current;
+      graduate.served = true;
+      scheduleBuilders();
+      gridDispatch = null;
+      const result = residentName(id) + ' assumiu o trabalho de ' + residentName(graduate.mentor) +
+        ' pela primeira vez desde que concluiu o aprendizado.';
+      addMemory(id, 'aprendizado', result);
+      addMemory(graduate.mentor, 'aprendizado', result);
+      storyUpdate(result);
+    };
+    row.append(title, message, accept);
+    list.append(row);
+  }
+}
+
 function canPlanPregnancy(bond) {
   if (!bond?.couple || bond.people?.length !== 2 ||
       bond.people.some(id => !Number.isInteger(id) || id < 0 || id >= state.people || childStage(id))) return false;
@@ -2587,15 +2908,110 @@ function migrateFamilyPlans() {
 
 function canSupportFamily(bond) {
   return canPlanPregnancy(bond) && freeBeds() > 0 && nurseryVacancies() > 0 && !populationFull() &&
-    state.resources.food >= pregnancySupplies.food && state.resources.water >= pregnancySupplies.water;
+    state.resources.food >= pregnancySupplies.food && state.resources.water >= pregnancySupplies.water &&
+    !pactBlocksWater(pregnancySupplies.water);
+}
+
+function proposeColonyPacts() {
+  if (state.people < 4) return;
+  for (const [key, definition] of Object.entries(colonyPacts)) {
+    const current = state.colonyPacts[key];
+    if (current && (current.status !== 'declined' || current.until > state.clock)) continue;
+    if (!definition.condition()) continue;
+    const minimum = key === 'water' ? Math.max(10, state.people * 2) : pactRestThreshold;
+    state.colonyPacts[key] = { status: 'offered', minimum };
+    storyUpdate('Os moradores propuseram um acordo de ' + definition.title.toLowerCase() + '.');
+  }
+}
+
+function pactRuleApplies(key, crossing) {
+  return crossing && state.colonyPacts[key]?.status === 'active';
+}
+
+function waterPactCrossed(amount) {
+  return amount > 0 && state.resources.water - amount + .0001 < (state.colonyPacts.water?.minimum ?? 0);
+}
+
+function pactBlocksWater(amount) {
+  return pactRuleApplies('water', waterPactCrossed(amount)) && !(state.colonyPacts.water.exception > state.clock);
+}
+
+function usePactException(key, crossing) {
+  const pact = state.colonyPacts[key];
+  if (!pactRuleApplies(key, crossing) || !(pact.exception > state.clock)) return;
+  delete pact.exception;
+  applyEffects({ morale: -4 });
+  storyUpdate('A colônia usou uma exceção ao acordo de ' + colonyPacts[key].title.toLowerCase() + '. O ânimo caiu 4 pontos.');
+}
+
+function renderColonyPacts() {
+  const list = byId('community-pact-list');
+  list.replaceChildren();
+  for (const [key, definition] of Object.entries(colonyPacts)) {
+    const pact = state.colonyPacts[key];
+    if (!pact || pact.status === 'declined') continue;
+    const row = document.createElement('div');
+    row.className = 'bunker-panel';
+    const title = document.createElement('strong');
+    title.textContent = definition.title + (pact.status === 'active' ? ' · em vigor' : ' · proposta');
+    const text = document.createElement('p');
+    text.textContent = key === 'water' ? 'Preservar ' + pact.minimum + ' L no bunker antes de enviar expedições ou separar provisões familiares.' :
+      'Evitar plantões extras quando o cansaço do morador já estiver em 55% ou mais.';
+    const actions = document.createElement('div');
+    actions.className = 'choices';
+    const action = (label, change) => {
+      const button = document.createElement('button');
+      button.className = 'control';
+      button.textContent = label;
+      button.onclick = () => {
+        change();
+        byId('community-pacts-title').focus({ preventScroll: true });
+      };
+      actions.append(button);
+    };
+    const dismiss = () => {
+      state.colonyPacts[key] = { status: 'declined', until: state.clock + 3 * 144 };
+      storyUpdate('O acordo de ' + definition.title.toLowerCase() + ' ficou de fora por enquanto.');
+    };
+    if (pact.status === 'offered') {
+      action('Aceitar acordo', () => {
+        pact.status = 'active';
+        storyUpdate('A colônia firmou o acordo de ' + definition.title.toLowerCase() + '.');
+      });
+      action('Agora não', dismiss);
+    } else {
+      if (pact.exception > state.clock) text.textContent += ' Uma exceção está liberada por mais ' +
+        duration(pact.exception - state.clock) + '.';
+      else {
+        text.textContent += ' Uma exceção dura 12 h e custa 4 pontos de ânimo se for usada.';
+        action('Liberar uma exceção por 12 h', () => {
+          pact.exception = state.clock + 72;
+          renderColonyPacts();
+          saveColony();
+        });
+      }
+      action('Encerrar acordo', dismiss);
+    }
+    row.append(title, text, actions);
+    list.append(row);
+  }
+  byId('community-pacts').hidden = !list.children.length;
+}
+
+function openColonyPacts(from) {
+  byId(from).close();
+  byId('journal-button').click();
+  byId('community-pacts-title').focus();
 }
 
 function supportFamily(key) {
   const plan = state.familyPlans[key];
   if (plan?.status !== 'wish' || !canSupportFamily(state.bonds[key])) return;
+  const crossing = waterPactCrossed(pregnancySupplies.water);
   applyEffects({ food: -pregnancySupplies.food, water: -pregnancySupplies.water });
   plan.status = 'expecting';
   plan.due = state.clock + 3 * 144;
+  usePactException('water', crossing);
   bondMoment(state.bonds[key], 'familia', 'O abrigo reservou uma cama e uma vaga no berçário para a chegada de um bebê.');
   if (byId('journal').open) renderCommunityJournal();
 }
@@ -2603,8 +3019,10 @@ function supportFamily(key) {
 function renderCommunityJournal() {
   const list = byId('community-log');
   list.replaceChildren();
+  renderColonyPacts();
   const entries = Object.entries(state.familyPlans);
   renderApprenticeships(list);
+  renderSuccessions(list);
   for (const [key, plan] of entries) {
     const bond = state.bonds[key];
     if (!bond || (plan.status !== 'born' && !canPlanPregnancy(bond))) continue;
@@ -2628,6 +3046,7 @@ function renderCommunityJournal() {
       button.className = 'control';
       button.textContent = 'Reservar provisões e espaço';
       button.disabled = !canSupportFamily(bond);
+      if (pactBlocksWater(pregnancySupplies.water)) text.textContent += ' A reserva acordada de água impede separar as provisões agora.';
       button.onclick = () => supportFamily(key);
       row.append(button);
     }
@@ -3223,7 +3642,7 @@ function addStaffTab(list, id, name, status, color, profession) {
   button.className = 'staff-tab';
   button.style.setProperty('--uniform', color);
   button.setAttribute('aria-pressed', staffSelected === id);
-  button.innerHTML = '<i aria-hidden="true">' + (profession?.icon || '◇') + '</i><b>' + name + '</b><small>' +
+  button.innerHTML = '<i aria-hidden="true">' + (profession?.icon || '◇') + '</i><b>' + escapeMarkup(name) + '</b><small>' +
     (profession ? profession.name + ' · ' : '') + status + '</small>';
   button.onclick = () => {
     staffSelected = id;
@@ -3326,6 +3745,7 @@ function renderResidentFile(id, home) {
   assignment.onchange = () => {
     if (state.oddJobs[id]?.kind === 'cover') delete state.oddJobs[id];
     state.duties[id] = assignment.value;
+    recordTutorialStep('staff');
     scheduleBuilders();
     gridDispatch = null;
     renderStaff();
@@ -3489,13 +3909,21 @@ function renderShiftControl(detail, id, home) {
     onShift(id) ? 'Em serviço. Rendimento ' + Math.round(alertness(id) * 100) + '%.' :
     'Descansando no abrigo.') + ' ' + shifts[shiftOf(id)][1];
   panel.append(label, select, status, meter, note);
-  if (home && !state.injuries[id] && !onShift(id) && tired < 89 && !state.training[id] && !state.restRequests[id]?.until) {
+  if (home && !state.injuries[id] && !onShift(id) && tired < 89 && !state.training[id] &&
+      !(state.restRequests[id]?.until > state.clock)) {
+    const crossing = pactRuleApplies('rest', tired >= pactRestThreshold);
+    const blocked = crossing && !(state.colonyPacts.rest.exception > state.clock);
     const wake = document.createElement('button');
     wake.className = 'control';
-    wake.textContent = 'Mobilizar por 3 h';
+    wake.textContent = blocked ? 'Ver acordo de descanso' : 'Mobilizar por 3 h';
     wake.title = 'Interrompe o descanso e aumenta o cansaço.';
     wake.onclick = () => {
+      if (blocked) {
+        openColonyPacts('staff');
+        return;
+      }
       state.overtime[id] = state.clock + 18;
+      usePactException('rest', crossing);
       renderStaff();
       renderRaid();
       renderHud();
@@ -3566,10 +3994,18 @@ function dryStorage(lot) {
     Math.abs(slots[a].x - origin.x) - Math.abs(slots[b].x - origin.x))[0];
 }
 
-function startLeak(lot) {
+function startLeak(lot, water = 10, stormUntil = 0) {
   if (state.leaks[lot] || !state.rooms[lot] || slots[lot].level < 1) return;
-  state.leaks[lot] = { water: 10, raised: state.clock };
+  state.leaks[lot] = { water, raised: state.clock, stormUntil };
   storyUpdate('Goteiras em ' + rooms[state.rooms[lot]].name + ' no nível ' + (slots[lot].level + 1) + '. Confira as tarefas.');
+}
+
+function stormTarget(climate) {
+  if (state.clock < state.nextStorm || liftOutOfService() || ![0, 2].includes(climate.index) ||
+      Object.keys(state.leaks).length >= 2) return;
+  const eligible = Object.keys(state.rooms).map(Number).filter(lot => slots[lot].level > 0 &&
+    state.rooms[lot] !== 'escada' && !state.leaks[lot] && !floorRoomCount('dreno', slots[lot].level));
+  return eligible.find(lot => wetStockRooms.includes(state.rooms[lot])) ?? eligible[0];
 }
 
 function assignLeakWork(lot, action, person) {
@@ -3626,7 +4062,8 @@ function updateLeaks() {
     else {
       const drainage = floorRoomCount('dreno', level);
       const humidity = floorExposure(level).damp;
-      leak.water = clamp(leak.water + (drainage ? -.13 : .12 + humidity * .13), 0, 100);
+      const stormInflow = leak.stormUntil >= state.clock ? .8 : 0;
+      leak.water = clamp(leak.water + (drainage ? -.13 : .12 + humidity * .13 + stormInflow), 0, 100);
     }
     const task = leak.task;
     if (!task) continue;
@@ -3825,14 +4262,24 @@ function hourText() {
   return fmt(Math.floor(state.clock / 6) % 24) + ':' + fmt(state.clock % 6 * 10);
 }
 
+function campaignMoment(entry) {
+  return /acordo|resgat|fundou|acolhe|nasceu|tempestade|aprendeu|escolheu um futuro|operação/i.test(entry.message);
+}
+
 function log(message) {
-  state.log.unshift({ stamp: 'D' + day() + ' ' + hourText(), message });
+  const entry = { stamp: 'D' + day() + ' ' + hourText(), message };
+  state.log.unshift(entry);
   state.log = state.log.slice(0, 8);
+  if (campaignMoment(entry) && !state.legacy.epilogue) {
+    state.campaignHistory.push(entry);
+    if (state.campaignHistory.length > 24) state.campaignHistory.splice(1, 1);
+  }
   renderLog();
 }
 
 function renderLog() {
-  byId('log').innerHTML = state.log.map(entry => '<li><time>' + entry.stamp + '</time>' + entry.message + '</li>').join('');
+  byId('log').innerHTML = state.log.map(entry =>
+    '<li><time>' + escapeMarkup(entry.stamp) + '</time>' + escapeMarkup(entry.message) + '</li>').join('');
 }
 
 function notice(message) {
@@ -3919,6 +4366,7 @@ function chooseLegacy(path) {
 }
 
 function renderLegacy() {
+  byId('journal-epilogue').hidden = !state.legacy.completed.length;
   const list = byId('legacy-list');
   list.replaceChildren();
   for (const [path, legacy] of Object.entries(legacies)) {
@@ -4072,8 +4520,53 @@ function completeLegacy(path) {
   delete progress.finale;
   applyEffects({ morale: 10 });
   if (path === 'radio') contactNeighbor('horizon', 2);
+  const first = progress.completed.length === 1;
+  if (first) progress.epilogue = epilogueSnapshot(path);
   storyUpdate('Legado concluído: ' + legacies[path].title + '. ' + record);
   renderLegacy();
+  if (first && byId('journal').open) openEpilogue();
+}
+
+function epilogueSnapshot(path) {
+  const history = state.campaignHistory;
+  return {
+    path, outcome: state.legacy.endings[path] || legacyFinales[path].ending,
+    founders: residentIds().slice(0, 4).map(residentName),
+    grown: residentIds().filter(id => state.children[id] && !childStage(id)).map(residentName),
+    children: Object.keys(state.children).length,
+    people: state.people,
+    posts: Object.keys(state.outposts).length,
+    partners: Object.values(state.neighbors).filter(neighbor => neighbor.trust >= 2).length,
+    decisions: (history.length <= 5 ? history : [history[0], ...history.slice(-4)])
+      .map(entry => entry.stamp + ' · ' + entry.message)
+  };
+}
+
+function openEpilogue() {
+  const first = state.legacy.completed[0];
+  if (!Object.hasOwn(legacies, first)) return;
+  const summary = state.legacy.epilogue || epilogueSnapshot(first);
+  byId('journal').close();
+  byId('epilogue-legacy').textContent = legacies[first].title;
+  byId('epilogue-outcome').textContent = summary.outcome;
+  byId('epilogue-founders').textContent = 'Fundadores · ' + summary.founders.join(', ');
+  byId('epilogue-generation').textContent = summary.grown.length ?
+    'Cresceram no abrigo · ' + summary.grown.join(', ') : summary.children ?
+      'A próxima geração ainda está crescendo no abrigo.' : 'A colônia ainda não teve uma nova geração.';
+  byId('epilogue-region').textContent = [
+    summary.people + (summary.people === 1 ? ' morador' : ' moradores'),
+    summary.posts + (summary.posts === 1 ? ' posto avançado' : ' postos avançados'),
+    summary.partners + (summary.partners === 1 ? ' vizinho próximo' : ' vizinhos próximos')
+  ].join(' · ');
+  const log = byId('epilogue-log');
+  log.replaceChildren();
+  for (const message of summary.decisions) {
+    const item = document.createElement('li');
+    item.textContent = message;
+    log.append(item);
+  }
+  byId('epilogue-decisions').hidden = !log.children.length;
+  byId('epilogue').showModal();
 }
 
 const rateFormat = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
@@ -4117,6 +4610,86 @@ function resourceTip(key, flow) {
     'Hidráulica aumenta o rendimento. Calor, moradores e animais elevam o consumo.';
 }
 
+function reserveRunway(key, flow) {
+  const rate = flow.effects[key];
+  if (!state.resources[key] && rate <= 0) return 0;
+  return rate < -0.00001 ? state.resources[key] / -rate : Infinity;
+}
+
+function roomBlocker(lot, type, activeFloors) {
+  if (roomFlooded(lot)) return ['Alagado. Bombeie a água e vede a infiltração.', 'room'];
+  if (roomUnderRenovation(lot)) return ['Em reforma. Veja a equipe e o prazo da obra.', 'room'];
+  if (state.leaks[lot]) return ['Infiltração. Água em ' + Math.floor(state.leaks[lot].water) +
+    '%. ' + leakStatus(lot, state.leaks[lot]) + '.', 'room'];
+  const sector = roomSector(type, lot);
+  if (!sector) return null;
+  if (!isRoomPowered(lot, type)) return [state.grid[sector] === 'off' ?
+    'Setor desligado. Reative em Energia.' : 'Sem energia suficiente. Revise as prioridades da rede.', 'power-button'];
+  if (activeFloors && !activeFloors.has(slots[lot].level)) return [
+    'Elevador parado e sem equipe de plantão neste andar. Use as escadas ou libere o elevador.', 'room'
+  ];
+  return null;
+}
+
+function renderSystemDiagnostics() {
+  const list = byId('system-issues');
+  list.replaceChildren();
+  const add = (title, message, action, open) => {
+    const row = document.createElement('section');
+    row.className = 'bunker-panel diagnostic-card';
+    const heading = document.createElement('h3');
+    heading.textContent = title;
+    const text = document.createElement('p');
+    text.textContent = message;
+    const button = document.createElement('button');
+    button.className = 'control';
+    button.textContent = action;
+    button.onclick = () => {
+      byId('resource-balance').close();
+      open();
+    };
+    row.append(heading, text, button);
+    list.append(row);
+  };
+  if (state.recovery) {
+    const recovering = state.recovery.ready;
+    const [post, suggested] = recoveryPost(recovering);
+    const blocked = Boolean(state.incident);
+    const message = recovering ? 'Os serviços essenciais voltaram a ficar acessíveis e as reservas estão estáveis. Confira quem pode voltar dos postos.' :
+      'Recupere o acesso aos cômodos essenciais e recomponha as reservas. Um posto abastecido pode receber parte da colônia.';
+    add('Plano de recuperação', message + (post === undefined && !recovering ?
+      ' Nenhum posto comporta um grupo agora.' : ''), blocked ? 'Ver incidente antes de sair' :
+      post === undefined ? 'Abrir mapa' : recovering ? 'Planejar retorno do posto ' + sectorName(post) :
+        'Preparar abrigo no posto ' + sectorName(post), () => {
+      if (blocked) {
+        byId('choices').querySelector('button:not(:disabled)')?.focus();
+        return;
+      }
+      byId('surface-button').click();
+      if (post === undefined || !byId('surface').open) return;
+      byId('surface-grid').children[post]?.click();
+      for (const person of suggested) shelterPicks.add(person);
+      byId('shelter-picks').dataset.people = '';
+      byId('post-shelter').open = true;
+      renderPostShelter(post);
+      byId('post-shelter').scrollIntoView({ block: 'nearest' });
+    });
+  }
+  if (liftOutOfService()) add('Elevador parado', 'Reparo em até ' + duration(state.liftFaultUntil - state.clock) +
+    '. As escadas permitem circular. Mecânicos numa oficina em modo Reparo podem antecipar a volta.', 'Ver tarefas',
+    () => byId('tasks-button').click());
+  const floors = liftOutOfService() ? staffedFloors() : null;
+  for (const [lot, type] of Object.entries(state.rooms)) {
+    const issue = roomBlocker(lot, type, floors);
+    if (!issue) continue;
+    const [message, target] = issue;
+    const location = slots[lot].outside ? 'superfície' : 'nível ' + (slots[lot].level + 1);
+    add(rooms[type].name + ' · ' + location, message, target === 'room' ? 'Inspecionar cômodo' : 'Abrir Energia',
+      () => target === 'room' ? buildSlot(Number(lot)) : byId(target).click());
+  }
+  byId('system-diagnostics').hidden = !list.children.length;
+}
+
 function renderResourceBalance() {
   gridDispatch = null;
   const flow = supplyRates();
@@ -4124,7 +4697,7 @@ function renderResourceBalance() {
   list.replaceChildren();
   for (const [key, unit] of [['food', 'kg'], ['water', 'L'], ['power', 'kWh'], ['materials', 'un']]) {
     const row = document.createElement('section');
-    row.className = 'bunker-panel';
+    row.className = 'bunker-panel diagnostic-card';
     const heading = document.createElement('h3');
     heading.textContent = resourceLabels[key][0].toUpperCase() + resourceLabels[key].slice(1);
     const values = document.createElement('p');
@@ -4135,8 +4708,31 @@ function renderResourceBalance() {
     note.className = 'balance-info';
     note.textContent = resourceTip(key, flow);
     row.append(heading, values, note);
+    const runway = reserveRunway(key, flow);
+    if (Number.isFinite(runway)) {
+      const forecast = document.createElement('strong');
+      forecast.textContent = runway === 0 ? 'Reserva esgotada.' :
+        'A reserva dura cerca de ' + duration(runway) + ' no ritmo atual.';
+      row.dataset.critical = runway <= 48 * 6;
+      row.insertBefore(forecast, note);
+      const button = document.createElement('button');
+      const target = key === 'power' ? 'power-button' : key === 'materials' ? 'build-button' :
+        state.incident ? 'event' : 'surface-button';
+      button.className = 'control';
+      button.textContent = { food: 'Buscar comida na superfície', water: 'Buscar água na superfície',
+        power: 'Revisar distribuição de energia', materials: 'Ver construções' }[key];
+      if (target === 'event') button.textContent = 'Ver incidente antes de sair';
+      button.onclick = () => {
+        byId('resource-balance').close();
+        if (target === 'build-button') setConstructionOpen(true);
+        else if (target === 'event') byId('choices').querySelector('button:not(:disabled)')?.focus();
+        else byId(target).click();
+      };
+      row.append(button);
+    }
     list.append(row);
   }
+  renderSystemDiagnostics();
 }
 
 function renderHud(flow = supplyRates()) {
@@ -4152,12 +4748,20 @@ function renderHud(flow = supplyRates()) {
   const assigned = assignedStudies().length;
   byId('research-label').textContent = assigned ? 'Pesquisa · ' + assigned : 'Pesquisa';
   byId('research-button').title = completed + '/' + Object.keys(researchPlans).length + ' plantas pesquisadas';
-  const home = residentsAtHome().length;
-  const jobs = Object.keys(state.works).length;
-  byId('tasks-label').textContent = Object.keys(state.initiatives.offers).length ? 'Tarefas •' : 'Tarefas';
-  byId('shift-summary').textContent = home + '/' + state.people + ' no abrigo';
-  const asleep = residentsAtHome().filter(id => !onShift(id)).length;
-  byId('shift-detail').textContent = asleep + ' em descanso · ' + jobs + (jobs === 1 ? ' obra' : ' obras');
+  const hasOffers = Object.keys(state.initiatives.offers).length > 0;
+  byId('tasks-label').textContent = hasOffers ? 'Tarefas •' : 'Tarefas';
+  byId('tasks-button').dataset.attention = hasOffers;
+  const risk = ['food', 'water', 'power'].reduce((first, key) =>
+    reserveRunway(key, flow) < reserveRunway(first, flow) ? key : first);
+  const runway = reserveRunway(risk, flow);
+  const warning = byId('diagnostic-warning');
+  warning.hidden = runway > 48 * 6 && !liftOutOfService() && !Object.keys(state.leaks).length && !state.recovery;
+  const label = runway <= 48 * 6 ? 'Reserva de ' + resourceLabels[risk] +
+    (runway ? ' · cerca de ' + duration(runway) : ' esgotada') :
+    state.recovery ? 'Plano de recuperação' :
+      liftOutOfService() ? 'Elevador parado · ver diagnóstico' : 'Infiltração · ver diagnóstico';
+  if (warning.textContent !== label) warning.textContent = label;
+  renderTutorialBadge();
   const stats = [
     ['food', 'Comida', 'kg', '≋', '#d0aa68'],
     ['water', 'Água', 'L', '◒', '#83bbca'],
@@ -4186,7 +4790,7 @@ function renderCrew() {
   byId('crew-title').textContent = 'Moradores · ' + state.people + ' / ' + beds() + ' camas' +
     (sheltered ? ' · ' + sheltered + ' nos postos' : '');
   byId('crew').innerHTML = residentIds().map(id =>
-    '<div class="resident"><i style="--uniform:' + residentAppearance(id)[0] + '"></i>' + residentName(id) +
+    '<div class="resident"><i style="--uniform:' + escapeMarkup(residentAppearance(id)[0]) + '"></i>' + escapeMarkup(residentName(id)) +
     '<small>' + (state.sheltered[id] !== undefined ? 'no posto ' + sectorName(state.sheltered[id]) :
       away.has(id) ? 'em viagem' : childStage(id) ?? (state.injuries[id] ? 'em recuperação' : apprenticeshipOf(id) ?
         'em aprendizado' : !onShift(id) ? 'em descanso' : awaitingProfession(id) ? 'escolhendo ofício' : professionFor(id).name)) + '</small></div>'
@@ -4765,6 +5369,11 @@ function routeDetour(id) {
   return route?.reopened ? routeEvents[route.kind] : null;
 }
 
+function routePartner(id) {
+  return ['village', 'camp'].find(key => (state.neighbors[key]?.trust ?? 0) >= 2 &&
+    state.world.some((tile, sector) => tile.site === key && tile.scouted && distanceBetween(id, sector) <= 2));
+}
+
 function updateRoutes() {
   let changed = false;
   for (const [id, route] of Object.entries(state.routes)) {
@@ -4776,7 +5385,7 @@ function updateRoutes() {
     changed = true;
   }
   if (state.clock >= state.routeNext) {
-    const busy = new Set(state.missions.flatMap(mission => [mission.tile, mission.postId]));
+    const busy = new Set(state.missions.flatMap(mission => [mission.tile, ...(mission.routeStops || [mission.postId])]));
     const candidates = state.world.map((tile, id) => ({ tile, id })).filter(({ tile, id }) =>
       id !== baseTile && tile.scouted && !busy.has(id) && !routeClosed(id));
     if (candidates.length) {
@@ -4785,7 +5394,8 @@ function updateRoutes() {
       const kind = weather().index === 3 ? 'snow' :
         tile.ground === 'marsh' || (weather().index !== 1 && Math.random() < .48) ? 'flood' : 'rubble';
       const event = routeEvents[kind];
-      state.routes[id] = { kind, until: state.clock + event.stop + Math.floor(Math.random() * 32), reopened: false };
+      const delay = event.stop + Math.floor(Math.random() * 32);
+      state.routes[id] = { kind, until: state.clock + (state.routeWorks[id] ? Math.ceil(delay * .60) : delay), reopened: false };
       state.routeNext = state.clock + 370 + Math.floor(Math.random() * 345);
       const message = event.notice + ' no setor ' + sectorName(id) + '.';
       log(message);
@@ -4803,7 +5413,7 @@ function scoutPlan(id, mount = null) {
   const scout = availableScout();
   const guidance = weather().index === 3 ? travelWeatherGuidance([scout]) : 0;
   const time = 7 + distanceFromBase(id) * 4 + (weather().index === 3 ? Math.max(2, 4 - Math.floor(guidance * 2)) : 0) +
-    (routeDetour(id)?.extra || 0);
+    (routeDetour(id)?.extra || 0) - (state.routeWorks[id] ? 5 : 0);
   const skill = scout === undefined ? 0 : skillLevel(scout, 'campo') - 1;
   const pace = mount ? animalTypes[mount.type].travel : 1;
   return { time: Math.ceil(time * pace * (count('mirante') ? .65 : 1) * (1 - skill * .045)),
@@ -4816,6 +5426,10 @@ function availableScout() {
     (skillLevel(a, 'campo') + (duty(a) === 'campo' ? 1 : 0)))[0];
 }
 
+function tripProvisions(time, size, interval) {
+  return Math.ceil(time / interval * size * (count('armazem') ? .70 : 1));
+}
+
 function tripPlan(id, party, dog = null, mount = null, animalRescue = false) {
   const size = party.length;
   const { ground } = tileInfo(id);
@@ -4824,13 +5438,13 @@ function tripPlan(id, party, dog = null, mount = null, animalRescue = false) {
   const detour = routeDetour(id);
   const guidance = climate.index === 3 ? travelWeatherGuidance(party) : 0;
   const winterDelay = climate.index === 3 ? Math.max(2, 8 - Math.floor(guidance * 4)) : 0;
-  const baseTime = 15 + distance * 10 + ground.delay + winterDelay + (detour?.extra || 0);
+  const improved = Boolean(state.routeWorks[id]);
+  const baseTime = 15 + distance * 10 + ground.delay + winterDelay + (detour?.extra || 0) - (improved ? 8 : 0);
   const transport = mount ? animalTypes[mount.type] : null;
   const handling = party.reduce((best, person) => Math.max(best, skillLevel(person, 'manejo') - 1), 0);
   const trackers = animalRescue ? party.reduce((best, person) => Math.max(best, skillLevel(person, 'rastreio') - 1), 0) : 0;
   const time = Math.ceil(baseTime * (transport ? transport.travel * (1 - handling * .023) : 1) * (1 - trackers * .036));
   const cargo = transport ? transport.cargo + (count('depositoCampo') ? .12 : 0) : 1;
-  const factor = count('armazem') ? .70 : 1;
   const trailSkill = party.reduce((best, person) => Math.max(best, skillLevel(person, 'campo') - 1 +
     (duty(person) === 'campo' ? 1 : 0)), 0);
   const bonded = party.some(person => (state.memories[person] || []).some(item => item.kind === 'rescue' && party.includes(item.buddy)));
@@ -4840,12 +5454,12 @@ function tripPlan(id, party, dog = null, mount = null, animalRescue = false) {
   return {
     time,
     cargo,
-    food: Math.ceil((time / 20) * size * factor) + (dog ? 1 : 0) + (mount ? 2 : 0),
-    water: Math.ceil((time / 14) * size * factor) + (dog ? 1 : 0) + (mount ? 3 : 0),
+    food: tripProvisions(time, size, 20) + (dog ? 1 : 0) + (mount ? 2 : 0),
+    water: tripProvisions(time, size, 14) + (dog ? 1 : 0) + (mount ? 3 : 0),
     risk: clamp(ground.risk + distance * .024 + (climate.night ? .06 : 0) +
       (climate.index === 3 ? .06 - Math.min(.045, guidance * .024) : 0) - Math.max(0, size - 1) * .055 - (operatingCount('radio', true) ? .12 : 0) -
       Math.min(.19, trailSkill * .037) - (bonded ? .06 : 0) - (dog ? .055 : 0) - briefing +
-      tired - (detour ? .035 : 0), .03, .75)
+      tired - (detour ? .035 : 0) - (improved ? .07 : 0), .03, .75)
   };
 }
 
@@ -4963,6 +5577,55 @@ function shelterTrip(id, party, returning) {
     }
   }
   return { time: Math.ceil(travel.time / 2), supplies, error };
+}
+
+function recoveryPost(returning) {
+  const posts = Object.keys(state.outposts).map(Number).sort((a, b) => distanceFromBase(a) - distanceFromBase(b));
+  if (returning) return [posts.find(id => !shelterTrip(id, shelterGuests(id), true).error), []];
+  const home = residentsAtHome();
+  const adult = home.find(shelterAdult);
+  if (adult === undefined) return [undefined, []];
+  const companion = home.find(id => id !== adult && !shelterAdult(id)) ?? home.find(id => id !== adult);
+  for (const id of posts) {
+    if (companion !== undefined && !shelterTrip(id, [adult, companion], false).error) return [id, [adult, companion]];
+    if (!shelterTrip(id, [adult], false).error) return [id, [adult]];
+  }
+  return [undefined, []];
+}
+
+function updateRecoveryPlan(flow) {
+  const accessibleFloors = liftOutOfService() ? staffedFloors() : null;
+  const damaged = Object.entries(state.rooms).some(([lot, type]) =>
+    ['cisterna', 'horta', 'enfermaria', 'gerador', 'deposito'].includes(type) &&
+    (roomFlooded(lot) || accessibleFloors && !accessibleFloors.has(slots[lot].level)));
+  const critical = damaged || state.resources.food < 3 || state.resources.water < 3 ||
+    (state.resources.power < 3 && flow.effects.power < 0);
+  if (!state.recovery) {
+    if (critical) {
+      state.recovery = { started: state.clock };
+      storyUpdate('A colônia abriu um plano de recuperação. Veja as prioridades no Balanço.');
+    }
+    return;
+  }
+  const plan = state.recovery;
+  const safe = !critical && state.resources.food >= 12 && state.resources.water >= 12 &&
+    (state.resources.power >= 8 || flow.effects.power >= 0);
+  if (!safe) {
+    delete plan.stableSince;
+    plan.ready = false;
+    return;
+  }
+  plan.stableSince ??= state.clock;
+  if (state.clock - plan.stableSince < 18) return;
+  const displaced = Object.keys(state.sheltered).length || state.missions.some(isShelterMission);
+  if (displaced) {
+    if (plan.ready) return;
+    plan.ready = true;
+    storyUpdate('O bunker se estabilizou. O plano de recuperação já permite organizar a volta dos postos.');
+  } else {
+    state.recovery = null;
+    storyUpdate('O plano de recuperação foi concluído. A equipe retomou a rotina do abrigo.');
+  }
 }
 
 function formatPostStock(value) {
@@ -5084,17 +5747,29 @@ function postSites(destination) {
     state.outposts[id].stock.food >= 1 && state.outposts[id].stock.water >= 1);
 }
 
-function renderPostRoutes(id, useRoutes) {
-  const select = byId('route-post');
-  const routes = useRoutes ? postSites(id) : [];
-  byId('route-post-wrap').hidden = !routes.length;
+function nextPostSites(destination, first) {
+  return Object.keys(state.outposts).map(Number).filter(id => id !== destination && id !== first && !routeClosed(id) &&
+    distanceFromBase(first) + distanceBetween(first, id) + distanceBetween(id, destination) <= distanceFromBase(destination) + 4 &&
+    state.outposts[id].stock.food >= 1 && state.outposts[id].stock.water >= 1);
+}
+
+function renderPostSelect(select, routes) {
+  byId(select.id + '-wrap').hidden = !routes.length;
   const stamp = routes.join(',');
   if (select.dataset.options === stamp) return;
   const previous = select.value;
   select.replaceChildren(new Option('Sem parada', ''));
   for (const item of routes) select.append(new Option('Posto ' + sectorName(item) + ' · reabastecer e descansar', String(item)));
-  select.value = routes.includes(Number(previous)) ? previous : '';
+  select.value = previous !== '' && routes.includes(Number(previous)) ? previous : '';
   select.dataset.options = stamp;
+}
+
+function renderPostRoutes(id, useRoutes) {
+  const select = byId('route-post');
+  const routes = useRoutes ? postSites(id) : [];
+  renderPostSelect(select, routes);
+  const next = select.value !== '' && routes.includes(Number(select.value)) ? nextPostSites(id, Number(select.value)) : [];
+  renderPostSelect(byId('route-post-next'), next);
 }
 
 function availableObjectives(id) {
@@ -5112,6 +5787,7 @@ function availableObjectives(id) {
     if (project && !tile.visited) options.push('salvage');
     if (project) options.push('restore');
   }
+  if (!state.routeWorks[id] && routePartner(id)) options.push('trail');
   for (const type of orderHints(id)) options.push('order:' + type);
   return options;
 }
@@ -5219,17 +5895,44 @@ function planDispatch(id, party, focus, mount) {
   const transfer = isTransfer ? selectedCargo() : null;
   const postPick = byId('route-post').value;
   const postId = !logistics && postPick !== '' && postSites(id).includes(Number(postPick)) ? Number(postPick) : null;
-  let supplies = null;
+  const stops = [];
   if (postId !== null) {
-    const stock = state.outposts[postId].stock;
-    supplies = { food: Math.min(Math.floor(stock.food), plan.food, party.length), water: Math.min(Math.floor(stock.water), plan.water, party.length) };
-    plan.food -= supplies.food;
-    plan.water -= supplies.water;
-    plan.time += (distanceFromBase(postId) + distanceBetween(postId, id) - distanceFromBase(id)) * 6 + 3;
-    plan.risk = Math.max(.03, plan.risk - (state.legacy.completed.includes('network') ? .105 : .075));
+    stops.push(postId);
+    const next = byId('route-post-next').value;
+    if (next !== '' && nextPostSites(id, postId).includes(Number(next))) stops.push(Number(next));
+  }
+  const [first, second] = stops;
+  if (second !== undefined) {
+    const firstStopDelay = (distanceFromBase(first) + distanceBetween(first, id) - distanceFromBase(id)) * 6 + 3;
+    const extraDelay = (distanceBetween(first, second) + distanceBetween(second, id) - distanceBetween(first, id)) * 6 + 3;
+    const before = plan.time + firstStopDelay;
+    const after = before + extraDelay;
+    plan.food += tripProvisions(after, party.length, 20) - tripProvisions(before, party.length, 20);
+    plan.water += tripProvisions(after, party.length, 14) - tripProvisions(before, party.length, 14);
+  }
+  const network = state.legacy.completed.includes('network');
+  let distance = 0;
+  let origin = baseTile;
+  const supplies = stops.map((stop, index) => {
+    const stock = state.outposts[stop].stock;
+    const food = Math.min(Math.floor(stock.food), plan.food, party.length);
+    const water = Math.min(Math.floor(stock.water), plan.water, party.length);
+    plan.food -= food;
+    plan.water -= water;
+    distance += distanceBetween(origin, stop);
+    origin = stop;
+    plan.risk = Math.max(.03, plan.risk - (index === 0 ? (network ? .105 : .075) : .04));
+    return { stop, food, water };
+  });
+  if (stops.length) {
+    distance += distanceBetween(origin, id);
+    plan.time += (distance - distanceFromBase(id)) * 6 + 3 * stops.length;
   }
   if (focus === 'establish' || focus === 'restore') plan.time += focus === 'restore' ? 36 : 25;
-  const materials = kitCost + (focus === 'establish' ? outpostCost : focus === 'restore' ? project.cost : 0);
+  const partner = focus === 'trail' ? routePartner(id) : undefined;
+  if (focus === 'trail') plan.time += 24;
+  const materials = kitCost + (focus === 'establish' ? outpostCost :
+    focus === 'restore' ? project.cost : focus === 'trail' ? routeWorkCost : 0);
   let error = '';
   if (focus === 'animals' && (!animal || !hasAnimalSpace(animal))) {
     error = animal ? 'Sem vaga livre em ' + rooms[animalTypes[animal].room].name.toLowerCase() + ' (incluindo resgates em andamento).' :
@@ -5238,6 +5941,8 @@ function planDispatch(id, party, focus, mount) {
     error = 'É preciso ter confiança com ' + neighbors[project.partner].name + '.';
   } else if (focus === 'restore' && party.length < 2) {
     error = 'A restauração precisa de pelo menos duas pessoas.';
+  } else if (focus === 'trail' && (!partner || state.routeWorks[id] || party.length < 2)) {
+    error = partner ? 'A melhoria exige uma equipe de pelo menos duas pessoas.' : 'A rota precisa de um vizinho de confiança.';
   } else if (isTransfer && (!transfer || !cargoTotal(transfer))) {
     error = 'Informe quantidades inteiras para a carga.';
   } else if (transfer && cargoTotal(transfer) > load) {
@@ -5250,11 +5955,13 @@ function planDispatch(id, party, focus, mount) {
   const costs = { food: plan.food, water: plan.water, materials };
   if (focus === 'supply' && transfer) for (const key of cargoKeys) costs[key] += transfer[key];
   if (!error && cargoKeys.some(key => costs[key] > state.resources[key])) error = 'Provisões ou materiais insuficientes no abrigo.';
-  return { ...plan, dog, kit, stockedKit, animal, postId, supplies, costs, transfer, load, error };
+  const waterBlocked = !error && pactBlocksWater(costs.water);
+  if (waterBlocked) error = 'A reserva acordada de água impede a partida.';
+  return { ...plan, dog, kit, stockedKit, animal, postId, supplies, costs, transfer, load, error, partner, waterBlocked };
 }
 
 function isLogisticsMission(focus) {
-  return ['establish', 'supply', 'retrieve', 'collect', 'restore', 'salvage'].includes(focus);
+  return ['establish', 'supply', 'retrieve', 'collect', 'restore', 'salvage', 'trail'].includes(focus);
 }
 
 function pickupStock(id, focus) {
@@ -5299,6 +6006,10 @@ function renderSurfaceMap() {
     button.title = id === baseTile ? 'Seu bunker' : status === 'blocked' ? 'Rota fechada' : state.outposts[id] ? 'Posto avançado' :
       partnership ? siteProjects[tile.site].name : tile.scouted ? site.name +
         (tile.development?.kind === 'salvage' ? ' · desmontado' : ' · ' + ground.name) : 'Região desconhecida';
+    if (state.routeWorks[id]) {
+      button.dataset.routeWork = '';
+      button.title += ' · rota melhorada';
+    }
     button.setAttribute('aria-label', 'Setor ' + sectorName(id) + ' · ' + button.title + (active ? ' · equipe em viagem' : ''));
     button.setAttribute('aria-pressed', id === siteSelected);
     button.onclick = () => {
@@ -5309,6 +6020,7 @@ function renderSurfaceMap() {
       byId('post-shelter').open = false;
       byId('mount').value = '';
       byId('route-post').value = '';
+      byId('route-post-next').value = '';
       renderPartyPicks();
       for (const [tileId, tileButton] of Array.from(grid.children).entries()) {
         tileButton.setAttribute('aria-pressed', tileId === id);
@@ -5353,6 +6065,7 @@ function renderDispatch() {
   const party = home.filter(id => partyPicks.has(id));
   if (byId('party-picks').dataset.people !== home.join(',')) renderPartyPicks();
   dispatch.hidden = true;
+  byId('dispatch-pact').hidden = true;
   byId('scout-action').hidden = true;
   byId('mount-option').hidden = true;
   byId('outpost-stock').hidden = true;
@@ -5371,7 +6084,11 @@ function renderDispatch() {
   byId('site-name').textContent = post ? 'Posto avançado de ' + sectorName(id) :
     tile.development?.kind === 'partner' ? siteProjects[tile.site].name : tile.scouted ? site.name : 'Região desconhecida';
   if (tile.scouted) {
-    const description = describeSiteDevelopment(id);
+    const partner = state.routeWorks[id] || routePartner(id);
+    const routeDescription = state.routeWorks[id] ? 'Rota melhorada com ' + neighbors[partner].name +
+      '. Viagens mais rápidas e seguras. Interdições 40% mais curtas.' :
+      partner ? neighbors[partner].name + ' aceita melhorar este acesso com duas pessoas e ' + routeWorkCost + ' materiais.' : '';
+    const description = [describeSiteDevelopment(id), routeDescription].filter(Boolean).join(' ');
     byId('site-development').hidden = !description;
     byId('site-development').textContent = description;
   }
@@ -5395,11 +6112,14 @@ function renderDispatch() {
     if (active) return;
     const plan = scoutPlan(id, mount);
     const affordable = state.resources.food >= plan.food && state.resources.water >= plan.water;
+    const waterBlocked = affordable && pactBlocksWater(plan.water);
     byId('scout-action').hidden = false;
     byId('scout-estimate').textContent = (home.length ? residentName(availableScout()) + ' · ' : '') +
       duration(plan.time) + ' ida e volta · ' + plan.food + ' comida · ' + plan.water + ' água' +
-      (!home.length ? ' · ninguém disponível no turno' : !affordable ? ' · provisões insuficientes' : '');
-    byId('send-scout').disabled = state.ended || !home.length || !affordable;
+      (!home.length ? ' · ninguém disponível no turno' : !affordable ? ' · provisões insuficientes' :
+        waterBlocked ? ' · reserva acordada de água' : '');
+    byId('dispatch-pact').hidden = !waterBlocked;
+    byId('send-scout').disabled = state.ended || !home.length || !affordable || waterBlocked;
     return;
   }
   const animal = tracksAt(tile);
@@ -5433,8 +6153,10 @@ function renderDispatch() {
   const cargoLine = focus === 'supply' ? ' · mais a carga selecionada · limite de carga ' + plan.load :
     ['retrieve', 'collect', 'salvage'].includes(focus) ? ' · limite de carga ' + plan.load :
     focus === 'restore' ? ' · obra: ' + siteProjects[tile.site].cost + ' materiais' :
-    focus === 'establish' ? ' · obra: ' + outpostCost + ' materiais' : ' · carga até ' + plan.load + ' un';
-  const staging = plan.supplies ? ' · Posto cobre ' + plan.supplies.food + ' comida e ' + plan.supplies.water + ' água.' : '';
+    focus === 'establish' ? ' · obra: ' + outpostCost + ' materiais' :
+    focus === 'trail' ? ' · obra: ' + routeWorkCost + ' materiais' : ' · carga até ' + plan.load + ' un';
+  const staging = plan.supplies.map(({ stop, food, water }) =>
+    ' · Posto ' + sectorName(stop) + ' cobre ' + food + ' comida e ' + water + ' água').join('');
   byId('trip-estimate').textContent = party.length ?
     party.length + (party.length === 1 ? ' pessoa' : ' pessoas') + ' · ' + duration(plan.time) + ' ida e volta · ' +
       plan.food + ' comida e ' + plan.water + ' água do bunker' + cargoLine +
@@ -5443,6 +6165,7 @@ function renderDispatch() {
     home.length ? 'Selecione pelo menos um morador disponível neste turno.' + (plan.error ? ' ' + plan.error : '') :
       'Nenhum morador disponível neste turno.';
   byId('send-party').disabled = state.ended || !party.length || !!plan.error;
+  byId('dispatch-pact').hidden = !plan.waterBlocked || !party.length;
 }
 
 function renderFieldVolunteer(home, party, logistics) {
@@ -5474,8 +6197,9 @@ function renderMissions() {
   if (!byId('surface').open) return;
   byId('mission-list').innerHTML = state.missions.map(mission =>
     '<li>' + (mission.scout ? 'Reconhecimento' : missionLabel(mission.focus)) +
-    ' · ' + sectorName(mission.tile) + ' · ' + mission.party.map(residentName).join(', ') +
-    (mission.mountId === undefined ? '' : ' · ' + (state.animals.find(animal => animal.id === mission.mountId)?.name || 'montaria')) +
+    ' · ' + sectorName(mission.tile) + ' · ' + mission.party.map(id => escapeMarkup(residentName(id))).join(', ') +
+    (mission.mountId === undefined ? '' : ' · ' + escapeMarkup(state.animals.find(animal => animal.id === mission.mountId)?.name || 'montaria')) +
+    (mission.routeStops?.length ? ' · via ' + mission.routeStops.map(sectorName).join(' e ') : '') +
     (mission.encounter?.status === 'waiting' ? ' · aguardando ordens' :
       mission.encounter?.status === 'ahead' && mission.returns <= state.clock ? ' · aguardando contato' :
       (mission.focus === 'shelter' ? ' · chegada ao posto em ' : ' · retorno em ') + duration(mission.returns - state.clock)) + '</li>'
@@ -5498,11 +6222,14 @@ function sendExpedition(scout = false) {
   const plan = scout ? scoutPlan(id, mount) : planDispatch(id, party, focus, mount);
   if (plan.error || state.resources.food < plan.food || state.resources.water < plan.water) return;
   const costs = plan.costs || { food: plan.food, water: plan.water, materials: 0 };
+  if (pactBlocksWater(costs.water)) return;
+  const crossesWater = waterPactCrossed(costs.water);
   applyEffects(Object.fromEntries(cargoKeys.map(key => [key, -costs[key]])));
   if (plan.stockedKit) state.fieldStocks.kits--;
-  if (plan.supplies) {
-    state.outposts[plan.postId].stock.food -= plan.supplies.food;
-    state.outposts[plan.postId].stock.water -= plan.supplies.water;
+  for (const provision of plan.supplies || []) {
+    const stock = state.outposts[provision.stop].stock;
+    stock.food -= provision.food;
+    stock.water -= provision.water;
   }
   if (focus === 'retrieve' || focus === 'collect') {
     const stock = pickupStock(id, focus);
@@ -5513,10 +6240,14 @@ function sendExpedition(scout = false) {
   const hasEncounter = focus === 'story' || (fieldMission && (!state.world.some(tile => tile.visited) || Math.random() < .66));
   state.missions.push({
     tile: id, scout, party, focus, kit: plan.kit, dogId: plan.dog?.id, mountId: mount?.id, cargo: plan.cargo ?? 1,
-    transfer: plan.transfer, postId: plan.postId, animal: plan.animal, order, returns: state.clock + plan.time, risk: plan.risk,
+    transfer: plan.transfer, postId: plan.postId, animal: plan.animal, order, partner: plan.partner,
+    routeStops: plan.supplies?.map(provision => provision.stop),
+    returns: state.clock + plan.time, risk: plan.risk,
     encounter: hasEncounter ? { status: 'ahead', at: state.clock + Math.floor(plan.time * .48) } : null
   });
+  if (scout) recordTutorialStep('scout');
   if (order) state.orders[order] = { status: 'away', tile: id };
+  usePactException('water', crossesWater);
   playGameSound('departure');
   partyPicks.clear();
   byId('mount').value = '';
@@ -5628,6 +6359,14 @@ function findManual(site) {
 function returnLogistics(mission) {
   const { tile, site } = tileInfo(mission.tile);
   const project = siteProjects[tile.site];
+  if (mission.focus === 'trail') {
+    if (!['village', 'camp'].includes(mission.partner) || state.routeWorks[mission.tile]) return;
+    state.routeWorks[mission.tile] = mission.partner;
+    for (const id of mission.party) gainExperience(id, 'obras', 9);
+    storyUpdate(neighbors[mission.partner].name + ' melhorou a rota do setor ' + sectorName(mission.tile) + ' com a nossa equipe.');
+    notice('Rota melhorada no setor ' + sectorName(mission.tile) + '.');
+    return;
+  }
   if (mission.focus === 'establish') {
     state.outposts[mission.tile] = { stock: { food: 0, water: 0, materials: 0 } };
     if (project) tile.visited = true;
@@ -5777,8 +6516,9 @@ function finishExpeditions() {
     }
     if (mission.mountId !== undefined) for (const id of mission.party) gainExperience(id, 'manejo', mission.scout ? 7 : 12);
     if (mission.postId != null) {
+      const rest = mission.routeStops?.length > 1 ? 28 : 18;
       for (const id of mission.party) {
-        state.fatigue[id] = Math.max(0, fatigueOf(id) - 18);
+        state.fatigue[id] = Math.max(0, fatigueOf(id) - rest);
         if (state.fatigue[id] <= 26) delete state.resting[id];
       }
     }
@@ -5928,6 +6668,14 @@ function resolveIncident(option) {
   }
   const outcome = option || state.incident.template.lapse;
   if (outcome.liftFault) state.liftFaultUntil = state.clock + outcome.liftFault;
+  if (outcome.stormRepair) state.liftFaultUntil = state.clock;
+  if (outcome.stormPump) {
+    const leak = state.leaks[state.incident.stormLot];
+    if (leak) {
+      leak.water = Math.max(0, leak.water - 50);
+      leak.pumpedUntil = state.clock + 108;
+    }
+  }
   const result = outcome.result;
   state.lastIncident = state.incident.template.title;
   state.incident = null;
@@ -5942,10 +6690,13 @@ function resolveIncident(option) {
 
 function renderIncident() {
   const active = state.incident;
+  const stormLot = active?.stormLot;
+  const room = rooms[state.rooms[stormLot]];
   byId('event').hidden = !active;
   byId('event-title').textContent = active?.template.title ?? '';
   byId('event-body').textContent = active ? active.template.body +
-    (active.postId === undefined ? '' : ' Setor ' + sectorName(active.postId) + '.') : '';
+    (active.postId === undefined ? '' : ' Setor ' + sectorName(active.postId) + '.') +
+    (room ? ' Ponto atingido: ' + room.name + ' (nível ' + (slots[stormLot].level + 1) + ').' : '') : '';
   byId('choices').replaceChildren();
   currentButtons = [];
   if (active) {
@@ -5965,6 +6716,16 @@ function renderIncident() {
       byId('choices').append(button);
       currentButtons.push([button, option]);
     }
+    if (room) {
+      const inspect = document.createElement('button');
+      inspect.className = 'control';
+      inspect.textContent = 'Inspecionar ' + room.name;
+      inspect.onclick = () => {
+        if (state.rooms[stormLot]) buildSlot(stormLot);
+        else byId('tasks-button').click();
+      };
+      byId('choices').append(inspect);
+    }
   }
   updateIncident();
 }
@@ -5977,9 +6738,12 @@ function updateIncident() {
   byId('event-clock').textContent = state.incident
     ? 'TEMPO PARA AGIR · ' + (state.incident.deadline - state.clock) * 10 + ' MIN NO JOGO' : '';
   for (const [button, option] of currentButtons) {
-    button.disabled = !canChoose(option);
+    const unavailable = option.stormRepair && !liftOutOfService() ? 'O elevador já voltou a funcionar.' :
+      option.stormPump && (!state.leaks[state.incident.stormLot] ||
+        state.leaks[state.incident.stormLot].pumpedUntil > state.clock) ? 'A água já foi contida.' : '';
+    button.disabled = Boolean(unavailable) || !canChoose(option);
     button.title = option.needsBed && (freeBeds() <= 0 || populationFull())
-      ? 'É preciso ter uma cama e espaço na colônia.' : button.disabled ? 'Recursos insuficientes.' : '';
+      ? 'É preciso ter uma cama e espaço na colônia.' : unavailable || (button.disabled ? 'Recursos insuficientes.' : '');
   }
 }
 
@@ -6025,7 +6789,9 @@ function supplyRates(climate = weather(), apply = false) {
   const ration = rationPolicies[state.rations];
   const outdoorGreenhouses = operatingOutput('estufa', false, slot => slot.outside);
   const seeds = climate.index === 3 ? Math.min(.25, specialtyOutput(specialistsIn('sementeira', 'sementes'), 'sementes') * .12) : 0;
-  const crops = operatingOutput('horta', true) * baseRoomRates.horta * (climate.crop + seeds) +
+  const gardens = operatingLots('horta', true).reduce((total, lot) => total +
+    roomOutput(lot) * (roomSpecialties.horta[roomSpecialty(lot)].seasons?.[climate.index] ?? 1), 0);
+  const crops = gardens * baseRoomRates.horta * (climate.crop + seeds) +
     operatingOutput('hidroponia', true) * baseRoomRates.hidroponia + operatingOutput('estufa', true, slot => !slot.outside) * baseRoomRates.estufa;
   const fruit = climate.index === 3 ? 0 : operatingOutput('pomar') * .26 * climate.sun;
   const outsideCrops = outdoorGreenhouses * .37 * climate.sun * (climate.index === 3 ? .77 : 1) + fruit;
@@ -6079,7 +6845,8 @@ function presentForCover(id) {
 
 function tick() {
   if (paused || !campaignStarted || state.ended || byId('main-menu').open ||
-      byId('journal').open || byId('staff').open || byId('research-board').open || byId('tasks').open || byId('power-board').open || byId('resource-balance').open) return;
+      byId('journal').open || byId('staff').open || byId('research-board').open || byId('tasks').open ||
+      byId('power-board').open || byId('resource-balance').open || byId('tutorial').open || byId('epilogue').open) return;
   state.clock++;
   gridDispatch = gridAllocation();
   evolveFatigue();
@@ -6114,9 +6881,10 @@ function tick() {
     notice(climate.name + ' · ' + climate.note);
   }
   gridDispatch = null;
-  const flow = supplyRates(climate, true);
+  let flow = supplyRates(climate, true);
   applyEffects(flow.effects);
   if (endIfNeeded()) return;
+  updateRecoveryPlan(flow);
   if (state.incident && state.clock >= state.incident.deadline) resolveIncident();
   if (state.ended) return;
   updateGate();
@@ -6129,13 +6897,23 @@ function tick() {
   updateLegacy();
   if (!state.incident && !state.raid && !state.missions.some(mission => mission.encounter?.status === 'waiting') &&
       state.clock >= state.quietUntil && Math.random() < .021) {
-    const template = choose(incidents.filter(item =>
-      !item.legacy && item.title !== state.lastIncident && (item.fromChapter ?? 0) <= state.chapter.index &&
+    const stormLot = stormTarget(climate);
+    const storm = stormLot !== undefined && Math.random() < .35;
+    const template = storm ? stormIncident : choose(incidents.filter(item =>
+      item !== stormIncident && !item.legacy && item.title !== state.lastIncident && (item.fromChapter ?? 0) <= state.chapter.index &&
       (!item.canOccur || item.canOccur())
     ));
     const responseTime = state.chapter.index >= 3 ? 20 : 24;
     state.incident = { template, deadline: state.clock + responseTime,
       postId: template.target === 'post' ? choose(loadedPosts()) : undefined };
+    if (storm) {
+      state.incident.stormLot = stormLot;
+      state.nextStorm = state.clock + 7 * 144;
+      state.nextLeak = Math.max(state.nextLeak, state.clock + 144);
+      state.liftFaultUntil = state.clock + 48;
+      startLeak(stormLot, 58, state.incident.deadline);
+      flow = supplyRates(climate);
+    }
     playGameSound('radio');
     byId('surface').close();
     setSpeed(speed);
@@ -6867,6 +7645,7 @@ function renderUpgradeMetrics(lot, type, from, to) {
     type === 'oficina' ? '100% é o ritmo do grau 1. Materiais por dia mostram a produção de base sem mecânico.' :
       percentage ? '100% indica o rendimento do grau 1.' :
         baseRoomRates[type] ? 'Produção nominal com o cômodo em funcionamento, antes de clima ou bônus da equipe.' : '';
+  if (roomSpecialties[type] && from === maxRoomLevel) hint.textContent += ' A especialização ajusta o rendimento indicado aqui.';
   hint.hidden = !hint.textContent;
 }
 
@@ -6949,6 +7728,54 @@ function renderSchool(lot, type) {
     ' XP por matéria e ' + schoolTotalLimit + ' no total ao crescer.';
 }
 
+function renderRoomSpecialty(lot, type, work) {
+  const panel = byId('room-specialty');
+  const options = roomSpecialties[type];
+  panel.hidden = !options || state.rooms[lot] !== type || roomLevel(lot) !== maxRoomLevel;
+  const list = byId('room-specialty-options');
+  if (panel.hidden) {
+    delete list.dataset.stamp;
+    return;
+  }
+  const installed = roomSpecialty(lot);
+  const reason = work ? 'Aguarde a conclusão da obra.' : roomFlooded(lot) ? 'Retire a água antes de reconfigurar.' :
+    state.resources.materials < specializationCost ? 'Faltam materiais para reconfigurar.' : '';
+  const stamp = [lot, installed, reason].join(':');
+  if (list.dataset.stamp === stamp) return;
+  list.dataset.stamp = stamp;
+  byId('room-specialty-status').textContent = 'Configuração atual: ' + options[installed].name + '. ' +
+    (reason || 'Reconfigurar custa ' + specializationCost + ' materiais.');
+  list.replaceChildren(...Object.entries(options).map(([key, option]) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'control';
+    button.dataset.installed = key === installed;
+    button.disabled = key === installed || Boolean(reason);
+    const label = document.createElement('strong');
+    label.textContent = option.name + (key === installed ? ' · instalada' : ' · ' + specializationCost + ' materiais');
+    const detail = document.createElement('small');
+    detail.textContent = option.detail;
+    button.append(label, detail);
+    button.onclick = () => setRoomSpecialty(lot, key);
+    return button;
+  }));
+}
+
+function setRoomSpecialty(lot, key) {
+  const type = state.rooms[lot];
+  if (!Object.hasOwn(roomSpecialties[type] || {}, key) || roomLevel(lot) !== maxRoomLevel || state.ended ||
+      state.works[lot] || roomFlooded(lot) || state.resources.materials < specializationCost || roomSpecialty(lot) === key) return;
+  state.resources.materials -= specializationCost;
+  state.roomSpecialties[lot] = key;
+  log(rooms[type].name + ' reconfigurada para ' + roomSpecialties[type][key].name.toLowerCase() + '.');
+  renderHud();
+  if (byId('room-dialog').open && inspected === Number(lot)) {
+    renderRoomInfo(lot);
+    byId('room-specialty-title').focus({ preventScroll: true });
+  }
+  saveColony();
+}
+
 function startRoomUpgrade(lot) {
   const plan = upgradePlan(lot);
   if (!plan || state.ended || state.works[lot] || roomFlooded(lot) || state.resources.materials < plan.cost) return;
@@ -7010,10 +7837,13 @@ function renderRoomInfo(id) {
   const sector = !work && roomSector(type, id);
   if (sector) byId('room-info').textContent += ' ' + sectorDefinitions[sector][0] +
     (isRoomPowered(id, type) ? ' · com energia.' : ' · sem energia.');
+  const blocker = !work && roomBlocker(id, type, liftOutOfService() ? staffedFloors() : null);
+  if (blocker) byId('room-info').textContent += ' ' + blocker[0];
   if (!work && type === 'estacaoTempo' && isRoomPowered(id, type)) byId('room-info').textContent += ' ' + seasonForecast();
   renderRoomConstruction(id, room, work, remaining);
   renderRoomProduction(id, !state.rooms[id] || roomUnderRenovation(id) ? null : type);
   renderRoomUpgrade(id, type, work, remaining);
+  renderRoomSpecialty(id, type, work);
   renderSchool(id, type);
   renderLeakPanel(id);
   byId('priority-button').hidden = !work;
@@ -7035,7 +7865,6 @@ function buildSlot(id) {
   }
   if (!selected) {
     setConstructionOpen(true);
-    byId('build-catalog').scrollIntoView({ block: 'nearest' });
     notice('Escolha o que construir e clique no lote.');
     return;
   }
@@ -7064,6 +7893,7 @@ function queueConstruction(id, type) {
   state.resources.materials -= room.cost;
   const workTime = room.hours * 6 + Math.max(0, slots[id].level) * 3;
   state.works[id] = { type, remaining: workTime, total: workTime };
+  recordTutorialStep('build');
   playGameSound('queue');
   log('Obras de ' + room.name + ' iniciadas ' + (slots[id].outside ? 'na superfície.' : 'no nível ' + (slots[id].level + 1) + '.'));
   scheduleBuilders();
@@ -7109,6 +7939,7 @@ function demolish(id) {
   }
   delete state.rooms[id];
   delete state.roomLevels[id];
+  delete state.roomSpecialties[id];
   cancelLeakWork(id);
   delete state.leaks[id];
   delete state.roomModes[id];
@@ -7143,7 +7974,8 @@ function refreshConstruction() {
     : '';
   byId('build-status').hidden = !selected;
   byId('propose-building').hidden = !selected;
-  byId('view-tip').hidden = !!selected;
+  byId('cancel-placement').hidden = !selected;
+  byId('build-button').dataset.placement = Boolean(selected);
   byId('outside-use').textContent = 'Superfície · ' + outsideIds.filter(id => state.rooms[id] || state.works[id]).length + '/' + outsideIds.length + ' lotes';
   gridDispatch = null;
   renderWorkQueue();
@@ -7167,17 +7999,71 @@ function renderTouchLots() {
   picker.disabled = options.length === 0;
 }
 
-function setConstructionOpen(open) {
+function setConstructionOpen(open, keepSelection = false) {
   byId('build-catalog').hidden = !open;
   byId('build-button').setAttribute('aria-expanded', open);
-  if (!open && selected) {
+  if (!open && !keepSelection && selected) {
     selected = null;
     refreshConstruction();
   }
 }
 
-function isPhoneLayout() {
-  return window.matchMedia?.('(max-width: 675px)').matches ?? false;
+function setupHudIcons() {
+  const icons = {
+    build: ['..#####...', '.##+++##..', '.####..#..', '....#.#...', '...#+#....', '..#+#.....', '.#+#......', '.##.......'],
+    map: ['...####...', '..#....#..', '.#....+.#.', '.#...++.#.', '.#..++..#.', '.#.+....#.', '..#....#..', '...####...'],
+    tasks: ['...++++...', '.#######..', '.#.....#..', '.#+.+++#..', '.#.....#..', '.#+.+++#..', '.#.....#..', '.#######..'],
+    power: ['.....+++..', '....+++...', '...+++....', '..++++++..', '.....++...', '....++....', '...++.....', '...+......'],
+    staff: ['..##..##..', '.####.###.', '.####.###.', '..##..##..', '..........', '.++++.###.', '++++++.###', '++++++.###'],
+    research: ['...####...', '....##....', '....##....', '...#..#...', '..#....#..', '.#.++.+.#.', '.#++++++#.', '..######..'],
+    journal: ['..######..', '.##++++##.', '.##....##.', '.##.++.##.', '.##....##.', '.##.++.##.', '.##....#..', '..######..'],
+    balance: ['.#........', '.#.....++.', '.#.....++.', '.#..##.++.', '.#..##.++.', '.#++##.++.', '.#++##.++.', '.########.']
+  };
+  document.querySelectorAll('.hud-icon').forEach(icon => {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 10;
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    icons[icon.dataset.icon].forEach((row, y) => {
+      [...row].forEach((pixel, x) => {
+        if (pixel === '.') return;
+        context.fillStyle = pixel === '+' ? '#edc487' : '#d8d5b5';
+        context.fillRect(x, y + 1, 1, 1);
+      });
+    });
+    icon.replaceChildren(canvas);
+  });
+}
+
+function setupBunkerCamera() {
+  const view = byId('cutaway-view');
+  let origin;
+  let dragged = false;
+  view.addEventListener('pointerdown', event => {
+    dragged = false;
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    origin = { x: event.clientX, y: event.clientY, left: view.scrollLeft, top: view.scrollTop };
+  });
+  view.addEventListener('pointermove', event => {
+    if (!origin || event.pointerType !== 'mouse' || !(event.buttons & 1)) return;
+    const dx = event.clientX - origin.x, dy = event.clientY - origin.y;
+    if (!dragged && Math.hypot(dx, dy) < 7) return;
+    if (!dragged) view.setPointerCapture(event.pointerId);
+    dragged = true;
+    view.dataset.dragging = 'true';
+    view.scrollLeft = origin.left - dx;
+    view.scrollTop = origin.top - dy;
+  });
+  const endDrag = () => {
+    origin = null;
+    delete view.dataset.dragging;
+  };
+  window.addEventListener('pointerup', endDrag);
+  view.addEventListener('pointercancel', endDrag);
+  view.addEventListener('click', event => {
+    if (dragged && event.detail > 0) event.stopImmediatePropagation();
+  }, true);
+  view.scrollLeft = (view.scrollWidth - view.clientWidth) / 2;
 }
 
 function setupConstruction() {
@@ -7234,8 +8120,12 @@ function renderCatalog() {
         return;
       }
       selected = selected === key ? null : key;
+      if (selected) setConstructionOpen(false, true);
       refreshConstruction();
-      if (selected && isPhoneLayout()) byId('touch-lot-label').scrollIntoView({ block: 'center' });
+      if (selected) {
+        const target = window.matchMedia?.('(max-width: 675px)').matches ? byId('touch-lot') : byId('cutaway-view');
+        target.focus({ preventScroll: true });
+      }
     };
     list.append(button);
   }
@@ -7332,6 +8222,15 @@ function drawSurfaceLight(climate) {
 }
 
 function drawWeather(climate) {
+  if (state.incident?.template === stormIncident || Object.values(state.leaks).some(leak => leak.stormUntil > state.clock)) {
+    rect(0, 0, 960, 102, '#283b4990');
+    for (let i = 0; i < 84; i++) {
+      const x = (i * 79 + animationTime * 66) % 959;
+      const y = (i * 29 + animationTime * 175) % 98;
+      rect(x, y, 1, 6, '#c5d7d18c');
+    }
+    return;
+  }
   if (climate.index === 0 || climate.index === 2) {
     if (state.clock % 144 < 95) return;
     for (let i = 0; i < 44; i++) {
@@ -8264,7 +9163,6 @@ function frameCutaway(level) {
   const visible = selected && !exteriorRooms.has(selected) ? 3 : Math.min(3, level + 1);
   if (shownDepth === visible) return;
   shownDepth = visible;
-  byId('cutaway-view').style.setProperty('--scene-bottom', visible === 3 ? 451 : floorY(visible) + 82);
   for (const slot of slots) slot.button.hidden = !slot.outside && slot.level > visible;
 }
 
@@ -8433,7 +9331,8 @@ function runTick() {
     tick();
     return;
   }
-  if (['main-menu', 'staff', 'journal', 'research-board', 'room-dialog', 'surface', 'tasks', 'power-board', 'resource-balance'].some(id => byId(id).open)) {
+  if (['main-menu', 'staff', 'journal', 'research-board', 'room-dialog', 'surface', 'tasks', 'power-board',
+    'resource-balance', 'tutorial', 'epilogue'].some(id => byId(id).open)) {
     stopFastForward();
     return;
   }
@@ -8467,10 +9366,16 @@ function runTick() {
   if (state.ended || message) stopFastForward(message);
 }
 
+function syncPauseButton() {
+  const button = byId('pause');
+  button.dataset.paused = paused;
+  button.textContent = paused ? '▶ Continuar' : 'Ⅱ Pausar';
+}
+
 function stopFastForward(message = '') {
   fastForwardUntil = 0;
   paused = true;
-  byId('pause').textContent = '▶ Continuar';
+  syncPauseButton();
   byId('next-decision').setAttribute('aria-pressed', 'false');
   setSpeed(speed);
   if (message && !state.ended) notice(message);
@@ -8511,6 +9416,7 @@ function reset(saved = null, showDefeat = true, scenario = 'normal') {
   byId('dog-escort').checked = false;
   byId('mount').value = '';
   byId('route-post').value = '';
+  byId('route-post-next').value = '';
   byId('mission-focus').value = '';
   for (const key of cargoKeys) byId('cargo-' + key).value = '0';
   category = categories[0];
@@ -8529,7 +9435,7 @@ function reset(saved = null, showDefeat = true, scenario = 'normal') {
       lift.y = clamp(trip.y, walkwayY(-1), walkwayY(3));
     }
   }
-  byId('pause').textContent = paused ? '▶ Continuar' : 'Ⅱ Pausar';
+  syncPauseButton();
   byId('notice').hidden = true;
   byId('journal-label').textContent = state.storyUnread ? 'Diário •' : 'Diário';
   setConstructionOpen(false);
@@ -8544,7 +9450,8 @@ function reset(saved = null, showDefeat = true, scenario = 'normal') {
 
 function showMenuPage(page) {
   menuPage = page;
-  for (const name of ['home', 'scenarios', 'confirm', 'help']) byId('menu-' + name).hidden = name !== page;
+  for (const name of ['home', 'scenarios', 'confirm', 'help', 'saves', 'import']) byId('menu-' + name).hidden = name !== page;
+  if (page !== 'import') pendingImport = null;
   const resumable = campaignStarted && !state.ended;
   const climate = weather();
   byId('menu-save').hidden = !campaignStarted;
@@ -8554,6 +9461,8 @@ function showMenuPage(page) {
   byId('menu-continue').hidden = !resumable;
   byId('menu-new').classList.toggle('primary', !resumable);
   if (page === 'scenarios') renderScenarios();
+  byId('menu-export').disabled = !campaignStarted;
+  if (page === 'saves') renderSaveCopies();
   if (page === 'confirm') byId('menu-confirm-copy').textContent =
     'Começar “' + scenarios[menuScenario].title + '” gera outro mapa e substitui o salvamento atual.';
 }
@@ -8592,9 +9501,162 @@ function openMainMenu(page = 'home') {
 function focusMenuPage() {
   const target = menuPage === 'confirm' ? byId('menu-confirm').querySelector('[data-menu-back]') :
     menuPage === 'help' ? byId('menu-help').querySelector('[data-menu-back]') :
+    menuPage === 'import' ? byId('menu-import').querySelector('[data-menu-back]') :
+    menuPage === 'saves' ? byId('menu-save-file') :
     menuPage === 'scenarios' ? byId('scenario-list').querySelector('[aria-pressed="true"]') :
     byId('menu-continue').hidden ? byId('menu-new') : byId('menu-continue');
   target?.focus();
+}
+
+let pendingImport;
+let saveFileRequest = 0;
+
+function portableSave() {
+  return { format: 'abrigo', version: 1, exportedAt: new Date().toISOString(), colony: colonySnapshot() };
+}
+
+function exportColony() {
+  if (!campaignStarted) return;
+  const archive = portableSave();
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(new Blob([JSON.stringify(archive)], { type: 'application/json' }));
+  link.href = url;
+  link.download = 'abrigo-' + state.scenario + '-dia-' + day() + '-' + archive.exportedAt.slice(0, 10) + '.json';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function readSaveCopies() {
+  try {
+    const copies = JSON.parse(localStorage.getItem(saveCopiesKey));
+    return Array.isArray(copies) ? copies.filter(copy => copy?.format === 'abrigo' &&
+      Object.hasOwn(scenarios, copy.colony?.scenario) && Number.isFinite(copy.colony.clock)) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeSaveCopies(copies, message) {
+  const status = byId('menu-transfer-status');
+  try {
+    localStorage.setItem(saveCopiesKey, JSON.stringify(copies));
+    status.textContent = message;
+    renderSaveCopies();
+  } catch {
+    status.textContent = 'O navegador não conseguiu atualizar as cópias locais.';
+  }
+}
+
+function saveSummary(colony, date) {
+  const people = colony.people + (colony.people === 1 ? ' morador' : ' moradores');
+  const formattedDate = date && Number.isFinite(date.getTime()) ? ' · ' +
+    date.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '';
+  return scenarios[colony.scenario].title + ' · Dia ' + (Math.floor(colony.clock / 144) + 1) +
+    ' · ' + people + formattedDate;
+}
+
+function renderSaveCopies() {
+  const list = byId('menu-save-copies');
+  list.replaceChildren();
+  const copies = readSaveCopies();
+  byId('menu-store-copy').disabled = !campaignStarted;
+  for (const [index, copy] of copies.entries()) {
+    const row = document.createElement('div');
+    row.className = 'menu-save';
+    const title = document.createElement('strong');
+    title.textContent = 'Cópia ' + (index + 1);
+    const summary = document.createElement('span');
+    summary.textContent = saveSummary(copy.colony, new Date(copy.exportedAt));
+    const actions = document.createElement('div');
+    actions.className = 'save-copy-actions';
+    const restore = document.createElement('button');
+    restore.className = 'control';
+    restore.textContent = 'Carregar';
+    restore.setAttribute('aria-label', 'Carregar cópia ' + (index + 1));
+    restore.onclick = () => {
+      if (!previewImport(JSON.parse(JSON.stringify(copy)))) {
+        byId('menu-transfer-status').textContent = 'Esta cópia está inválida.';
+      } else byId('menu-import-detail').previousElementSibling.textContent = 'Cópia local';
+    };
+    const remove = document.createElement('button');
+    remove.className = 'control';
+    remove.textContent = 'Excluir';
+    remove.setAttribute('aria-label', 'Excluir cópia ' + (index + 1));
+    remove.onclick = () => {
+      if (!window.confirm('Excluir esta cópia do navegador?')) return;
+      writeSaveCopies(copies.filter((_, position) => position !== index), 'Cópia excluída.');
+    };
+    actions.append(restore, remove);
+    row.append(title, summary, actions);
+    list.append(row);
+  }
+}
+
+function previewImport(archive) {
+  const wrapped = archive?.format === 'abrigo';
+  if (wrapped && archive.version !== 1) return false;
+  const candidate = decodeColony(wrapped ? archive.colony : archive);
+  if (!candidate) return false;
+  const date = wrapped ? new Date(archive.exportedAt) : null;
+  pendingImport = candidate;
+  const detail = byId('menu-import-detail');
+  detail.previousElementSibling.textContent = 'Partida do arquivo';
+  detail.textContent = saveSummary(candidate, date);
+  byId('menu-import-copy').textContent = campaignStarted ?
+    'Esta partida vai substituir o salvamento atual neste navegador.' : 'Carregue esta partida neste navegador.';
+  byId('menu-import-apply').textContent = campaignStarted ? 'Substituir partida atual' : 'Importar partida';
+  byId('menu-import-apply').classList.toggle('destructive', campaignStarted);
+  showMenuPage('import');
+  focusMenuPage();
+  return true;
+}
+
+async function chooseSaveFile(event) {
+  const { target } = event;
+  const file = target.files[0];
+  target.value = '';
+  if (!file) return;
+  const request = ++saveFileRequest;
+  const status = byId('menu-transfer-status');
+  status.textContent = 'Lendo o arquivo…';
+  try {
+    if (file.size > 2 * 1024 * 1024) throw new Error('Arquivo acima de 2 MB.');
+    const archive = JSON.parse((await file.text()).replace(/^\uFEFF/, ''), (key, value) =>
+      ['__proto__', 'constructor', 'prototype'].includes(key) ? undefined : value);
+    if (request !== saveFileRequest || menuPage !== 'saves') return;
+    if (!previewImport(archive)) throw new Error('Salvamento incompatível.');
+    status.textContent = '';
+  } catch {
+    if (request === saveFileRequest && menuPage === 'saves') status.textContent =
+      'Não foi possível ler esta partida. Escolha um arquivo de save válido do ABRIGO, de até 2 MB.';
+  }
+}
+
+function applyImportedColony() {
+  if (!pendingImport) return;
+  const previous = decodeColony(JSON.parse(JSON.stringify(colonySnapshot())));
+  const hadCampaign = campaignStarted;
+  const wasPaused = paused;
+  try {
+    campaignStarted = true;
+    reset(pendingImport, false);
+  } catch {
+    campaignStarted = hadCampaign;
+    reset(previous, false);
+    paused = wasPaused;
+    syncPauseButton();
+    showMenuPage('saves');
+    byId('menu-transfer-status').textContent = 'Este arquivo não pôde ser carregado. A partida anterior foi preservada.';
+    focusMenuPage();
+    return;
+  }
+  const stored = saveColony();
+  showMenuPage('saves');
+  byId('menu-transfer-status').textContent = stored ? 'Partida importada. Volte ao menu para continuar.' :
+    'Partida carregada nesta aba. O navegador bloqueou o salvamento automático.';
+  focusMenuPage();
 }
 
 function playFromMenu(newGame = false) {
@@ -8603,6 +9665,7 @@ function playFromMenu(newGame = false) {
     const preference = state.soundConfigured ? state.sound : null;
     campaignStarted = true;
     reset(null, false, menuScenario);
+    if (byId('menu-guided').checked) state.tutorial = { completed: [] };
     if (preference !== null) {
       state.sound = preference;
       state.soundConfigured = true;
@@ -8610,20 +9673,104 @@ function playFromMenu(newGame = false) {
     }
   }
   paused = false;
-  byId('pause').textContent = 'Ⅱ Pausar';
+  syncPauseButton();
+  renderTutorialBadge();
   byId('main-menu').close();
   if (state.sound) setGameSound(true);
   saveColony();
   byId('menu-button').focus();
+  if (newGame && state.tutorial) openTutorial();
+}
+
+const tutorialSteps = [
+  ['staff', 'Defina uma função', 'Escolha um morador e altere sua função. Cultivo ajuda a horta, Hidráulica ajuda a cisterna, e Geral cobre obras vagas.', 'staff-button'],
+  ['build', 'Inicie uma obra', 'Escolha qualquer planta que possa pagar e confirme um lote compatível. Siga a obra no painel Tarefas.', 'build-button'],
+  ['balance', 'Leia o balanço', 'Compare produção e consumo. Um saldo negativo indica que o estoque pode acabar se o ritmo continuar.', 'resource-balance-button'],
+  ['scout', 'Envie um batedor', 'Abra o mapa, selecione um setor desconhecido próximo e use Enviar batedor. O reconhecimento revela o local para futuras expedições.', 'surface-button']
+];
+
+function recordTutorialStep(key) {
+  const tutorial = state.tutorial;
+  if (!tutorial || tutorial.dismissed || tutorial.completed.includes(key)) return;
+  tutorial.completed.push(key);
+  renderTutorialBadge();
+}
+
+function renderTutorialBadge() {
+  const button = byId('tutorial-button');
+  const tutorial = state.tutorial;
+  button.hidden = !tutorial || tutorial.dismissed || state.ended;
+  if (button.hidden) return;
+  const next = tutorial.completed.length + 1;
+  const label = next > tutorialSteps.length ? 'Primeiro turno concluído' : 'Primeiro turno · ' + next + '/' + tutorialSteps.length;
+  if (button.textContent !== label) button.textContent = label;
+}
+
+function dismissTutorial() {
+  state.tutorial.dismissed = true;
+  byId('tutorial').close();
+  renderTutorialBadge();
+  saveColony();
+  byId('menu-button').focus();
+}
+
+function openTutorial() {
+  const tutorial = state.tutorial;
+  if (!tutorial || tutorial.dismissed) return;
+  const list = byId('tutorial-steps');
+  list.replaceChildren();
+  const next = tutorialSteps.find(([key]) => !tutorial.completed.includes(key));
+  for (const [key, title, detail] of tutorialSteps) {
+    const item = document.createElement('li');
+    const label = document.createElement('strong');
+    label.textContent = tutorial.completed.includes(key) ? title + ' · concluído' : title;
+    item.append(label);
+    if (next?.[0] === key) {
+      item.setAttribute('aria-current', 'step');
+      const description = document.createElement('p');
+      description.textContent = detail;
+      item.append(description);
+    }
+    list.append(item);
+  }
+  const action = byId('tutorial-action');
+  action.textContent = next ? 'Abrir ' + byId(next[3]).getAttribute('aria-label') : 'Concluir guia';
+  action.onclick = () => {
+    if (!next) {
+      dismissTutorial();
+      return;
+    }
+    byId('tutorial').close();
+    const target = byId(next[3]);
+    if (next[0] === 'build') {
+      setConstructionOpen(true);
+      byId('close-catalog').focus();
+    } else {
+      target.click();
+    }
+  };
+  byId('tutorial-dismiss').hidden = !next;
+  byId('tutorial').showModal();
 }
 
 byId('tasks-button').onclick = () => {
   renderTaskBoard();
   byId('tasks').showModal();
 };
-byId('resource-balance-button').onclick = () => {
+byId('diagnostic-warning').onclick = byId('resource-balance-button').onclick = () => {
   renderResourceBalance();
   byId('resource-balance').showModal();
+  recordTutorialStep('balance');
+  if (state.tutorial && !state.tutorial.dismissed) saveColony();
+};
+byId('tutorial-button').onclick = openTutorial;
+byId('tutorial-dismiss').onclick = dismissTutorial;
+byId('journal-epilogue').onclick = openEpilogue;
+byId('epilogue-new').onclick = () => {
+  byId('epilogue').close();
+  menuScenario = 'normal';
+  byId('menu-guided').checked = false;
+  openMainMenu('scenarios');
 };
 byId('power-button').onclick = () => {
   renderPowerBoard();
@@ -8635,6 +9782,7 @@ byId('menu-button').onclick = () => openMainMenu();
 byId('menu-continue').onclick = () => playFromMenu();
 byId('menu-new').onclick = () => {
   menuScenario = 'normal';
+  byId('menu-guided').checked = false;
   showMenuPage('scenarios');
   focusMenuPage();
 };
@@ -8649,24 +9797,45 @@ byId('menu-guide').onclick = () => {
   showMenuPage('help');
   focusMenuPage();
 };
+byId('menu-transfer').onclick = () => {
+  byId('menu-transfer-status').textContent = '';
+  showMenuPage('saves');
+  focusMenuPage();
+};
+byId('menu-export').onclick = exportColony;
+byId('menu-store-copy').onclick = () => {
+  if (!campaignStarted) return;
+  const copies = readSaveCopies();
+  if (copies.length >= 3) {
+    byId('menu-transfer-status').textContent = 'As três vagas estão ocupadas. Exclua uma cópia para liberar espaço.';
+    return;
+  }
+  writeSaveCopies([...copies, portableSave()], 'Cópia guardada neste navegador.');
+};
+byId('menu-save-file').onchange = chooseSaveFile;
+byId('menu-import-apply').onclick = applyImportedColony;
 for (const button of byId('main-menu').querySelectorAll('[data-menu-back]')) {
   button.onclick = () => {
-    showMenuPage(menuPage === 'confirm' ? 'scenarios' : 'home');
+    saveFileRequest++;
+    showMenuPage(menuPage === 'confirm' ? 'scenarios' : menuPage === 'import' ? 'saves' : 'home');
     focusMenuPage();
   };
 }
 byId('main-menu').addEventListener('cancel', event => {
   event.preventDefault();
   if (menuPage !== 'home') {
-    showMenuPage(menuPage === 'confirm' ? 'scenarios' : 'home');
+    saveFileRequest++;
+    showMenuPage(menuPage === 'confirm' ? 'scenarios' : menuPage === 'import' ? 'saves' : 'home');
     focusMenuPage();
   } else playFromMenu();
 });
 
 byId('build-button').onclick = () => {
-  const opening = byId('build-catalog').hidden;
-  setConstructionOpen(opening);
-  if (opening) byId('build-catalog').scrollIntoView({ block: 'nearest' });
+  setConstructionOpen(byId('build-catalog').hidden);
+};
+byId('close-catalog').onclick = byId('cancel-placement').onclick = () => {
+  setConstructionOpen(false);
+  byId('build-button').focus();
 };
 byId('touch-category').onchange = event => {
   category = event.target.value;
@@ -8678,15 +9847,15 @@ byId('touch-lot').onchange = event => {
   event.target.value = '';
   buildSlot(Number(value));
 };
+let detailCenter = .5;
 byId('bunker-zoom').onclick = () => {
   const view = byId('cutaway-view');
   const button = byId('bunker-zoom');
   const detailed = view.dataset.zoom !== 'detail';
-  const center = view.scrollWidth ? (view.scrollLeft + view.clientWidth / 2) / view.scrollWidth : .5;
+  if (!detailed && view.scrollWidth) detailCenter = (view.scrollLeft + view.clientWidth / 2) / view.scrollWidth;
   view.dataset.zoom = detailed ? 'detail' : 'overview';
-  button.setAttribute('aria-pressed', String(detailed));
   button.textContent = detailed ? 'Visão geral' : 'Aproximar';
-  view.scrollLeft = detailed ? center * view.scrollWidth - view.clientWidth / 2 : 0;
+  view.scrollLeft = detailed ? detailCenter * view.scrollWidth - view.clientWidth / 2 : 0;
 };
 byId('propose-building').onclick = () => requestInitiative(constructionInitiative(selected));
 byId('propose-room').onclick = () => requestInitiative(roomInitiative(inspected));
@@ -8706,6 +9875,7 @@ byId('surface-button').onclick = () => {
 };
 byId('send-party').onclick = () => sendExpedition();
 byId('send-scout').onclick = () => sendExpedition(true);
+byId('dispatch-pact').onclick = () => openColonyPacts('surface');
 byId('send-shelter').onclick = () => startShelterTravel(siteSelected, false);
 byId('recall-shelter').onclick = () => startShelterTravel(siteSelected, true);
 byId('return-gate').onclick = () => {
@@ -8716,6 +9886,7 @@ byId('field-kit').onchange = renderDispatch;
 byId('dog-escort').onchange = renderDispatch;
 byId('mission-focus').onchange = renderDispatch;
 byId('route-post').onchange = renderDispatch;
+byId('route-post-next').onchange = renderDispatch;
 for (const key of cargoKeys) byId('cargo-' + key).oninput = renderDispatch;
 byId('mount').onchange = renderDispatch;
 byId('raid-seal').onclick = () => prepareRaid('sealed');
@@ -8777,7 +9948,7 @@ byId('next-decision').onclick = () => {
   }
   fastForwardUntil = state.clock + 144;
   paused = false;
-  byId('pause').textContent = 'Ⅱ Pausar';
+  syncPauseButton();
   byId('next-decision').setAttribute('aria-pressed', 'true');
   setSpeed(speed);
 };
@@ -8787,7 +9958,7 @@ byId('pause').onclick = () => {
     return;
   }
   paused = !paused;
-  byId('pause').textContent = paused ? '▶ Continuar' : 'Ⅱ Pausar';
+  syncPauseButton();
 };
 byId('speed').onclick = () => {
   if (fastForwardUntil) stopFastForward();
@@ -8841,14 +10012,20 @@ byId('end-dialog').addEventListener('cancel', event => event.preventDefault());
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && !byId('main-menu').open && !byId('room-dialog').open && !byId('end-dialog').open &&
       !byId('journal').open && !byId('surface').open && !byId('staff').open && !byId('research-board').open &&
-      !byId('tasks').open && !byId('power-board').open && !byId('resource-balance').open) {
+      !byId('tasks').open && !byId('power-board').open && !byId('resource-balance').open &&
+      !byId('tutorial').open && !byId('epilogue').open) {
     event.preventDefault();
-    if (!byId('build-catalog').hidden) setConstructionOpen(false);
+    if (!byId('build-catalog').hidden || selected) {
+      setConstructionOpen(false);
+      byId('build-button').focus();
+    }
     else openMainMenu();
   }
 });
 window.addEventListener('pagehide', saveColony);
 setupConstruction();
+setupHudIcons();
+setupBunkerCamera();
 const savedCampaign = readColony();
 campaignStarted = Boolean(savedCampaign);
 reset(savedCampaign, false);
